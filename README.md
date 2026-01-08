@@ -2,7 +2,7 @@
 **Affiliation:** Institute of Astronomy, University of Cambridge
 
 ## Overview
-This repository hosts the data and configuration files for the study: **"The development of the ozone layer under an evolving Sun"**. 
+This repository hosts the data and configuration files: **"The development of the ozone layer under an evolving Sun"**. 
 
 We explore the evolution of Earth's ozone ($O_3$) layer across geological history. By simulating thousands of atmospheric states, we investigate how the ozone layer responds to:
 1.  **Atmospheric Oxygenation:** Varying $O_2$ levels from the Archean to the modern day (0.1 to 150 % of Present Atmospheric Levels).
