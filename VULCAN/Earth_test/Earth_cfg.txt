@@ -39,7 +39,7 @@ He_H = 0.09692
 ini_mix = 'const_mix' # Options: 'EQ', 'const_mix', 'vulcan_ini', 'table' (for 'vulcan_ini, the T-P grids have to be exactly the same)
 
 # Initialsing uniform (constant with pressure) mixing ratios (only reads when ini_mix = const_mix)
-const_mix = {'N2':0.78, 'O2':0.20, 'H2O':1e-6,  'CO2':4E-4, 'Ar':9.34e-3, 'SO2': 2e-10} 
+const_mix = {'N2':0.78, 'O2':0.2095, 'H2O':1e-6,  'CO2':280E-6, 'Ar':9.34e-3, 'SO2': 2e-10} 
 
 # ====== Setting up photochemistry ======
 use_photo = True
@@ -98,7 +98,7 @@ update_frq = 100
 # Boundary Conditions:
 use_topflux = False
 use_botflux = True
-use_fix_sp_bot = {"H2O":0.00894, "H2O_l_s":0, 'CO2':4E-4} #   0.0143 for 40% humidity 0.0033 for 20% humidity in US standard 1967 # fixed mixing ratios at the lower boundary
+use_fix_sp_bot = {"H2O":0.00894, "H2O_l_s":0, 'CO2':280E-6} #   0.0143 for 40% humidity 0.0033 for 20% humidity in US standard 1967 # fixed mixing ratios at the lower boundary
 diff_esc = ['H2', 'H'] # species for diffusion-limit escape at TOA
 max_flux = 1e13  # upper limit for the diffusion-limit fluxes
 
