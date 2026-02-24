@@ -1,0 +1,90 @@
+
+      SUBROUTINE AERTAB
+
+      INCLUDE '../INCLUDECHEM/parNZ.inc'
+      INCLUDE '../INCLUDECHEM/parNQ_NQT.inc'
+      INCLUDE '../INCLUDECHEM/parNF.inc'
+c in May 16 2019, JL change NT from 51 to 41
+       PARAMETER(NT=53)
+      DIMENSION TTAB(NT),PH2O(NT,NF),PH2SO4(NT,NF)
+C-AJ 08/31/2022 DEBUG
+      DIMENSION TTABOLD(51),PH2OOLD(51,NF),PH2SO4OLD(51,NF)
+      INCLUDE '../INCLUDECHEM/comABLOK.inc'
+      INCLUDE '../INCLUDECHEM/comSULBLK.inc'
+      INCLUDE '../INCLUDECHEM/comAERBLK.inc'
+c      INCLUDE '../INCLUDECHEM/parNT.inc'      
+C
+C   THIS SUBROUTINE READS A TABLE OF SULFURIC ACID AND H2O VAPOR
+C   PRESSURES AS FUNCTIONS OF TEMPERATURE AND CONCENTRATION OF
+C   H2SO4 IN THE PARTICLES.  THEN IT PRODUCES A NEW TABLE IN WHICH
+C   THE LOG OF THE VAPOR PRESSURES IS STORED AT EACH VERTICAL GRID
+C   POINT OF THE MODEL.
+C
+C ***********************************************************
+C   READ DATAFILE (VAPOR PRESSURES IN MM HG)
+      READ(63,800) PH2OOLD,PH2SO4OLD,TTABOLD,FTAB
+ 800  FORMAT(1P6E12.5)
+      close(63)
+      DO J = 1,NF
+      DO I = 1,51
+      PH2O(I,J)=PH2OOLD(I,J)
+      PH2SO4(I,J)=PH2SO4OLD(I,J)
+      END do
+      PH2O(52,J)=PH2O(51,J)
+      PH2O(53,J)=PH2O(52,J)
+      PH2SO4(52,J)=PH2SO4(51,J)
+      PH2SO4(53,J)=PH2SO4(52,J)
+      END DO  
+      DO I = 1,51
+      TTAB(I)=TTABOLD(I)
+      END DO
+      TTAB(52)=TTAB(51)
+      TTAB(53)=TTAB(53)
+c in may 16 2019, JL print out h2s04.pdat file to check the dimension
+c aj 08/31/2022 debug and jump the JL's printout
+      GO TO 1900
+      write(158,1950)
+ 1950 format('TTAB')
+      write(158,1949) TTAB
+      write(158,1952)
+ 1952 format(/'PH2O')
+      write(158,1949)((PH2O(I,J),J=1,34),I=1,51)
+ 1949 format(1p17E8.1)
+      write(158,1953)
+ 1953 format(/'PH2SO4')
+      write(158,1951)((PH2SO4(I,J),J=1,34),I=1,51)
+ 1951 format(1p17E8.1)
+      close(158)
+C ***********************************************************
+C
+C   CONVERT VAPOR PRESSURES TO BARS
+1900      DO 5 K=1,NF
+      DO 5 J=1,NT
+      PH2O(J,K) = PH2O(J,K)*1.013/760.
+   5  PH2SO4(J,K) = PH2SO4(J,K)*1.013/760.
+C
+C   INTERPOLATE TABLE TO TEMPERATURE AT EACH VERTICAL GRID POINT
+      DO 1 J=1,NZ
+      DO 2 I=1,NT
+      IS = I
+      IF(TTAB(I) .GT. T(J)) GO TO 3
+   2  CONTINUE
+   3  IS1 = MAX0(IS-1,1)
+C   T(J) LIES BETWEEN TTAB(IS) AND TTAB(IS1)
+      FR = 1.
+      IF(IS .GT. IS1) FR = (T(J) - TTAB(IS1))/(TTAB(IS) - TTAB(IS1))
+C
+C   INTERPOLATE PH2O AND PH2SO4 LOGARITHMICALLY
+      DO 4 K=1,NF
+      H2OL = ALOG(PH2O(IS,K))
+      H2OL1 = ALOG(PH2O(IS1,K))
+      H2SO4L = ALOG(PH2SO4(IS,K))
+      H2SOL1 = ALOG(PH2SO4(IS1,K))
+      VH2O(K,J) = FR*H2OL + (1.-FR)*H2OL1
+   4  VH2SO4(K,J) = FR*H2SO4L + (1.-FR)*H2SOL1
+   1  CONTINUE
+C
+c      print *, 'VH2O = ', VH2O 
+
+      RETURN
+      END

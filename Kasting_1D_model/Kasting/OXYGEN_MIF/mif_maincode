@@ -1,0 +1,799 @@
+C-SH Added code from Alex Pavlov's version 
+      PRINT*, ''
+      PRINT *, '----------START O ISOTOPE CALCULATION----------'
+      PRINT*, ''
+C-PL COMMENT OUT TILL 46 AS DELTA 33=34=36, SO WE DON'T NEED CAL TWICE HERE 
+!      DO J=1,NZ
+!       DELTAS3(J) = 0.
+!       DELTAS4(J) = 0.
+!       DELTAS8(J) = 0.
+!      ENDDO
+!      PHOTOCOEFF91 = 1. 
+!      PHOTOCOEFF1 = 1.!/0.9
+!      PHOTOCOEFF2 = 1.!/0.95
+!      PHOTOCOEFF38 = 1. 
+!      PHOTOCOEFF39 = 1.
+!      USOLI = 0. 
+!      CALL OXYGEN(PHOTOCOEFF2,PHOTOCOEFF38,PHOTOCOEFF39,
+!     2 PHOTOCOEFF91,PHOTOCOEFF1,USOLI,DELTAS4,DELTAS3,DELTAS8)
+
+!      DO J=1,NZ
+
+!      DELTAH2S34(J) = (USOLI(LH2SI,J)-USOL(LH2S,J))/USOL(LH2S,J)*1000 !C-PL THIS IS A TEST FOR MDF S34
+!      DELTAHS34(J) = (USOLI(LHSI,J)-USOL(LHS,J))/USOL(LHS,J)*1000 
+!      DELTASO34(J) = (USOLI(LSIO,J)-USOL(LSO,J))/USOL(LSO,J)*1000 
+!      DELTAHSO34(J) = (USOLI(LHSIO,J)-USOL(LHSO,J))/USOL(LHSO,J)*1000 
+!      DELTAS34(J) = (USOLI(LSI,J)-USOL(LS,J))/USOL(LS,J)*1000 
+!      DELTAS234(J) = (USOLI(LSIS,J)/2.-USOL(LS2,J))/USOL(LS2,J)*1000 
+!      DELTASO234(J) = (USOLI(LSIO2,J)-USOL(LSO2,J))/USOL(LSO2,J)*1000 
+!      DELTAH2SO434(J) = (USOLI(LH2SIO4,J)-USOL(LH2SO4,J))/
+!     2 USOL(LH2SO4,J)*1000
+
+!      ENDDO
+!      DO J=1,10 
+!       DELTAS334(J) = DELTAS3(J)
+!       DELTAS434(J) = DELTAS4(J)
+!       DELTAS834(J) = DELTAS8(J)
+!       DELTAS3(J) = 0.
+!       DELTAS4(J) = 0.
+!       DELTAS8(J) = 0.
+!      ENDDO
+!      PHOTOCOEFF91 = 1.
+!      PHOTOCOEFF1 = 1.!/0.9351 
+!      PHOTOCOEFF2 = 1.!/0.3  !SO2 photolysis
+!      PHOTOCOEFF38 = 1. 
+!      PHOTOCOEFF39 = 1. 
+
+      USOLI = 0.
+!      CALL SULFUR(PHOTOCOEFF2,PHOTOCOEFF38,PHOTOCOEFF39,
+!     2 PHOTOCOEFF91,PHOTOCOEFF1,USOLI,DELTAS4,DELTAS3,DELTAS8)
+      CALL OXYGEN(USOLI) !USOLI IS THE OUT&IN_PUT VAR
+      DO J=1,NZ !C-PL DELTA HERE IS FOR DIFFERENT SPECIES IN DIFFERENT LAYER
+      DELTAH2CO17(J) = (USOLI(LH2CQ,J)-USOL(LH2CO,J))
+     2 /USOL(LH2CO,J)*1000
+      DELTAO17(J) = (USOLI(LQ,J)-USOL(LO,J))/USOL(LO,J)*1000
+      DELTAH2O17(J) = (USOLI(LH2Q,J)-USOL(LH2O,J))/USOL(LH2O,J)*1000
+      DELTAOH17(J) = (USOLI(LQH,J)-USOL(LOH,J))/USOL(LOH,J)*1000
+      DELTAHO217(J) = (USOLI(LHOQ,J)/2.-USOL(LHO2,J))/USOL(LHO2,J)*1000
+      DELTAH2O217(J) = (USOLI(LH2OQ,J)/2.-USOL(LH2O2,J))
+     2 /USOL(LH2O2,J)*1000
+      DELTAO3A17(J) = (USOLI(LO2Q,J)/2.-USOL(LO3,J))/USOL(LO3,J)*1000
+      DELTAO3B17(J) = (USOLI(LOQO,J)-USOL(LO3,J))/USOL(LO3,J)*1000
+      DELTAO317(J)  =  2./3.*DELTAO3A17(J)+1./3.*DELTAO3B17(J)    !TOTAL DELTA O3
+      DELTACO17(J) = (USOLI(LCQ,J)-USOL(LCO,J))/USOL(LCO,J)*1000
+      DELTACH3OOHA17(J) = (USOLI(LCH3OQH,J)-USOL(LCH3OOH,J))
+     2 /USOL(LCH3OOH,J)*1000
+      DELTACH3OOHB17(J) = (USOLI(LCH3QOH,J)-USOL(LCH3OOH,J))
+     2 /USOL(LCH3OOH,J)*1000
+      DELTACH3OOH17(J)=(DELTACH3OOHA17(J)+DELTACH3OOHB17(J))/2. ! TOTAL DELTA CH3OOH
+      DELTACH3O2A17(J) = (USOLI(LCH3OQ,J)-USOL(LCH3O2,J))
+     2 /USOL(LCH3O2,J)*1000
+      DELTACH3O2B17(J) = (USOLI(LCH3QO,J)-USOL(LCH3O2,J))
+     2 /USOL(LCH3O2,J)*1000
+      DELTACH3O217(J)  = (DELTACH3O2A17(J)+DELTACH3O2B17(J))/2. !TOTAL CH3O2
+      DELTAN2O17(J) = (USOLI(LN2Q,J)-USOL(LN2O,J))/USOL(LN2O,J)*1000
+      DELTANO17(J) = (USOLI(LNQ,J)-USOL(LNO,J))/USOL(LNO,J)*1000
+      DELTANO217(J) = (USOLI(LNOQ,J)/2.-USOL(LNO2,J))/USOL(LNO2,J)*1000
+      DELTAHNO217(J) = (USOLI(LHNOQ,J)/2.-USOL(LHNO2,J))
+     2 /USOL(LHNO2,J)*1000
+      DELTAHNO317(J) = (USOLI(LHNO2Q,J)/3.-USOL(LHNO3,J))
+     2 /USOL(LHNO3,J)*1000
+      DELTAHO2NO2A17(J) = (USOLI(LHOQNO2,J)/2.-USOL(LHO2NO2,J))
+     2 /USOL(LHO2NO2,J)*1000
+      DELTAHO2NO2B17(J) = (USOLI(LHO2NOQ,J)/2.-USOL(LHO2NO2,J))
+     2 /USOL(LHO2NO2,J)*1000
+      DELTAHO2NO217(J)  = 1./2.*DELTAHO2NO2A17(J)+1./2.*DELTAHO2NO2B17(J) !TOTAL HO2NO2
+      DELTANO317(J) = (USOLI(LNO2Q,J)/3.-USOL(LNO3,J))/USOL(LNO3,J)*1000
+      DELTAN2O5A17(J) = (USOLI(LN2O4Q,J)/4.-USOL(LN2O5,J))
+     2 /USOL(LN2O5,J)*1000
+      DELTAN2O5B17(J) = (USOLI(LN2QO4,J)-USOL(LN2O5,J)) 
+     2 /USOL(LN2O5,J)*1000
+      DELTAN2O517(J)  = 4./5.*DELTAN2O5A17(J) + 1./5.*DELTAN2O5B17(J) !TOTAL N2O5
+      DELTAO217(J) = (USOLI(LOQ,J)/2.-USOL(LO2,J))/USOL(LO2,J)*1000
+      DELTASO17(J) = (USOLI(LSQ,J)-USOL(LSO,J))/USOL(LSO,J)*1000
+      DELTASO217(J) = (USOLI(LSOQ,J)/2.-USOL(LSO2,J))/USOL(LSO2,J)*1000
+      DELTAH2SO417(J) = (USOLI(LH2SO3Q,J)/4.-USOL(LH2SO4,J))
+     2 /USOL(LH2SO4,J)*1000
+      DELTASHO17(J) = (USOLI(LHSQ,J)-USOL(LHSO,J))/USOL(LHSO,J)*1000
+      DELTACO217(J) = (USOLI(LCOQ,J)/2.-USOL(LCO2,J))/USOL(LCO2,J)*1000
+      ENDDO 
+
+C-PL COMMENTED OUT AS THEM CAL. ABOVE      
+!      DO J=1,10 
+!       DELTAS333(J) = DELTAS3(J)
+!       DELTAS433(J) = DELTAS4(J)
+!       DELTAS833(J) = DELTAS8(J)
+!       DELTAS3(J) = 0.
+!       DELTAS4(J) = 0.
+!       DELTAS8(J) = 0.
+!      ENDDO
+      
+      print*, ''
+      print*, '--------------out of isotope subroutine---------------'
+      print*, ''
+     
+C-PL COMMENTED OUT      
+!      print*, 'sulfur mass balance: '
+!      sulf_in = H2SVOLC + S2VOLC !H2S and SO2 are volcanically injected
+!      sulf_out = 0.
+!      SO4LOSS = 0.
+
+      DO 420 I=1,NQI
+      SRI(I) = 0.
+      DO 430 J=1,20
+  430  SRI(I) = SRI(I) + RAINGCI(I,J)*USOLI(I,J)*DEN(J)*1.e5
+      PHIDEPI(I) = VDEPI(I)*USOLI(I,1)*DEN(1)
+!      sulf_out = sulf_out+SRI(I)+PHIDEPI(I) C-PL COMMENTED OUT
+!!      if(I.eq.LSIS) sulf_out = sulf_out+SRI(I)+PHIDEPI(I)
+  420  TLOSSI(I) = SRI(I) + PHIDEPI(I)
+      DO J=1,NZ
+      SO4LOSS = SO4LOSS + CONSO4(J)*DEN(J)*1.e5
+      ENDDO
+!      TLOSSI(LSIS) = TLOSSI(LSIS) + RATI(95) !C-PL COMMENTOUT 
+!      TLOSSI(LSIS2) = TLOSSI(LSIS2) + RATI(96) 
+!      TLOSSI(LSIS3) = TLOSSI(LSIS3) + RATI(97)
+!      sulf_out = sulf_out + RATI(95) + RATI(96) + RATI(97)
+!      sulf_out = sulf_out + SO4LOSS
+  
+!!     sulf_out = sulf_out + RATI(88) 
+!      PRINT*, ' S8PROD      SO4LOSS    | S     in          out'
+!      PRINT 440, RATI(88), SO4LOSS,' | ', sulf_in, sulf_out
+!  440  format(1P2E12.4,A3,1P2E12.4)
+      print*, ''
+      print*, '      prod and loss terms'
+      print 1800, (ISPECI(I),I=1,10)
+      print 1810, 'SR ',(SRI(I),I=1,10)
+      print 1810, 'Phi',(PHIDEPI(I),I=1,10)
+      print 1810, 'TPI ',(TPI(I),I=1,10)
+      print 1810, 'TLI ',(TLI(I),I=1,10)
+      print*, ''
+
+      print 1800, (ISPECI(I),I=11,20)
+      print 1810, 'SR ',(SRI(I),I=11,20)
+      print 1810, 'Phi',(PHIDEPI(I),I=11,20)
+      print 1810, 'TPI ',(TPI(I),I=11,20)
+      print 1810, 'TLI ',(TLI(I),I=11,20)
+      print*, ''
+
+      print 1800, (ISPECI(I),I=21,NQI)
+      print 1810, 'SR ',(SRI(I),I=21,NQI)
+      print 1810, 'Phi',(PHIDEPI(I),I=21,NQI)
+      print 1810, 'TPI ',(TPI(I),I=21,NQI)
+      print 1810, 'TLI ',(TLI(I),I=21,NQI)
+      print*, ''
+ 1800 format(4x,10(A12))
+ 1810 format(A5,1P10E12.4)
+  
+C-SH the *T variables represent approximate MDF trends for identifying MIF signals in 33S(0.515) and 36S(1.89) species
+!      DO J=1,NZ
+!      DELTAS333T(J) = 0.515*DELTAS334(J)
+!      DELTAH2S33T(J) = 0.515*DELTAH2S34(J)
+!      DELTAHS33T(J) = 0.515*DELTAHS34(J)
+!      DELTASO33T(J) = 0.515*DELTASO34(J)
+!      DELTAHSO33T(J) = 0.515*DELTAHSO34(J)
+!      DELTAS33T(J) = 0.515*DELTAS34(J)
+!      DELTAS233T(J) = 0.515*DELTAS234(J)
+!      DELTAS433T(J) = 0.515*DELTAS434(J)
+!      DELTASO233T(J) = 0.515*DELTASO234(J)
+!      DELTAH2SO433T(J) = 0.515*DELTAH2SO434(J)
+!      enddo
+      
+C-SH calculate approximate CapDel values for printing
+!      CDELTAHSO33 = DELTAHSO33(1) - DELTAHSO33T(1)
+!      CDELTAS33 = DELTAS33(1) - DELTAS33T(1)
+!      DO J=1,10
+!       CDELTAS433(J) = DELTAS433(J) - DELTAS433T(J)
+!       CDELTAS333(J) = DELTAS333(J) - DELTAS333T(J)
+!      ENDDO
+!      DO J=1,NZ
+!       CDELTAS233(J) = DELTAS233(J) - DELTAS233T(J)
+!       CDELTASO33(J) = DELTASO33(J) - DELTASO33T(J)
+!       CDELTASO233(J) = DELTASO233(J) - DELTASO233T(J)
+!       CDELTAH2S33(J) = DELTAH2S33(J) - DELTAH2S33T(J)
+!       CDELTAHS33(J) = DELTAHS33(J) - DELTAHS33T(J)
+!       CDELTAH2SO433(J) = DELTAH2SO433(J) - DELTAH2SO433T(J)
+!      ENDDO
+
+C-PL WE ONLY CAL. 17O FRACOXYGEN=0.5305(Crockford et al.,2018)      
+!      do i=1,2
+      fracoxy = 0.5305
+!      if(i.eq.2) fracoxy = 1.89
+!      DO J=1,10
+!      C2DELTAS(i,J)=DELTAS33(J)-1000.*((1.
+!     2 + DELTAS34(J)/1000.)**fracsulf - 1.)
+!       C2DELTAS3(i,J) = DELTAS333(J) - 1000.*((1.
+!     2 + DELTAS334(J)/1000.)**fracsulf - 1.)
+!       C2DELTAS4(i,J) = DELTAS433(J) - 1000.*((1.
+!     2 + DELTAS434(J)/1000.)**fracsulf - 1.)
+!       C2DELTAS8(i,J) = DELTAS833(J) - 1000.*((1.
+!     2 + DELTAS834(J)/1000.)**fracsulf - 1.)
+!      ENDDO
+      DO J=1,NZ
+  ! DELTAHSO33(J)=DELTASO34(J)=DELTASO36(J)
+!      C2DELTAHSO(i,J)=DELTAHSO33(J)-1000.*((1.  
+!     2 + DELTASO34(J)/1000.)**fracoxy - 1.)
+!       C2DELTAS2(i,J) = DELTAS233(J) - 1000.*((1.
+!     2 + DELTAS234(J)/1000.)**fracoxy - 1.)
+!       C2DELTASO(i,J) = DELTASO33(J)  - 1000.*((1.
+!     2 + DELTASO34(J)/1000.)**fracoxy - 1.)
+!       C2DELTASO2(i,J) = DELTASO233(J) - 1000.*((1.
+!     2 + DELTASO234(J)/1000.)**fracoxy - 1.)
+!       C2DELTAH2S(i,J) = DELTAH2S33(J) - 1000.*((1.
+!     2 + DELTAH2S34(J)/1000.)**fracoxy - 1.)
+!       C2DELTAHS(i,J) = DELTAHS33(J) - 1000.*((1.
+!     2 + DELTAHS34(J)/1000.)**fracoxy - 1.)
+!       C2DELTAH2SO4(i,J) = DELTAH2SO433(J) - 1000.*((1.
+!     2 + DELTAH2SO434(J)/1000.)**fracoxy - 1.)
+
+      C2DELTAH2CO(J)=DELTAH2CO17(J)-1000.*((1.  ! delta17O=delta18O
+     2 + DELTAH2CO17(J)/1000.)**fracoxy - 1.)
+      C2DELTAO(J)=DELTAO17(J)-1000.*((1.
+     2 + DELTAO17(J)/1000.)**fracoxy - 1.)
+      C2DELTAH2O(J)=DELTAH2O17(J)-1000.*((1.
+     2 + DELTAH2O17(J)/1000.)**fracoxy - 1.)
+      C2DELTAOH(J)=DELTAOH17(J)-1000.*((1.
+     2 + DELTAOH17(J)/1000.)**fracoxy - 1.)
+      C2DELTAHO2(J)=DELTAHO217(J)-1000.*((1.
+     2 + DELTAHO217(J)/1000.)**fracoxy - 1.)
+      C2DELTAH2O2(J)=DELTAH2O217(J)-1000.*((1.
+     2 + DELTAH2O217(J)/1000.)**fracoxy - 1.)
+      C2DELTAO3A(J)=DELTAO3A17(J)-1000.*((1.
+     2 + DELTAO3A17(J)/1000.)**fracoxy - 1.)
+      C2DELTAO3B(J)=DELTAO3B17(J)-1000.*((1.
+     2 + DELTAO3B17(J)/1000.)**fracoxy - 1.)
+      C2DELTAO3(J)=DELTAO317(J)-1000.*((1.
+     2 + DELTAO317(J)/1000.)**fracoxy - 1.) ! TOTAL O3
+      C2DELTACO(J)=DELTACO17(J)-1000.*((1.
+     2 + DELTACO17(J)/1000.)**fracoxy - 1.)
+      C2DELTACH3OOHA(J)=DELTACH3OOHA17(J)-1000.*((1.
+     2 + DELTACH3OOHA17(J)/1000.)**fracoxy - 1.)
+      C2DELTACH3OOHB(J)=DELTACH3OOHB17(J)-1000.*((1.
+     2 + DELTACH3OOHB17(J)/1000.)**fracoxy - 1.)
+      C2DELTACH3OOH(J)=DELTACH3OOH17(J)-1000.*((1.
+     2 + DELTACH3OOH17(J)/1000.)**fracoxy - 1.) !TOTAL CH3OOH
+      C2DELTACH3O2A(J)=DELTACH3O2A17(J)-1000.*((1.
+     2 + DELTACH3O2A17(J)/1000.)**fracoxy - 1.)
+      C2DELTACH3O2B(J)=DELTACH3O2B17(J)-1000.*((1.
+     2 + DELTACH3O2B17(J)/1000.)**fracoxy - 1.)
+      C2DELTACH3O2(J)=DELTACH3O217(J)-1000.*((1.
+     2 + DELTACH3O217(J)/1000.)**fracoxy - 1.)  !TOTAL CH3O2
+      C2DELTAN2O(J)=DELTAN2O17(J)-1000.*((1.
+     2 + DELTAN2O17(J)/1000.)**fracoxy - 1.)
+      C2DELTANO(J)=DELTANO17(J)-1000.*((1.
+     2 + DELTANO17(J)/1000.)**fracoxy - 1.)
+      C2DELTANO2(J)=DELTANO217(J)-1000.*((1.
+     2 + DELTANO217(J)/1000.)**fracoxy - 1.)
+      C2DELTAHNO2(J)=DELTAHNO217(J)-1000.*((1.
+     2 + DELTAHNO217(J)/1000.)**fracoxy - 1.)
+      C2DELTAHNO3(J)=DELTAHNO317(J)-1000.*((1.
+     2 + DELTAHNO317(J)/1000.)**fracoxy - 1.)
+      C2DELTAHO2NO2A(J)=DELTAHO2NO2A17(J)-1000.*((1.
+     2 + DELTAHO2NO2A17(J)/1000.)**fracoxy - 1.)
+      C2DELTAHO2NO2B(J)=DELTAHO2NO2B17(J)-1000.*((1.
+     2 + DELTAHO2NO2B17(J)/1000.)**fracoxy - 1.)
+      C2DELTAHO2NO2(J)=DELTAHO2NO217(J)-1000.*((1.
+     2 + DELTAHO2NO217(J)/1000.)**fracoxy - 1.)  !TOTAL HO2NO2
+      C2DELTANO3(J)=DELTANO317(J)-1000.*((1.
+     2 + DELTANO317(J)/1000.)**fracoxy - 1.)
+      C2DELTAN2O5A(J)=DELTAN2O5A17(J)-1000.*((1.
+     2 + DELTAN2O5A17(J)/1000.)**fracoxy - 1.)
+      C2DELTAN2O5B(J)=DELTAN2O5B17(J)-1000.*((1.
+     2 + DELTAN2O5B17(J)/1000.)**fracoxy - 1.)
+      C2DELTAN2O5(J)=DELTAN2O517(J)-1000.*((1.
+     2 + DELTAN2O517(J)/1000.)**fracoxy - 1.)  !TOATAL N2O5
+      C2DELTAO2(J)=DELTAO217(J)-1000.*((1.
+     2 + DELTAO217(J)/1000.)**fracoxy - 1.)
+      C2DELTASO(J)=DELTASO17(J)-1000.*((1.
+     2 + DELTASO17(J)/1000.)**fracoxy - 1.)
+      C2DELTASO2(J)=DELTASO217(J)-1000.*((1.
+     2 + DELTASO217(J)/1000.)**fracoxy - 1.)
+      C2DELTAH2SO4(J)=DELTAH2SO417(J)-1000.*((1.
+     2 + DELTAH2SO417(J)/1000.)**fracoxy - 1.)
+      C2DELTAHSO(J)=DELTAHSO17(J)-1000.*((1.
+     2 + DELTAHSO17(J)/1000.)**fracoxy - 1.)
+      C2DELTACO2(J)=DELTACO217(J)-1000.*((1.
+     2 + DELTACO217(J)/1000.)**fracoxy - 1.)
+     !enddo
+      
+      print*, 'delta 17O values with altitude'
+      PRINT 102, 'Z(km)',(ISPECI(I),I=1,NQI)
+      DO J=1,NZ
+      if(J.le.10.or.modulo(J,4).eq.1) PRINT 104,J-0.5,
+     2 DELTAH2CO17(J),DELTAO17(J),DELTAH2O17(J),
+     3 DELTAOH17(J),DELTAHO217(J),DELTAH2O217(J),DELTAO3A17(J),
+     4 DELTAO3B17(J),DELTACO17(J),DELTACH3OOHA17(J),
+     5 DELTACH3OOHB17(J),DELTACH3O2A17(J),DELTACH3O2B17(J),
+     6 DELTAN2O17(J),DELTANO17(J),DELTANO217(J),DELTAHNO217(J),
+     7 DELTAHNO317(J),DELTAHO2NO2A17(J),DELTAHO2NO2B17(J),
+     8 DELTANO317(J),DELTAN2O5A17(J),DELTAN2O5B17(J),DELTAO217(J),
+     9 DELTASO17(J),DELTASO217(J),DELTAH2SO417(J),DELTASHO17(J),
+    10 DELTACO217(J)
+      ENDDO
+  102 format(2x,A8,2x,29(A8,2x))
+  104 format(2x,F6.1,1x,1P29E10.2)
+      
+!      print*, '         delta-34S delta-33S'
+!      print*, 'species    value     value'
+!      PRINT 102,'  H2S  ',DELTAH2S34(1),DELTAH2S33(1)
+!      PRINT 102,'  HS   ', DELTAHS34(1),DELTAHS33(1) 
+!      PRINT 102,'  SO   ', DELTASO34(1),DELTASO33(1) 
+!      PRINT 102,'  SO2  ', DELTASO234(1),DELTASO233(1)
+!      PRINT 102,'  H2SO4', DELTAH2SO434(1),DELTAH2SO433(1) 
+!      PRINT 102,'  S    ', DELTAS34(1),DELTAS33(1) 
+!      PRINT 102,'  S2   ', DELTAS234(1),DELTAS233(1) 
+!      PRINT 102,'  S3   ', DELTAS334(1),DELTAS333(1) 
+!      PRINT 102,'  S4   ', DELTAS434(1),DELTAS433(1) 
+!      PRINT 102,'  S8   ', DELTAS834(1),DELTAS833(1) 
+!      PRINT 102,'  HSO  ', DELTAHSO34(1),DELTAHSO33(1)
+!  102 format(A8,1P2E10.2)
+
+!      PRINT *,'CDELTAH2S33=', CDELTAH2S33(1), 'LOSS H2S=', TLOSS(LH2S) 
+!      PRINT *,'CDELTAHS33=', CDELTAHS33(1), 'LOSS HS=', TLOSS(LHS) 
+!      PRINT *,'CDELTAS33=', CDELTAS33, 'LOSS S=', TLOSS(LS) 
+!      PRINT *,'CDELTAS233=', CDELTAS233(1), 'LOSS S2=', TLOSS(LS2)*2 
+!      PRINT *,'CDELTAS433=', CDELTAS433(1) 
+!      PRINT *,'CDELTAS333=', CDELTAS333(1) 
+!      PRINT *,'CDELTASO33=', CDELTASO33(1), 'LOSS SO=', TLOSS(LSO) 
+!      PRINT *,'CDELTAHSO33=', CDELTAHSO33, 'LOSS HSO=', TLOSS(LHSO) 
+!      PRINT *,'CDELTASO233=', CDELTASO233(1), 'LOSS SO2=', TLOSS(LSO2) 
+!      PRINT *,'CDELTAH2SO433=', CDELTAH2SO433(1), 'LOSS H2SO4=', SO4LOS
+      
+!      print*, ''
+!      print*, '         precise capdel formula values: '
+!      print*, 'CapDel(spec) =   33S       36S       36S/33S'
+!      PRINT 1030,'CapDel(H2S) = ', (C2DELTAH2S(i,1),i=1,2),
+!     2 C2DELTAH2S(2,1)/C2DELTAH2S(1,1)
+!      PRINT 1030,'CapDel(HS) = ', (C2DELTAHS(i,1),i=1,2),
+!     2 C2DELTAHS(2,1)/C2DELTAHS(1,1)
+!      PRINT 1030,'CapDel(S) = ', (C2DELTAS(i,1),i=1,2),
+!     2 C2DELTAS(2,1)/C2DELTAS(1,1)
+!      PRINT 1030,'CapDel(S2) = ', (C2DELTAS2(i,1),i=1,2),
+!     2 C2DELTAS2(2,1)/C2DELTAS2(1,1)
+!      PRINT 1030,'CapDel(S3) = ', (C2DELTAS3(i,1),i=1,2),
+!     2 C2DELTAS3(2,1)/C2DELTAS3(1,1)
+!      PRINT 1030,'CapDel(S4) = ', (C2DELTAS4(i,1),i=1,2),
+!     2 C2DELTAS4(2,1)/C2DELTAS4(1,1)
+!      PRINT 1030,'CapDel(S8) = ', (C2DELTAS8(i,1),i=1,2),
+!     2 C2DELTAS8(2,1)/C2DELTAS8(1,1)
+!      PRINT 1030,'CapDel(SO) = ', (C2DELTASO(i,1),i=1,2),
+!     2 C2DELTASO(2,1)/C2DELTASO(1,1)
+!      PRINT 1030,'CapDel(HSO) = ', (C2DELTAHSO(i,1),i=1,2),
+!     2 C2DELTAHSO(2,1)/C2DELTAHSO(1,1)
+!      PRINT 1030,'CapDel(SO2) = ', (C2DELTASO2(i,1),i=1,2),
+!     2 C2DELTASO2(2,1)/C2DELTASO2(1,1)
+!      PRINT 1030,'CapDel(H2SO4) = ', (C2DELTAH2SO4(i,1),i=1,2),
+!     2 C2DELTAH2SO4(2,1)/C2DELTAH2SO4(1,1)
+! 1030 format(A16,1P3E10.2)
+      
+C-SH the following implementation is only APPROXIMATE - does not take into 
+! account varying delta profiles with altitude.
+!      print*,''
+!      PRINT *, 'TOTAL ISOTOPIC BALANCE'
+!      do i=1,2
+!      label1 = ' 33S '
+!      if(i.eq.2) label1 = ' 36S '
+!      if(i.eq.2) print*, ''
+!      TOTALREDS = C2DELTAH2S(i,1)*TLOSSI(1)+C2DELTAHS(i,1)*
+!     2 TLOSSI(2)+C2DELTAS(i,1)*TLOSSI(3) + C2DELTAS2(i,1)*
+!     3 TLOSS(8) +C2DELTASO(i,1)*TLOSS(4) + C2DELTAHSO(i,1)*
+!     4 TLOSS(7) +C2DELTAS8(i,1)*RATI(88)
+!      TOTALOXIS = C2DELTASO2(i,1)*TLOSS(5)
+!     2 + C2DELTAH2SO4(i,1)*SO4LOSS + C2DELTAH2SO4(i,1)*TLOSS(6)
+!      PRINT 1031, 'TOTALRED',label1,' = ', TOTALREDS
+!      PRINT 1031, 'TOTALOXI',label1,' = ', TOTALOXIS 
+!      enddo
+!      print 1035, 'H2S','HS','S','SIS','SO','HSO','S8','SO2',
+!     2 'SO4(aer)','H2SO4'
+!      print 1034, 33,C2DELTAH2S(1,1)*TLOSSI(1),C2DELTAHS(1,1)*
+!     2 TLOSSI(2),C2DELTAS(1,1)*TLOSSI(3),C2DELTAS2(1,1)*
+!     3 TLOSS(8),C2DELTASO(1,1)*TLOSS(4), C2DELTAHSO(1,1)*
+!     4 TLOSS(7),C2DELTAS8(1,1)*RATI(88),C2DELTASO2(1,1)*TLOSS(5),
+!     5 C2DELTAH2SO4(1,1)*SO4LOSS,C2DELTAH2SO4(1,1)*TLOSS(6)
+!      print 1034, 36,C2DELTAH2S(2,1)*TLOSSI(1),C2DELTAHS(2,1)*
+!     2 TLOSSI(2),C2DELTAS(2,1)*TLOSSI(3),C2DELTAS2(2,1)*
+!     3 TLOSS(8),C2DELTASO(2,1)*TLOSS(4),C2DELTAHSO(2,1)*
+!     4 TLOSS(7),C2DELTAS8(2,1)*RATI(88),C2DELTASO2(2,1)*TLOSS(5),
+!     5 C2DELTAH2SO4(2,1)*SO4LOSS,C2DELTAH2SO4(2,1)*TLOSS(6)
+
+      goto 2201
+C-PL  delete SEVERAL LINES HERE SINCE WE DID'T USE THEM
+ 2201 continue
+    
+ 1031 format(A8,A5,A3,1PE10.2)
+ 1034 format(I2,1x,1P12E10.2)
+ 1035 format(3x,12(A8,2x))
+ 
+      print*, ''
+!      DO K=1,2
+      label1='17O'
+!      if(K.eq.2) label1='36S'
+      print*, '-------------',label1,' budget ----------'
+      DO 4200 I=1,NQI
+ 4200 SRI(I) = 0.
+      SO4LOSS1 = 0.
+      S8LOSS = 0.
+      del_elS = 0.; TLOSS_elS = 0.; TLOSSI_elS = 0.
+      elS_cap33 = 0.; elS_cap36 = 0.; elS_frac = 0.
+      sulf_in = 0.
+      sulf_out = 0.
+C-SH I've commandeered the Phidep terms to calculate fractionation balance terms.
+!      PHIDEPI(1) = (TLOSSI(1)/TLOSS(LH2S) - 1.)*1000. !DELTA H2S
+!      PHIDEPI(2) = (TLOSSI(2)/TLOSS(LHS) - 1.)*1000.  !DELTA HS
+!      PHIDEPI(3) = (TLOSSI(3)/TLOSS(LS) - 1.)*1000.   !DELTA S
+!      PHIDEPI(4) = (TLOSSI(4)/TLOSS(LSO) - 1.)*1000.  !DELTA SO
+!      PHIDEPI(5) = (TLOSSI(5)/TLOSS(LSO2) - 1.)*1000.  !DELTA SO2
+!      PHIDEPI(6) = (TLOSSI(6)/TLOSS(LH2SO4) - 1.)*1000.  !DELTA H2SO4
+!      PHIDEPI(7) = (TLOSSI(7)/TLOSS(LHSO) - 1.)*1000.  !DELTA HSO
+!      PHIDEPI(8) = (TLOSSI(8)/(2.*TLOSS(LS2)) - 1.)*1000.  !DELTA S2
+!      PHIDEPI(9) = (TLOSSI(9)/(3.*TLOSS(LS3)) - 1.)*1000.  !DELTA S3
+!      PHIDEPI(10) = (TLOSSI(10)/(4.*TLOSS(LS4)) - 1.)*1000.  !DELTA S4
+!C-PL DELTA HERE IS THE DELTA VALUE TO THE SEDIMENT RAINOUT+VDEP
+      DELTA(1)   = (TLOSSI(1)/TLOSS(LH2CO) - 1.)*1000.
+      DELTA(2)   = (TLOSSI(2)/TLOSS(LO) - 1.)*1000.
+      DELTA(3)   = (TLOSSI(3)/TLOSS(LH2O) - 1.)*1000.
+      DELTA(4)   = (TLOSSI(4)/TLOSS(LOH) - 1.)*1000.
+      DELTA(5)   = (TLOSSI(5)/TLOSS(LHO2) - 1.)*1000.
+      DELTA(6)   = (TLOSSI(6)/TLOSS(LH2O2) - 1.)*1000.
+      DELTA(7)   = (TLOSSI(7)/TLOSS(LO3) - 1.)*1000. !O2Q
+      DELTA(8)   = (TLOSSI(8)/TLOSS(LO3) - 1.)*1000. !OQO
+      DELTAO3    = 2./3.*DELTA(7)+1./3.*DELTA(8)     !TOTAL DELTA O3
+      DELTA(9)   = (TLOSSI(9)/TLOSS(LCO) - 1.)*1000.
+      DELTA(10)   = (TLOSSI(10)/TLOSS(LCH3OOH) - 1.)*1000. !CH3OQH
+      DELTA(11)   = (TLOSSI(11)/TLOSS(LCH3OOH) - 1.)*1000. !CH3QOH
+      DELTACH3OOH = (DELTA(10)+DELTA(11))/2. ! TOTAL DELTA CH3OOH
+      DELTA(12)   = (TLOSSI(12)/TLOSS(LCH3O2) - 1.)*1000. !CH3OQ
+      DELTA(13)   = (TLOSSI(13)/TLOSS(LCH3O2) - 1.)*1000. !CH3QO
+      DELTACH3O2  = (DELTA(12)+DELTA(13))/2. !TOTAL CH3O2
+      DELTA(14)   = (TLOSSI(14)/TLOSS(LN2O) - 1.)*1000.
+      DELTA(15)   = (TLOSSI(15)/TLOSS(LNO) - 1.)*1000.
+      DELTA(16)   = (TLOSSI(16)/TLOSS(LNO2) - 1.)*1000.
+      DELTA(17)   = (TLOSSI(17)/TLOSS(LHNO2) - 1.)*1000.
+      DELTA(18)   = (TLOSSI(18)/TLOSS(LHNO3) - 1.)*1000.
+      DELTA(19)   = (TLOSSI(19)/TLOSS(LHO2NO2) - 1.)*1000. !HOQNO2
+      DELTA(20)   = (TLOSSI(20)/TLOSS(LHO2NO2) - 1.)*1000. !HO2NOQ
+      DELTAHO2NO2 = 1./2.*DELTA(19)+1./2.*DELTA(20) !TOTAL HO2NO2
+      DELTA(21)   = (TLOSSI(21)/TLOSS(LNO3) - 1.)*1000.
+      DELTA(22)   = (TLOSSI(22)/TLOSS(LN2O5) - 1.)*1000. !N2O4Q
+      DELTA(23)   = (TLOSSI(23)/TLOSS(LN2O5) - 1.)*1000. !N2QO4
+      DELTAN2O5   = 4./5.*DELTA(22) + 1./5.*DELTA(23) !TOTAL N2O5
+      DELTA(24)   = (TLOSSI(24)/TLOSS(LO2) - 1.)*1000.
+      DELTA(25)   = (TLOSSI(25)/TLOSS(LSO) - 1.)*1000.
+      DELTA(26)   = (TLOSSI(26)/TLOSS(LSO2) - 1.)*1000.
+      DELTA(27)   = (TLOSSI(27)/TLOSS(LH2SO4) - 1.)*1000.
+      DELTA(28)   = (TLOSSI(28)/TLOSS(LHSO) - 1.)*1000.
+      DELTA(29)   = (TLOSSI(29)/TLOSS(LCO2) - 1.)*1000.
+      
+C-PL COMMENT OUT SINCE THIS IS ABOUT SULFUR
+!      DO 4400 I=1,NQI   !C-PL CHANGE LATER MASS BALANCE
+! 4400 sulf_out = sulf_out+PHIDEPI(I)*TLOSS(I)
+!      DO J=1,NZ
+!      S8LOSS = (RATI(88)/(8.*TP(LS8AER)) - 1.)*1000. !DELTA S8
+!      SO4LOSS1 = (SO4LOSS/TP(LSO4AER) - 1.)*1000. !DELTA H2SO4 condensation
+!      ENDDO
+!      sulf_out = sulf_out + SO4LOSS1*SO4LOSS + S8LOSS*RATI(88)
+!      SOUT = S2VOLC + H2SVOLC
+!      TLOSS_elS = TLOSS(LS)+TLOSS(LS2)*2.+TLOSS(LS3)*3.+TLOSS(LS4)*4.
+!     2 +TP(LS8AER)*8.
+!      TLOSSI_elS = TLOSSI(3)+TLOSSI(8)+TLOSSI(9)+TLOSSI(10)+RATI(88)
+!      del_elS = (TLOSS(LS)*PHIDEPI(3)+TLOSS(LS2)*2.*PHIDEPI(8)+
+!     2 TLOSS(LS3)*3.*PHIDEPI(9)+TLOSS(LS4)*4.*PHIDEPI(10)+
+!     3 TP(LS8AER)*8.*S8LOSS)/TLOSS_elS  !TOTAL DELTA
+!      elS_cap33 = del_elS - 1000.*((1.+del_elS/1000.)**0.515-1.)
+!      elS_cap36 = del_elS - 1000.*((1.+del_elS/1000.)**1.89-1.)
+
+C-PL CALCULATE CAP DEL 
+      DO I=1,NQI
+!      CAP33(I) = PHIDEPI(I) - 1000.*((1.+PHIDEPI(I)/1000.)**0.515-1.)!0.515*PHIDEPI(I)!
+!      CAP36(I) = PHIDEPI(I) - 1000.*((1.+PHIDEPI(I)/1000.)**1.89-1.)!1.89*PHIDEPI(I)!
+      CAP17(I) = DELTA(I)-1000.*((1.+DELTA(I)/1000.)**0.5305-1.)
+      ENDDO
+C-PL  TOTAL CAP DEL NUMBERS FOR SPECIES THAT HAVE 2 ISOTOPIC SPECIES
+      CAPO317   = DELTAO3 -1000.*((1.+DELTAO3/1000.)**0.5305-1.) 
+      CAPCH3OOH17=DELTACH3OOH-1000.*((1.+DELTACH3OOH/1000.)**0.5305-1.)
+      CAPC3O217 = DELTACH3O2 - 1000.*((1.+DELTACH3O2/1000.)**0.5305-1.)
+      CAPHO2NO217=DELTAHO2NO2-1000.*((1.+DELTAHO2NO2/1000.)**0.5305-1.)
+      CAPN2O517  =DELTAN2O5-1000.*((1.+DELTAN2O5/1000.)**0.5305-1.)    
+!      CAP33SO4 = SO4LOSS1 - 1000.*((1.+SO4LOSS1/1000.)**0.515-1.)!0.515*SO4LOSS1!
+!      CAP36SO4 = SO4LOSS1 - 1000.*((1.+SO4LOSS1/1000.)**1.89-1.)!1.89*SO4LOSS1!
+!      CAP33S8 = S8LOSS - 1000.*((1.+S8LOSS/1000.)**0.515-1.)!0.515*S8LOSS!
+!      CAP36S8 = S8LOSS - 1000.*((1.+S8LOSS/1000.)**1.89-1.)!1.89*S8LOSS!
+      
+C-PL COMMENT OUT SINCE THIS IS ABOUT SULFUR    
+!      print*, '      weighted delta removal terms'
+!      PRINT*, ' S8        SO4      | S   in        out'
+!      PRINT 4440, S8LOSS, SO4LOSS1,' | ', sulf_in, sulf_out
+! 4440 format(1P2E10.2,A3,1P2E10.2)
+
+!      print*, ''
+!      print 1801, (ISPECI(I),I=1,NQI),'SO4con','S8aer','S_n'
+!      print 1811, 'delta      ',(PHIDEPI(I),I=1,NQI),SO4LOSS1,S8LOSS
+!     2 ,del_elS
+!      print 1811, 'CAP-33S    ',(CAP33(I),I=1,NQI),CAP33SO4,CAP33S8
+!     2 ,elS_cap33
+!!      print 1811, 'CAP33/del',((PHIDEPI(I) - 1000.*((1.+PHIDEPI(I)/
+!!     2 1000.)**0.515-1.))/PHIDEPI(I),I=1,NQI),(SO4LOSS1 - 1000.*
+!!     3 ((1.+SO4LOSS1/1000.)**0.515-1.))/SO4LOSS1,(S8LOSS - 1000.*
+!!     4 ((1.+S8LOSS/1000.)**0.515-1.))/S8LOSS
+!      print 1811, 'CAP-36S    ',(CAP36(I),I=1,NQI),CAP36SO4,CAP36S8
+!     2 ,elS_cap36
+!      print 1811, '36S/33S    ',(CAP36(I)/CAP33(I),I=1,NQI),
+!     2 CAP36SO4/CAP33SO4,CAP36S8/CAP33S8,elS_cap36/elS_cap33
+
+      print*, ''
+      print 1801, (ISPECI(I),I=1,10)
+      print 1811, 'delta      ',(DELTA(I),I=1,10)
+      print 1811, 'CAP-17O     ',(CAP17(I),I=1,10)
+
+      print*, ''
+      print 1811, 'TLOSSI     ',(TLOSSI(I),I=1,10)
+      print 1811, 'TLOSS      ',TLOSS(LH2CO),TLOSS(LO),TLOSS(LH2O),
+     2 TLOSS(LOH),TLOSS(LHO2),TLOSS(LH2O2),TLOSS(LO3),TLOSS(LO3),
+     3 TLOSS(LCO),TLOSS(LCH3OOH)
+
+      print*, ''
+      print 1801, (ISPECI(I),I=11,20)
+      print 1811, 'delta      ',(DELTA(I),I=11,20)
+      print 1811, 'CAP-17O    ',(CAP17(I),I=11,20)
+
+      print*, ''
+      print 1811, 'TLOSSI     ',(TLOSSI(I),I=11,20)
+      print 1811, 'TLOSS      ',TLOSS(LCH3OOH),TLOSS(LCH3O2),
+     2 TLOSS(LCH3O2),TLOSS(LN2O),TLOSS(LNO),TLOSS(LNO2),
+     3 TLOSS(LHNO2),TLOSS(LHNO3),TLOSS(LHO2NO2),TLOSS(LHO2NO2)
+
+      print*, ''
+      print 1801, (ISPECI(I),I=21,NQI)
+      print 1811, 'delta      ',(DELTA(I),I=21,NQI)
+      print 1811, 'CAP-17O    ',(CAP17(I),I=21,NQI)
+
+      print*, ''
+      print 1811, 'TLOSSI     ',(TLOSSI(I),I=21,NQI)
+      print 1811, 'TLOSS      ',TLOSS(LNO3),TLOSS(LN2O5),
+     2 TLOSS(LN2O5),TLOSS(LO2),TLOSS(LSO),TLOSS(LSO2),
+     3 TLOSS(LH2SO4),TLOSS(LHSO),TLOSS(LCO2)
+C-PL SPECIES HAVE TWO ISOTOPIC SPECIES
+      print*, ''
+      print 1802, 'O3I','CH3OOHI','CH3O2I','HO2NO2I','N2O5I'
+ 1802 format(18x,A10,18x,A10,18x,A10,18x,A10,18x,A10)
+
+      print 1803, 'delta      ',DELTAO3,DELTACH3OOH,
+     2 DELTACH3O2,DELTAHO2NO2,DELTAN2O5
+      print 1803, 'CAP-17O    ',CAPO317,CAPCH3OOH17,
+     2 CAPC3O217,CAPHO2NO217,CAPN2O517
+
+      print*, ''
+      print 1803, 'TLOSSI     ',TLOSSI(7)+TLOSSI(8),
+     2 TLOSSI(10)+TLOSSI(11),TLOSSI(12)+TLOSSI(13),
+     3 TLOSSI(19)+TLOSSI(20),TLOSSI(22)+TLOSSI(23)
+      print 1803, 'TLOSS      ',TLOSS(LO3),TLOSS(LCH3OOH),
+     2 TLOSS(LCH3O2),TLOSS(LHO2NO2),TLOSS(LN2O5)
+ 1803 format(A18,1P5E10.2)
+CCCC
+C-PL COMMENT OUT
+!      print*, ''
+!      print 1811, 'TLOSSI     ',(TLOSSI(I),I=1,NQI),SO4LOSS,RATI(88)
+!     2 ,TLOSSI_elS
+!      print 1811, 'TLOSS      ',TLOSS(LH2S),TLOSS(LHS),TLOSS(LS),
+!     2 TLOSS(LSO),TLOSS(LSO2),TLOSS(LH2SO4),TLOSS(LHSO),TLOSS(LS2),
+!     3 TLOSS(LS3),TLOSS(LS4),TP(LSO4AER),TP(LS8AER),TLOSS_elS
+!      print 1811, 'frac(removed)  ',(TLOSSI(I)/SOUT,I=1,NQI),
+!     2 SO4LOSS/(S2VOLC+H2SVOLC),RATI(88)/SOUT,TLOSS_elS/SOUT
+
+
+C-PL COMMENT OUT SINCE WE DON'T HAVE SOUT FOR OXYGEN QUESTION
+!      print 1811, 'DEL*TLOSS/Sout ',TLOSS(LH2S)*PHIDEPI(1)/SOUT,
+!     2 TLOSS(LHS)*PHIDEPI(2)/SOUT,TLOSS(LS)*PHIDEPI(3)/SOUT,
+!     3 TLOSS(LSO)*PHIDEPI(4)/SOUT,TLOSS(LSO2)*PHIDEPI(5)/SOUT,
+!     4 TLOSS(LH2SO4)*PHIDEPI(6)/SOUT,TLOSS(LHSO)*PHIDEPI(7)/SOUT,
+!     5 2.*TLOSS(LS2)*PHIDEPI(8)/SOUT,3.*TLOSS(LS3)*PHIDEPI(9)/SOUT,
+!     6 4.*TLOSS(LS4)*PHIDEPI(10)/SOUT,
+!     7 SO4LOSS1*TP(LSO4AER)/SOUT,8.*S8LOSS*TP(LS8AER)/SOUT
+!     8 ,del_elS*TLOSS_elS/SOUT
+!      print *, "SUM(del*TLOSS) = ",TLOSS(LH2S)*PHIDEPI(1)/SOUT+
+!     2 TLOSS(LHS)*PHIDEPI(2)/SOUT+TLOSS(LS)*PHIDEPI(3)/SOUT+
+!     3 TLOSS(LSO)*PHIDEPI(4)/SOUT+TLOSS(LSO2)*PHIDEPI(5)/SOUT+
+!     4 TLOSS(LH2SO4)*PHIDEPI(6)/SOUT+TLOSS(LHSO)*PHIDEPI(7)/SOUT+
+!     5 2.*TLOSS(LS2)*PHIDEPI(8)/SOUT+3.*TLOSS(LS3)*PHIDEPI(9)/SOUT+
+!     6 4.*TLOSS(LS4)*PHIDEPI(10)/SOUT+
+!     2 SO4LOSS1*TP(LSO4AER)/SOUT+8.*S8LOSS*TP(LS8AER)/SOUT
+!      print*, ""
+!      print 1811, 'CAPDEL33*TLOS ',TLOSS(LH2S)*CAP33(1)/SOUT,
+!     2 TLOSS(LHS)*CAP33(2)/SOUT,TLOSS(LS)*CAP33(3)/SOUT,
+!     3 TLOSS(LSO)*CAP33(4)/SOUT,TLOSS(LSO2)*CAP33(5)/SOUT,
+!     4 TLOSS(LH2SO4)*CAP33(6)/SOUT,TLOSS(LHSO)*CAP33(7)/SOUT,
+!     5 2.*TLOSS(LS2)*CAP33(8)/SOUT,3.*TLOSS(LS2)*CAP33(9)/SOUT,
+!     6 4.*TLOSS(LS4)*CAP33(10)/SOUT,
+!     2 CAP33SO4*TP(LSO4AER)/SOUT,8.*CAP33S8*TP(LS8AER)/SOUT
+!     3 ,elS_cap33*TLOSS_elS/SOUT
+!      print*, "SUM(CapDel33*TL) = ",TLOSS(LH2S)*CAP33(1)/SOUT+
+!     2 TLOSS(LHS)*CAP33(2)/SOUT+TLOSS(LS)*CAP33(3)/SOUT+
+!     3 TLOSS(LSO)*CAP33(4)/SOUT+TLOSS(LSO2)*CAP33(5)/SOUT+
+!     4 TLOSS(LH2SO4)*CAP33(6)/SOUT+TLOSS(LHSO)*CAP33(7)/SOUT+
+!     5 2.*TLOSS(LS2)*CAP33(8)/SOUT+3.*TLOSS(LS3)*CAP33(9)/SOUT+
+!     6 4.*TLOSS(LS4)*CAP33(10)/SOUT+
+!     2 CAP33SO4*TP(LSO4AER)/SOUT+8.*CAP33S8*TP(LS8AER)/SOUT
+!      print*, ''
+!       print 1811, 'CAPDEL36*TLOS ',TLOSS(LH2S)*CAP36(1)/SOUT,
+!     2 TLOSS(LHS)*CAP36(2)/SOUT,TLOSS(LS)*CAP36(3)/SOUT,
+!     3 TLOSS(LSO)*CAP36(4)/SOUT,TLOSS(LSO2)*CAP36(5)/SOUT,
+!     4 TLOSS(LH2SO4)*CAP36(6)/SOUT,TLOSS(LHSO)*CAP36(7)/SOUT,
+!     5 2.*TLOSS(LS2)*CAP36(8)/SOUT,3.*TLOSS(LS3)*CAP36(9)/SOUT,
+!     6 4.*TLOSS(LS4)*CAP36(10)/SOUT,
+!     2 CAP36SO4*TP(LSO4AER)/SOUT,8.*CAP36S8*TP(LS8AER)/SOUT
+!     3 ,elS_cap36*TLOSS_elS/SOUT
+!      print*, "SUM(CapDel36*TL) = ",TLOSS(LH2S)*CAP36(1)/SOUT+
+!     2 TLOSS(LHS)*CAP36(2)/SOUT+TLOSS(LS)*CAP36(3)/SOUT+
+!     3 TLOSS(LSO)*CAP36(4)/SOUT+TLOSS(LSO2)*CAP36(5)/SOUT+
+!     4 TLOSS(LH2SO4)*CAP36(6)/SOUT+TLOSS(LHSO)*CAP36(7)/SOUT+
+!     5 2.*TLOSS(LS2)*CAP36(8)/SOUT+3.*TLOSS(LS3)*CAP36(9)/SOUT+
+!     6 4.*TLOSS(LS4)*CAP36(10)/SOUT+
+!     2 CAP36SO4*TP(LSO4AER)/SOUT+8.*CAP36S8*TP(LS8AER)/SOUT
+      print*, ''
+!      enddo
+ 1801 format(18x,10(A10))
+ 1811 format(A18,1P10E10.2)
+!     
+! 1031 format(A8,A5,A3,1PE10.2)
+! 1034 format(I2,1x,1P10E10.2)
+! 1035 format(3x,10(A8,2x))
+      PRINT*, ''
+      print 1032, 'cap-DELTA 17O profiles'
+ 1032 format(30x,A25)
+!      PRINT 1033,'Z(km)','H2S','HS','HSO','SO','SO2','H2SO4',' | ',
+!     2 'H2S','HS','HSO','SO','SO2','H2SO4'
+! 1033 format(2x,A5,6(A7,3x),A3,6(A7,3x))
+
+!      DO J=1,NZ
+!      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+!     2 C2DELTAH2S(1,J),C2DELTAHS(1,J),C2DELTAHSO(1,J),
+!     3 C2DELTASO(1,J),C2DELTASO2(1,J),C2DELTAH2SO4(1,J),' | ',
+!     4 C2DELTAH2S(2,J),C2DELTAHS(2,J),C2DELTAHSO(2,J),
+!     5 C2DELTASO(2,J),C2DELTASO2(2,J),C2DELTAH2SO4(2,J)
+! 889  FORMAT(1X,F6.1,1P6E10.2,A3,1P6E10.2)
+!      ENDDO    
+CCCCCC     
+      PRINT 1804,'Z(km)',(ISPECI(I),I=1,10)
+ 1804 format(18x,11(A10))
+      DO J=1,NZ
+      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+     2 C2DELTAH2CO(J),C2DELTAO(J),C2DELTAH2O(J),C2DELTAOH(J),
+     3 C2DELTAHO2(J), C2DELTAH2O2(J),C2DELTAO3A(J),C2DELTAO3B(J),
+     4 C2DELTACO(J),C2DELTACH3OOHA(J)
+ 889  FORMAT(18X,F6.1,18P10E10.2)
+      ENDDO
+
+      PRINT*, ''
+      PRINT 1804,'Z(km)',(ISPECI(I),I=11,20)
+      DO J=1,NZ
+      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+     2 C2DELTACH3OOHB(J),C2DELTACH3O2A(J),C2DELTACH3O2B(J),
+     3 C2DELTAN2O(J), C2DELTANO(J),C2DELTANO2(J),C2DELTAHNO2(J),
+     4 C2DELTAHNO3(J),C2DELTAHO2NO2A(J),C2DELTAHO2NO2B(J)
+      ENDDO
+
+      PRINT*, ''
+      PRINT 1804,'Z(km)',(ISPECI(I),I=21,NQI)
+      DO J=1,NZ
+      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+     2 C2DELTANO3(J),C2DELTAN2O5A(J),C2DELTAN2O5B(J),C2DELTAO2(J),
+     3 C2DELTASO(J), C2DELTASO2(J),C2DELTAH2SO4(J),C2DELTAHSO(J),
+     4 C2DELTACO2(J)
+      ENDDO
+! PRINT THE SPECIES HAVE TWO ISOTOPIC SPECIES
+      PRINT*, ''
+      print 1802, 'O3I','CH3OOHI','CH3O2I','HO2NO2I','N2O5I'
+ 1802 format(18x,A10,18x,A10,18x,A10,18x,A10,18x,A10)
+      DO J=1,NZ
+      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+     2 C2DELTAO3(J),C2DELTACH3OOH(J),C2DELTACH3O2(J),
+     3 C2DELTAHO2NO2(J),C2DELTAN2O5(J)
+ 889  FORMAT(18X,F6.1,18P5E10.2)
+      ENDDO
+
+
+
+
+C-PL COMMENT OUT
+!      PRINT*, ''
+!      print 1032, 'cap-DELTA 33S profiles','cap-DELTA 36S profiles'
+! 1032 format(24x,A25,38x,A25)
+!      PRINT 1033,'Z(km)','H2S','HS','HSO','SO','SO2','H2SO4',' | ',
+!     2 'H2S','HS','HSO','SO','SO2','H2SO4'
+! 1033 format(2x,A5,6(A7,3x),A3,6(A7,3x))
+!      DO J=1,NZ
+!      if(J.le.10.or.modulo(J,4).eq.1) PRINT 889, ZKM(J),
+!     2 C2DELTAH2S(1,J),C2DELTAHS(1,J),C2DELTAHSO(1,J),
+!     3 C2DELTASO(1,J),C2DELTASO2(1,J),C2DELTAH2SO4(1,J),' | ',
+!     4 C2DELTAH2S(2,J),C2DELTAHS(2,J),C2DELTAHSO(2,J),
+!     5 C2DELTASO(2,J),C2DELTASO2(2,J),C2DELTAH2SO4(2,J)
+! 889  FORMAT(1X,F6.1,1P6E10.2,A3,1P6E10.2)
+!      ENDDO
+      
+!      print*,''
+!      PRINT 891, 'CapDel','33S','36S'
+!      PRINT 892, 'Z(km)',('S','S2','S3','S4','S8',i=1,2)
+!      DO J=1,10
+!      PRINT 890, ZKM(J),C2DELTAS(1,J),C2DELTAS2(1,J),C2DELTAS3(1,J),
+!     2 C2DELTAS4(1,J),C2DELTAS8(1,J),' | ',C2DELTAS(2,J),C2DELTAS2(2,J)
+!     3 ,C2DELTAS3(2,J),C2DELTAS4(2,J),C2DELTAS8(2,J)
+!      ENDDO
+! 890  FORMAT(1X,F6.1,1P5E10.2,A3,1P5E10.2)
+! 891  FORMAT(A6,25x,A3,52x,A3)
+! 892  FORMAT(3x,A5,1x,5(A5,5x),' | ',5(A5,5x))
+      
+      print*, ''
+!      print*, 'customized printout for total S outgassing sensitivity'
+!      print*, 'S2/3/4/8/elS TLOSS, cap33, cap36/cap33'
+!      print 1066,H2SVOLC+S2VOLC,2.*TLOSS(LS2),3.*TLOSS(LS3),
+!     & 4.*TLOSS(LS4),8.*TLOSS(LS8AER),TLOSS_elS,CAP33(LSIS),
+!     & CAP33(LSIS2),CAP33(LSIS3),CAP33S8,elS_cap33,
+!     & CAP33(LSIS)/CAP36(LSIS),CAP33(LSIS2)/CAP36(LSIS2),
+!     & CAP33(LSIS3)/CAP36(LSIS3),CAP36S8/CAP33S8,
+!     & elS_cap36/elS_cap33
+     
+      print*, ''
+C      print*, 'F(O2), then elemental S/sulfate/SO2/H2S TLOSS, cap33, 
+C     & cap36/cap33' !S_volc
+C       print 1036,SGFLUX(LO2),TLOSS_elS,TP(LSO4AER),TLOSS(LSO2), !SGFLUX(LO2) !H2SVOLC+S2VOLC
+C     & TLOSS(LH2S),elS_cap33,CAP33SO4,CAP33(LSIO2),CAP33(LH2SI),
+C     & elS_cap36/elS_cap33,CAP36SO4/CAP33SO4,CAP36(LSIO2)/CAP33(LSIO2),
+C     & CAP36(LH2SI)/CAP33(LH2SI)
+C-PL COMMENT OUT
+!      print 1096,TLOSS_elS,TP(LSO4AER),TLOSS(LSO2),
+!     & TLOSS(LH2S),elS_cap33,CAP33SO4,CAP33(LSIO2),CAP33(LH2SI),
+!     & elS_cap36/elS_cap33,CAP36SO4/CAP33SO4,CAP36(LSIO2)/CAP33(LSIO2),
+!     & CAP36(LH2SI)/CAP33(LH2SI),del_elS,SO4LOSS1,PHIDEPI(LSIO2),
+!     & PHIDEPI(LH2SI)
+      
+!      print*, 'altitude, AERSOL(SO4, S8), RPAR(SO4, S8)'
+!!      print*, 'altitude, N(S2/S3/S4), N_sat(S2/S3/S4)'
+!!!      print*, 'S2/S3/S4 condensation rates vs. S2/S3/S4 consumption'
+!!!      PRINT*, 'then photolysis of S2, S3, and S4 (/cm3/s for all!)'
+      DO J=1,50
+!      print 1076, ZKM(J),AERSOL(J,1),AERSOL(J,2),RPAR(J,1),RPAR(J,2)
+!!      print 1086, ZKM(J),SL(LS2,J),SL(LS3,J),SL(LS4,J),
+!!     & (N_Ssvap(I,J),I=2,4)
+!!!      print 1086, ZKM(J),AR(231,J)*SL(LS2,J),AR(232,J)*SL(LS3,J),
+!!!     & AR(233,J)*SL(LS4,J),
+!!!     & AR(225,J)*SL(LS2,J)**2.,AR(226,J)*SL(LS3,J)*SL(LS,J),
+!!!     & AR(227,J)*SL(LS4,J)**2.,
+!!!     & AR(221,J)*SL(LS2,J),AR(229,J)*SL(LS3,J),AR(228,J)*SL(LS4,J)
+      ENDDO
+ 1036 format(1P5E10.2,1x,1p4e10.2,1x,0p,4(f6.2,1x))
+ 1066 format(1P6E10.2,1x,1p5e10.2,1x,0p,5(f6.2,1x))
+ 1076 format(F6.1,1P4E10.2)
+ 1086 format(F6.1,1P9E10.2)
+ 1096 format(1P4E10.2,1x,0p,4(f6.1,1x),4(f6.2,1x),4(f6.1,1x))
+      print*, ''
+      
+      endif !only print on moderately converged runs
+
+      WRITE(118,1049), '#',0,(L,L=1,NSP)
+ 1049 FORMAT(1x,A2,1x,53(I8,2x))
+      WRITE(118,1037), '#Z(km) ',' DENTOT ',(ISPEC(L),L=1,NSP)
+ 1037 FORMAT(1x,A6,3x,53(A8,2x))
+      DO I=1,10
+      WRITE(118,1038) I-0.5,DEN(I),(SL(J,I),J=1,NSP)
+      ENDDO
+ 1038 FORMAT(1x,F6.1,1x,1P53E10.3)
+      DO I=11,100,4
+      WRITE(118,1038) I-0.5,DEN(I),(SL(J,I),J=1,NSP)
+      ENDDO
+      
+!      PRINT 1050,AR(216,NZ),AR(105,NZ),AR(186,NZ),AR(117,NZ),
+!     & AR(118,NZ),AR(222,NZ),AR(119,NZ),AR(122,NZ),AR(123,NZ),
+!     & AR(127,NZ),AR(185,NZ),AR(229,NZ),AR(221,NZ),AR(228,NZ)
+! 1050 format(1P14E10.2)
+      
+      PRINT*, "Success!"
+!      DO I=1,100
+!      PRINT 1039,I-0.5,SL(LS2,I)/DEN(I),SL(LS3,I)/DEN(I),
+!     & SL(LS4,I)/DEN(I)
+!      ENDDO
+ 1039 FORMAT('[',F4.1,' , ',1PE10.2,' , ',1PE10.2,' , ',1PE10.2,']')
+      m_S = 2.*32.07/6.022E23 !g per S atom
+      c_S = ((8.*1.38E-16*T(J))/(3.1415*2.*m_S))**0.5
+!      print*,RPAR(10,1),AERSOL(10,1),c_S
+      S2_lifetime = c_S*3.1415*RPAR(10,1)*AERSOL(10,1)
+!      print*, 'Lifetime of S2 vs. cond. on SO4 (10km): ',S2_lifetime
+

@@ -1,0 +1,5 @@
+c common block used in atm_chem.f,outputp, CHEM/dochem.f, PRTCL/aercon.f,
+c PRTCL/aertab.f
+      COMMON/SULBLK/VH2O(NF,NZ),VH2SO4(NF,NZ),FTAB(NF),H2SO4S(NZ),
+     2  FSULF(NZ),CONSO4(NZ),TPH2O,TLH2O,LIGHTNO2
+     3  ,TPH2OI,TLH2OI,LIGHTNO2I,GPPOXY,GPPCDE,COMBIN,RECOMB

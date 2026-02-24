@@ -1,0 +1,4 @@
+c JL: so far, NT was used on subrontine aertab only. It is the number of 
+c species until the short lived 
+
+      PARAMETER(NT=41) 

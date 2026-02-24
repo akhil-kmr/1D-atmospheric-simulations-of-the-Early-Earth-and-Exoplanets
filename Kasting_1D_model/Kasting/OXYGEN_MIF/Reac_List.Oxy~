@@ -1,0 +1,323 @@
+1         H2Q       O1D       OH        QH      
+2         H2O       Q1D       OH        QH      
+3         H2        Q1D       QH        H      
+4         H2        Q         QH        H      
+5         H2        QH        H2Q       H      
+6         H         O2Q       QH        O2      
+7         H         O2Q       OH        OQ      
+8         H         OQO       OH        OQ      
+9         H         OQ        HOQ            
+10        H         HOQ       H2        OQ      
+11        H         HOQ       H2Q       O      
+12        H         HOQ       H2O       Q      
+13        H         HOQ       QH        OH      
+14        QH        O         H         OQ      
+15        OH        Q         H         OQ      
+16        QH        HO2       H2Q       O2      
+17        OH        HOQ       H2O       OQ      
+18        QH        O3        HOQ       O2      
+19        OH        O2Q       HOQ       O2      
+20        OH        O2Q       HO2       OQ      
+21        OH        OQO       HO2       OQ      
+22        HOQ       O         OH        OQ      
+23        HO2       Q         QH        O2      
+24        HOQ       O3        QH        O2        O2      
+25        HOQ       O3        OH        O2        OQ
+26        HO2       O2Q       QH        O2        O2
+27        HO2       O2Q       OH        O2        OQ
+28        HO2       OQO       OH        O2        OQ
+29        HOQ       HO2       H2OQ      O2      
+30        HOQ       HO2       H2O2      OQ      
+31        H2OQ      OH        HOQ       H2O      
+32        H2O2      QH        HO2       H2Q      
+33        Q         O         OQ            
+34        Q         O2        O2Q            
+35        O         OQ        O2Q            
+36        O         OQ        OQO            
+37        Q         O3        O2        OQ      
+38        O         OQO       O2        OQ      
+39        O         O2Q       O2        OQ      
+40        QH        OH        H2Q       O      
+41        QH        OH        H2O       Q      
+42        Q1D       N2        Q         N2      
+43        Q1D       O2        Q         O2      
+44        O1D       OQ        O         OQ      
+45        O2Q       HV        OQ        O1D        
+46        O2Q       HV        O2        Q1D        
+47        OQO       HV        OQ        O1D        
+48        OQO       HV        OQ        O      
+49        O2Q       HV        OQ        O      
+50        O2Q       HV        O2        Q      
+51        COQ       HV        CQ        O   
+52        COQ       HV        CO        Q     
+53        CQ        OH        COQ       H      
+54        CO        QH        COQ       H      
+55        CQ        O         COQ            
+56        CO        Q         COQ            
+57        H         CQ        HCQ            
+58        H         HCQ       H2        CQ      
+59        HCQ       HCO       H2CQ      CO      
+60        HCQ       HCO       H2CO      CQ      
+61        QH        HCO       H2Q       CO      
+62        OH        HCQ       H2O       CQ      
+63        Q         HCO       H         COQ      
+64        Q         HCO       QH        CO      
+65        O         HCQ       OH        CQ      
+66        H2CQ      H         H2        HCQ      
+67        COQ       HV        CQ        O1D        
+68        COQ       HV        CO        Q1D        
+69        HCQ       O2        HO2       CQ      
+70        HCO       OQ        HOQ       CO      
+71        H2CQ      OH        H2O       HCQ      
+72        H2CO      QH        H2Q       HCO      
+73        H         QH        H2Q            
+74        QH        OH        H2OQ            
+75        H2CQ      O         HCQ       OH      
+76        H2CO      Q         HCO       QH      
+77        H2OQ      O         OH        HOQ      
+78        H2O2      Q         QH        HO2      
+79        CH4       QH        CH3       H2Q      
+80        CH4       Q1D       CH3       QH      
+81        CH4       Q1D       H2CQ      H2      
+82        CH21      OQ        H2CQ      O      
+83        CH21      OQ        H2CO      Q      
+84        CH23      OQ        H2CQ      O      
+85        CH23      OQ        H2CO      Q      
+86        CH3       OQ        CH3OQ            
+87        CH3       OQ        CH3QO            
+88        CH3       QH        H2CQ      H2      
+89        CH3       Q         H2CQ      H      
+90        CH3       O2Q       H2CQ      HO2      
+91        CH3       O2Q       H2CO      HOQ      
+92        CH3       OQO       H2CO      HOQ      
+93        CH3OQ     HO2       CH3OQH    O2      
+94        CH3QO     HO2       CH3QOH    O2      
+95        CH3O2     HOQ       CH3OOH    OQ      
+96        CH3QO     CH3O2     H3CO      H3CQ      O2
+97        CH3OQ     CH3O2     H3CO      H3CO      OQ      
+98        CH3OQ     NO        H3CO      NOQ      
+99        CH3QO     NO        H3CQ      NO2      
+100       CH3O2     NQ        H3CO      NOQ      
+101       H3CQ      O2        H2CQ      HO2      
+102       H3CO      OQ        H2CO      HOQ      
+103       H3CQ      O         H2CQ      OH      
+104       H3CO      Q         H2CO      QH      
+105       H3CQ      OH        H2CQ      H2O      
+106       H3CO      QH        H2CO      H2Q      
+107       N2Q       O1D       NQ        NO      
+108       N2O       Q1D       NQ        NO      
+109       N2Q       O1D       N2        OQ      
+110       N2O       Q1D       N2        OQ      
+111       N         OQ        NQ        O      
+112       N         OQ        NO        Q      
+113       N         O2Q       NQ        O2      
+114       N         O2Q       NO        OQ      
+115       N         OQO       NO        OQ      
+116       N         QH        NQ        H      
+117       N         NQ        N2        Q      
+118       NQ        O3        NOQ       O2      
+119       NO        O2Q       NOQ       O2      
+120       NO        O2Q       NO2       OQ      
+121       NO        OQO       NO2       OQ      
+122       NQ        O         NOQ            
+123       NO        Q         NOQ            
+124       NQ        HO2       NOQ       OH      
+125       NO        HOQ       NOQ       OH      
+126       NO        HOQ       NO2       QH      
+127       NQ        OH        HNOQ            
+128       NO        QH        HNOQ            
+129       NOQ       O         NQ        O2      
+130       NOQ       O         NO        OQ      
+131       NO2       Q         NO        OQ      
+132       NOQ       OH        HNO2Q            
+133       NO2       QH        HNO2Q            
+134       NOQ       H         NQ        OH      
+135       NOQ       H         NO        QH      
+136       HNO2Q     OH        H2O       NO2Q      
+137       HNO3      QH        H2Q       NO3      
+138       HOQ       NO2       HOQNO2            
+139       HO2       NOQ       HO2NOQ            
+140       HOQNO2    OH        NO2       H2O       OQ
+141       HO2NO2    QH        NO2       H2Q       O2
+142       HO2NOQ    OH        NOQ       H2O       O2
+143       HOQNO2    O         NO2       OH        OQ
+144       HO2NO2    Q         NO2       QH        O2
+145       HO2NOQ    O         NOQ       OH        O2
+146       HOQNO2    HV        HOQ       NO2       
+147       HO2NOQ    HV        HO2       NOQ       
+148       CH3OQH    OH        CH3OQ     H2O      
+149       CH3QOH    OH        CH3QO     H2O      
+150       CH3OOH    QH        CH3O2     H2Q      
+151       CH3OQ     OH        H3CO      HOQ      
+152       CH3O2     QH        H3CO      HOQ      
+153       CH3QO     OH        H3CQ      HO2      
+154       O2Q       NO2       OQ        NO3      
+155       O2Q       NO2       O2        NO2Q      
+156       OQO       NO2       OQ        NO3      
+157       O3        NOQ       O2        NO2Q      
+158       NOQ       NO3       NQ        NO2       O2
+159       NOQ       NO3       NO        NOQ       O2
+160       NOQ       NO3       NO        NO2       OQ
+161       NO2       NO2Q      NQ        NO2       O2
+162       NO2       NO2Q      NO        NOQ       O2
+163       NO2       NO2Q      NO        NO2       OQ
+164       Q         NO3       OQ        NO2      
+165       O         NO2Q      OQ        NO2      
+166       O         NO2Q      O2        NOQ      
+167       NQ        NO3       NO2       NOQ      
+168       NO        NO2Q      NOQ       NO2      
+169       NO        NO2Q      NO2       NOQ      
+170       QH        NO3       HOQ       NO2      
+171       OH        NO2Q      HOQ       NO2      
+172       OH        NO2Q      HO2       NOQ      
+173       HOQ       NO3       HNO3      OQ      
+174       HO2       NO2Q      HNO2Q     O2      
+175       NOQ       O         NO2Q            
+176       NO2       Q         NO2Q            
+177       NO2Q      NO2       N2O4Q            
+178       NO2Q      NO2       N2QO4            
+179       NO3       NOQ       N2O4Q            
+180       NO3       NOQ       N2QO4            
+181       N2O4Q     HV        NOQ       NO3   
+182       N2O4Q     HV        NO2       NO2Q     
+183       N2QO4     HV        NO2       NO2Q    
+184       N2O4Q     H2O       HNO2Q     HNO3      
+185       N2QO4     H2O       HNO2Q     HNO3      
+186       N2O5      H2Q       HNO2Q     HNO3      
+187       SQ        O2        O         SOQ      
+188       SO        OQ        Q         SO2      
+189       SO        OQ        O         SOQ      
+190       SQ        HO2       SOQ       OH      
+191       SO        HOQ       SOQ       OH      
+192       SO        HOQ       SO2       QH      
+193       SQ        O         SOQ            
+194       SO        Q         SOQ            
+195       SQ        OH        SOQ       H      
+196       SO        QH        SOQ       H      
+197       SOQ       OH        HSO2Q            
+198       SO2       QH        HSO2Q            
+199       SOQ       O         SO2Q            
+200       SO2       Q         SO2Q            
+201       SO2Q      H2O       H2SO3Q            
+202       SO3       H2Q       H2SO3Q            
+203       HSO2Q     O2        HO2       SO2Q      
+204       HSO3      OQ        HOQ       SO3      
+205       HSO2Q     OH        H2O       SO2Q      
+206       HSO3      QH        H2Q       SO3      
+207       HSO2Q     H         H2        SO2Q      
+208       HSO2Q     O         OH        SO2Q      
+209       HSO3      Q         QH        SO3      
+210       H2S       QH        H2Q       HS      
+211       H2S       Q         QH        HS      
+212       HS        Q         H         SQ      
+213       HS        OQ        QH        SO      
+214       HS        OQ        OH        SQ      
+215       HS        HOQ       H2S       OQ      
+216       HS        HCQ       H2S       CQ      
+217       S         OQ        SQ        O      
+218       S         OQ        SO        Q      
+219       S         QH        SQ        H      
+220       S         HOQ       HS        OQ      
+221       S         HOQ       SQ        OH      
+222       S         HOQ       SO        QH      
+223       HS        H2CQ      H2S       HCQ      
+224       SO1Q      M         SO3Q      M      
+225       SO1Q      M         SOQ       M      
+226       SO1Q      O2        SO2Q      O      
+227       SO21      OQ        SO2Q      O      
+228       SO21      OQ        SO3       Q      
+229       SO1Q      SO2       SO2Q      SO      
+230       SO1Q      SO2       SO3       SQ      
+231       SO21      SOQ       SO2Q      SO      
+232       SO21      SOQ       SO3       SQ      
+233       SO3Q      M         SOQ       M      
+234       SO3Q      SO2       SO2Q      SO      
+235       SO3Q      SO2       SO3       SQ      
+236       SO23      SOQ       SO2Q      SO      
+237       SO23      SOQ       SO3       SQ      
+238       SQ        NO2       SOQ       NO      
+239       SO        NOQ       SOQ       NO      
+240       SO        NOQ       SO2       NQ      
+241       SQ        O3        SOQ       O2      
+242       SO        O2Q       SOQ       O2      
+243       SO        O2Q       SO2       OQ      
+244       SO        OQO       SO2       OQ      
+245       SOQ       HO2       SO2Q      OH      
+246       SO2       HOQ       SO2Q      OH      
+247       SO2       HOQ       SO3       QH      
+248       HS        O2Q       HSQ       O2      
+249       HS        O2Q       HSO       OQ      
+250       HS        OQO       HSO       OQ      
+251       HS        NOQ       HSQ       NO      
+252       HS        NOQ       HSO       NQ      
+253       S         O2Q       SQ        O2      
+254       S         O2Q       SO        OQ      
+255       S         OQO       SO        OQ      
+256       SQ        SO        SOQ       S      
+257       SO2Q      SO        SOQ       SO2      
+258       SO3       SQ        SOQ       SO2      
+259       S         COQ       SQ        CO      
+260       S         COQ       SO        CQ      
+261       SQ        HO2       HSQ       O2      
+262       SO        HOQ       HSO       OQ      
+263       SQ        HCO       HSQ       CO      
+264       SO        HCQ       HSO       CQ      
+265       H         SQ        HSQ            
+266       HSQ       OH        H2O       SQ      
+267       HSO       QH        H2Q       SO      
+268       HSQ       H         HS        QH      
+269       HSQ       H         H2        SQ      
+270       HSQ       HS        H2S       SQ      
+271       HSQ       O         OH        SQ      
+272       HSO       Q         QH        SO      
+273       HSQ       S         HS        SQ      
+274       N2        Q1D       N2Q            
+275       N2Q       H         N2        OH         
+276       N2Q       NO        NOQ       N2      
+277       N2O       NQ        NOQ       N2
+278       O         HCQ       H         COQ
+279       OQ        HV        Q         O1D
+280       OQ        HV        O         Q1D
+281       OQ        HV        O         Q
+282       H2Q       HV        H         QH
+283       H2OQ      HV        QH        OH
+284       H2CQ      HV        H2        CQ
+285       H2CQ      HV        HCQ       H
+286       HCQ       HV        H         CQ
+287       HOQ       HV        QH        O
+288       HOQ       HV        OH        Q
+289       CH3OQH    HV        H3CO      QH
+290       CH3QOH    HV        H3CQ      OH
+291       N2Q       HV        N2        Q
+292       HNOQ      HV        NQ        OH    
+293       HNOQ      HV        NO        QH 
+294       HNO2Q     HV        NOQ       OH
+295       HNO2Q     HV        NO2       QH
+296       NQ        HV        N         Q
+297       NOQ       HV        NQ        O
+298       NOQ       HV        NO        Q
+299       NO2Q      HV        NOQ       O
+300       NO2Q      HV        NO2       Q
+301       SQ        HV        S         Q
+302       SOQ       HV        SQ        O
+303       SOQ       HV        SO        Q
+304       SOQ       HV        S         OQ
+305       SOQ       HV        SO1Q
+306       SOQ       HV        SO3Q
+307       H2SO3Q    HV        SOQ       OH        OH
+308       H2SO3Q    HV        SO2       QH        OH
+309       SO2Q      HV        SOQ       O
+310       SO2Q      HV        SO2       Q
+311       SO1Q      HV        SO3Q      HV       
+312       SO1Q      HV        SOQ       HV
+313       SO3Q      HV        SOQ       HV
+314       HSQ       HV        HS        Q
+315       HOQNO2    HV        HOQ       NO2       
+316       HO2NOQ    HV        HO2       NOQ 
+317       N2O4Q     HV        NOQ       NO3   
+318       N2O4Q     HV        NO2       NO2Q     
+319       N2QO4     HV        NO2       NO2Q  
+320       Q         O2        OQ        O
+321       O         OQ        O2        Q
+322       Q1D       CO2       COQ       O
+323       O1D       COQ       CO2       Q
