@@ -6,12 +6,13 @@
 
 FC = gfortran
 #PLATFORM = macOS 
-FCFLAG = -c -fdefault-real-8 -fdefault-integer-8 -falign-commons -w -fdec
+FCFLAG = -c -fdefault-real-8 -fdefault-integer-8 -falign-commons -fdec -std=legacy -fno-range-check -ffixed-line-length-none
 FFLAG1 = -fdefault-real-8 -fdefault-integer-8
-FC = ifort
+
+# FC = ifort
 #PLATFORM = linux
-FCFLAG = -c -r8 -i8 -align all -diag-disable remark -i-static
-FFLAG1 = -r8 -i8 
+# FCFLAG = -c -r8 -i8 -align all -diag-disable remark -i-static
+# FFLAG1 = -r8 -i8 
 
 OUTPUT = runchem
 CDOTO  = ATMCHEM.o
