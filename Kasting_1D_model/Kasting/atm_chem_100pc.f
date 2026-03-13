@@ -518,6 +518,7 @@ C  code is not coupled to the climate model.
 C  JK   Data are estimated above 64 km. I'm adjusting the temperature
 C       near the tropopause downward in order to get better 
 C       statospheric H2O
+C replaced by Akhil with the WACCM 100pc grid
       DATA T/288.15, 281.65, 275.15, 268.66, 262.17,
      &       255.68, 249.19, 242.70, 236.21, 229.73,
      &       223.25, 216.77, 216.65, 216.65, 216.65,
@@ -538,7 +539,7 @@ C       statospheric H2O
      &       186.90, 186.90, 186.90, 186.90, 186.90,
      &       188.00, 190.00, 191.00, 192.50, 194.00,
      &       195.00, 196.50, 198.00, 200.00, 202.00/
-
+C also replaced by Akhil
       DATA TP1/288.15, 281.65, 275.15, 268.66, 262.17,
      &       255.68, 249.19, 242.70, 236.21, 229.73,
      &       223.25, 216.77, 216.65, 216.65, 216.65,
@@ -583,26 +584,26 @@ c     &       188.00, 190.00, 191.00, 192.50, 194.00,
 c     &       195.00, 196.50, 198.00, 200.00, 202.00/
 
 C  Temperature profile for O2=0.1 PAL (from Segura et al.,2003, Fig.2)
-      DATA TP2/285.15, 278.65, 272.15, 265.66, 261.17,
-     &       255.68, 249.19, 242.70, 236.21, 225.00,
-     &       210.00, 210.00, 210.00, 210.00, 210.00,
-     &       210.00, 214.00, 214.00, 216.65, 216.65,
-     &       216.65, 217.58, 218.57, 219.57, 220.56, 
-     &       221.55, 222.54, 223.54, 224.53, 225.52,
-     &       226.51, 227.50, 228.49, 230.97, 233.74, 
-     &       236.51, 239.28, 237.00, 235.00, 233.00,
-     &       230.00, 227.00, 224.00, 222.00, 220.00,
-     &       218.00, 216.00, 214.00, 212.00, 210.00,
-     &       209.00, 208.00, 207.00, 206.00, 205.00, 
-     &       204.00, 203.00, 202.00, 201.00, 200.00, 
-     &       200.00, 200.00, 200.00, 200.00, 200.00,
-     &       200.00, 200.00, 200.00, 200.00, 200.00,
-     &       200.00, 200.00, 200.00, 200.00, 200.00,
-     &       200.00, 200.00, 200.00, 200.00, 198.60,
-     &       196.00, 194.70, 192.00, 190.80, 189.00,
-     &       186.90, 186.90, 186.90, 186.90, 186.90,
-     &       188.00, 190.00, 191.00, 192.50, 194.00,
-     &       195.00, 196.50, 198.00, 200.00, 202.00/
+      DATA TP2/287.71, 281.29, 275.47, 270.39, 265.00,
+     &       258.90, 252.21, 245.06, 237.71, 230.33,
+     &       223.25, 216.83, 211.39, 206.96, 203.14,
+     &       199.57, 196.16, 193.07, 190.53, 188.65,
+     &       187.28, 186.19, 185.22, 184.30, 183.39,
+     &       182.51, 181.67, 180.92, 180.30, 179.86,
+     &       179.69, 179.75, 179.97, 180.19, 180.23,
+     &       180.01, 179.41, 178.53, 177.49, 176.38,
+     &       175.35, 174.49, 173.83, 173.38, 173.13,
+     &       172.99, 172.92, 172.87, 172.81, 172.71,
+     &       172.57, 172.37, 172.09, 171.76, 171.35,
+     &       170.89, 170.38, 169.83, 169.28, 168.75,
+     &       168.25, 167.79, 167.44, 167.16, 166.93,
+     &       166.91, 167.05, 167.19, 167.66, 168.48,
+     &       169.30, 170.49, 172.19, 174.07, 176.27,
+     &       179.12, 182.34, 185.89, 190.33, 195.37,
+     &       200.66, 206.69, 213.20, 219.81, 226.72,
+     &       233.85, 241.96, 253.23, 266.67, 282.17,
+     &       305.06, 333.27, 362.66, 396.97, 434.94,
+     &       472.85, 510.88, 548.97, 586.55, 620.44/
 
 C   Eddy diffusion profile from Massie & Hunten, JGR (1981)
       DATA EDD/64*0., 5.174E+05, 5.674E+05, 6.224E+05, 6.826E+05,
@@ -625,9 +626,9 @@ C
 C ***** LOWER BOUNDARY CONDITIONS (NQT)*****
 c NOTE: Mixing ratios for present Earth for H2,CO,CH4, N2O and CH3Cl
 c are defined after the model parameters.
-c edited by Akhil
+
 c fixed mixing ratios         H2 CH4 CO     N2O    ch3cl    o2     co2
-      DATA LBOUND/2, 0, 1, 5*0, 1, 1, 2, 2*0, 1, 2, 13*0, 1, 2, 2*0, 2, 2*0, 1, 0/
+      DATA LBOUND/2*0, 1, 5*0, 1, 1, 1, 2*0, 1, 8*0, 1, 5*0,1, 6*0, 1,0/
 c fixed surface flux
 c       DATA LBOUND/2*0, 1, 5*0, 0, 2, 2, 2*0, 2, 8*0,2,5*0, 1,6*0,1,0/
 c
@@ -879,14 +880,25 @@ c  the climate model.
 C =================================================================
 
 C ========= Lower boundary conditions for biogenic trace gases ====
+!changed by Akhil
+       LBOUND(9)  = 1 ! H2 (mixing ratio)
+       LBOUND(10) = 1 ! CH4 (mixing ratio)
+       LBOUND(14) = 1 ! N2O (mixing ratio)
+       LBOUND(23) = 1 ! CH3Cl (mixing ratio)
+       LBOUND(1)  = 2 ! CH2O (flux)
+       LBOUND(11) = 2 ! CO (flux)
+       LBOUND(15) = 2 ! NO (flux)
+       LBOUND(33) = 2 ! SO2 (flux)
+
 
        if(INIT.eq.1) goto 77
-c      Surface mixing ratios. Edited by Akhil
-         if(LBOUND(9).eq.1)FH2 = 5.00E-7
-         !if(LBOUND(11).eq.1)FCO = 9.0E-8
+c      Surface mixing ratios
+         if(LBOUND(9).eq.1)FH2 = 5E-7
+         if(LBOUND(10).eq.1)FCH4 = 0.808E-6
          if(LBOUND(14).eq.1)FN2O = 2.73E-7
+	
 C AJ 08/30/2022 ADD CL BACK
-         if(LBOUND(23).eq.1)FCH3CL = 5.0E-10
+         if(LBOUND(23).eq.1)FCH3CL = 4.57E-10
 
        DO i = 1, NZ
         if(LBOUND(9).eq.1) then
@@ -908,12 +920,20 @@ C-AJ 08/30/2022 ADD CL BACK
         END DO
    77   continue       
 
-C-AJ after using the correlated-k coefficient. Replaced by me (Akhil)
-	 if(LBOUND(1).eq.2)SGFLUX(1) = 5.16E+08     ! H2CO
-         if(LBOUND(11).eq.2)SGFLUX(11) = 4.98E+10   ! CO
-         if(LBOUND(15).eq.2)SGFLUX(15) = 2.37E+09   ! NO
-         if(LBOUND(30).eq.2)SGFLUX(30) = 2.00E+08   ! H2S
-         if(LBOUND(33).eq.2)SGFLUX(33) = 1.43E+09   ! SO2
+C-AJ after using the correlated-k coefficient
+         ! if(LBOUND(9).eq.2)SGFLUX(9) = -5.57E+09  H2
+         ! if(LBOUND(10).eq.2)SGFLUX(10) = 8.54E+10 CH4
+         ! if(LBOUND(11).eq.2)SGFLUX(11) = 1.76E+11 CO
+         ! if(LBOUND(14).eq.2)SGFLUX(14) = 1.18E+09 N2O
+         ! if(LBOUND(23).eq.2)SGFLUX(23) = 2.37E+08 CH3Cl
+
+C      Akhil - WACCM6 CMIP6 emission fluxes
+         if(LBOUND(1).eq.2)SGFLUX(1)   = 5.16E+08  ! CH2O
+         if(LBOUND(11).eq.2)SGFLUX(11) = 4.98E+10  ! CO
+         if(LBOUND(15).eq.2)SGFLUX(15) = 2.37E+09  ! NO
+         if(LBOUND(33).eq.2)SGFLUX(33) = 1.2E+08  ! SO2
+         !if(LBOUND(23).eq.2)SGFLUX(23) = 2.37E+08  ! Default ch3cl
+
 C ============ End biogenic trace gas section ========================
 
 C-AJ 03/10/2022 Read the Gaussian points and weights for global integration
@@ -1474,8 +1494,8 @@ C   CONSTANT UPWARD FLUX
 C-PL fixed sign error in last term of DJAC from SH
   31  CONTINUE
       RHS(K) = RHS(K) + (DU(K,1) + DHU(K,1))*USOL(K,2) - DU(K,1)*U(K)
-     2   + HI(K,1)*U(K)/(2.*DZ) + SGFLUX(K)/DEN(1)/DZ - (VDEP(K)/DZ)*U(K)
-      DJAC(KD,K) = DJAC(KD,K) + DTINV + DU(K,1) - HI(K,1)/(2.*DZ) + VDEP(K)/DZ
+     2   + HI(K,1)*U(K)/(2.*DZ) + SGFLUX(K)/DEN(1)/DZ
+      DJAC(KD,K) = DJAC(KD,K) + DTINV + DU(K,1) - HI(K,1)/(2.*DZ)
       DJAC(KU,K+NQ) = - DU(K,1) - DHU(K,1)
   15  CONTINUE
 C
@@ -1546,8 +1566,11 @@ C  to overuse this. --JK)
       IF((I.EQ.LHO2NO2).AND.(Z(J).GT.5.E6)) GOTO 26
       IF((I.EQ.LHNO2).AND.(Z(J).GT.7.E6)) GOTO 26
       IF((I.EQ.LNO3).AND.(Z(J).GT.7.E6)) GOTO 26
-      IF((I.EQ.LCLONO2).AND.(Z(J).GT.5.E6)) GOTO 26
+      IF((I.EQ.LCLONO2).AND.(Z(J).GT.1.E6)) GOTO 26
       IF((I.EQ.LCH3OOH).AND.(Z(J).GT.7.E6)) GOTO 26
+C      IF((I.EQ.LHOCL).AND.(Z(J).GT.1.0E6)) GOTO 26
+
+      
 C
       REL(I,J) = RHS(K)/USOL(I,J)
       EREL = ABS(REL(I,J))
