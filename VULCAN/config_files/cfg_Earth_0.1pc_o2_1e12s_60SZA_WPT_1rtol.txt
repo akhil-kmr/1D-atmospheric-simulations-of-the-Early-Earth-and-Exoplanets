@@ -113,7 +113,7 @@ remove_list = [] # in pairs e.g. [1,2]
 use_condense = True
 use_settling = True
 use_relax = ['H2O', 'H2SO4']
-humidity = 0.25 # only for water
+humidity = 0.4 # only for water
 r_p = {'H2O_l_s': 0.01, 'H2SO4_l': 1e-4}  # particle radius in cm (1e-4 = 1 micron)
 rho_p = {'H2O_l_s': 0.9, 'H2SO4_l': 1.8302} # particle density in g cm^-3
 start_conden_time = 1e-2
