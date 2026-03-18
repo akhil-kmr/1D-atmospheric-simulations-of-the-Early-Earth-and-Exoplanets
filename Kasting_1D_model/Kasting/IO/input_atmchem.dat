@@ -8,22 +8,22 @@ INIT=      0
 TSTOP=     5.e17
 DT=        1.e-8
 NSTEPS=    1000
-ZY=        60  !Insolation-weighted average solar zenith angle
+ZY=        48.2  !Insolation-weighted average solar zenith angle
 AGL=       0.375 !Diurnal averaging factor for this zenith angle
 ISEASON=   1
 IZYO2=     0
 IO2=       1   !For now, always use IO2=1, as the A&F model is not used
 INO=       1
 EPSJ=      1.E-7
-ZTROP=     11.E5
+ZTROP=     10.5E5
 FCO2=      4.00e-04     !CO2 surface mixing ratio
-FO2=       0.00021         !O2 mixing ratio
+FO2=       0.021         !O2 mixing ratio
 GPPOXY=    1.16e14      !Gross primary productivity (1.16e14 cm-2s-1)
 GPPCDE=    1.16e14      !Gross primary productivity CARBON DIOXIDE
 COMBIN=    2.0          !1.0:active combinatorial effect 2.0:disable ~
 RECOMB=    1.2          !1.2:active symmetry effect      1.0:disable ~
 GauFLAG=   1            !0:STANDARD      1:SINGLE SOLAR ZENITH ANGLE
-CLFLAG=    0            !0:STANDARD CL   1:LOW CL
+CLFLAG=    1            !0:STANDARD CL   1:LOW CL
 *****************************************
 ***             DEFINITIONS           ***
 *****************************************
