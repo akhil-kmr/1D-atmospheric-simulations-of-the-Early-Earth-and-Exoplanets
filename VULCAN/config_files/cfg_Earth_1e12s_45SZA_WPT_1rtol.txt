@@ -17,7 +17,7 @@ com_file = 'thermo/all_compose.txt'
 atm_file = 'atm/atm_Earth_PI_WACCM_Kzz.txt' # TP and Kzz (optional) file
 sflux_file = 'atm/stellar_flux/Gueymard_solar.txt' # This is the flux density at the stellar surface
 top_BC_flux_file = 'atm/' # the file for the top boundary conditions
-bot_BC_flux_file = 'atm/BC_bot_Earth_Photochem.txt' # the file for the lower boundary conditions
+bot_BC_flux_file = 'atm/BC_bot_Earth_Photochem_final.txt' # the file for the lower boundary conditions
 vul_ini = 'output/Earth_1e12s.vul' # the file to initialize the abundances for ini_mix = 'vulcan_ini'
 # output:
 output_dir = 'output/'
@@ -39,7 +39,7 @@ He_H = 0.09692
 ini_mix = 'const_mix' # Options: 'EQ', 'const_mix', 'vulcan_ini', 'table' (for 'vulcan_ini, the T-P grids have to be exactly the same)
 
 factor = 1
-N2_mix = 0.76
+N2_mix = (1-(0.21*factor))-0.015
 
 # Initialsing uniform (constant with pressure) mixing ratios (only reads when ini_mix = const_mix)
 const_mix = {'N2':N2_mix, 'O2':0.2095*factor, 'H2O':1e-6,  'CO2':284E-6, 'Ar':9.34e-3, 'SO2': 2e-10} 

@@ -38,7 +38,7 @@ S_H = 1.3183E-5
 He_H = 0.09692
 ini_mix = 'const_mix' # Options: 'EQ', 'const_mix', 'vulcan_ini', 'table' (for 'vulcan_ini, the T-P grids have to be exactly the same)
 
-factor = 1.0
+factor = 1
 N2_mix = (1-(0.21*factor))-0.015
 
 # Initialsing uniform (constant with pressure) mixing ratios (only reads when ini_mix = const_mix)
