@@ -218,6 +218,15 @@ def Read_O3_Run(file_path=''):
     spec = DS['variable']['species']
     return DS, spec
 
+#%% VULCAN PCb runs
+PCb_V, PCb_V_spec = Read_O3_Run(file_path='PCb_1e12s_482SZA_WBC_WPT_1rtol.vul')
+PCb_50pc_V, PCb_50pc_V_spec = Read_O3_Run(file_path='PCb_50pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
+PCb_10pc_V, PCb_10pc_V_spec = Read_O3_Run(file_path='PCb_10pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
+PCb_5pc_V, PCb_5pc_V_spec = Read_O3_Run(file_path='PCb_5pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
+PCb_1pc_V, PCb_1pc_V_spec = Read_O3_Run(file_path='PCb_1pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
+PCb_05pc_V, PCb_1pc_V_spec = Read_O3_Run(file_path='PCb_0.5pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
+
+
 #%% VULCAN regular oxygen cases
 
 One50_pc_V_60SZA, One50_pc_spec_60SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_60SZA_WPT_1rtol.vul')
@@ -253,7 +262,7 @@ Z1_pc_V_482SZA, Z1_pc_spec_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_
 Z1_pc_V_45SZA, Z1_pc_spec_45SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_45SZA_WPT_1rtol.vul')
 
 #%% VULCAN cases with different methane
-#One50_pc_V_10xCH4_482SZA, One50_pc_spec_10xCH4_482SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_48.2SZA_10xCH4_WPT_1rtol.vul')
+One50_pc_V_10xCH4_482SZA, One50_pc_spec_10xCH4_482SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_48.2SZA_10xCH4_WPT_1rtol.vul')
 One50_pc_V_5xCH4_482SZA, One50_pc_spec_5xCH4_482SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_48.2SZA_5xCH4_WPT_1rtol.vul')
 One50_pc_V_05xCH4_482SZA, One50_pc_spec_05xCH4_482SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_48.2SZA_0.5xCH4_WPT_1rtol.vul')
 One50_pc_V_01xCH4_482SZA, One50_pc_spec_01xCH4_482SZA = Read_O3_Run(file_path='Earth_150pc_o2_1e12s_48.2SZA_0.1xCH4_WPT_1rtol.vul')
@@ -323,24 +332,24 @@ Z5_pc_V_10xCH4_482SZA, Z5_pc_spec_10xCH4_482SZA = Read_O3_Run(file_path='Earth_0
 Z5_pc_V_5xCH4_482SZA, Z5_pc_spec_5xCH4_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_5xCH4_WPT_1rtol.vul')
 Z5_pc_V_05xCH4_482SZA, Z5_pc_spec_05xCH4_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_0.5xCH4_WPT_1rtol.vul')
 Z5_pc_V_01xCH4_482SZA, Z5_pc_spec_01xCH4_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_0.1xCH4_WPT_1rtol.vul')
-'''
+
 Z5_pc_V_10xCH4f_482SZA, Z5_pc_spec_10xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_10xCH4flux_WPT_1rtol.vul')
 Z5_pc_V_5xCH4f_482SZA, Z5_pc_spec_5xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_5xCH4flux_WPT_1rtol.vul')
 Z5_pc_V_1xCH4f_482SZA, Z5_pc_spec_1xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_1xCH4flux_WPT_1rtol.vul')
 Z5_pc_V_05xCH4f_482SZA, Z5_pc_spec_05xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_0.5xCH4flux_WPT_1rtol.vul')
 Z5_pc_V_01xCH4f_482SZA, Z5_pc_spec_01xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_48.2SZA_0.1xCH4flux_WPT_1rtol.vul')
-'''
+
 Z1_pc_V_10xCH4_482SZA, Z1_pc_spec_10xCH4_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_10xCH4_WPT_1rtol.vul')
 Z1_pc_V_5xCH4_482SZA, Z1_pc_spec_5xCH4_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_5xCH4_WPT_1rtol.vul')
 Z1_pc_V_05xCH4_482SZA, Z1_pc_spec_05xCH4_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_0.5xCH4_WPT_1rtol.vul')
 Z1_pc_V_01xCH4_482SZA, Z1_pc_spec_01xCH4_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_0.1xCH4_WPT_1rtol.vul')
-'''
+
 Z1_pc_V_10xCH4f_482SZA, Z1_pc_spec_10xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_10xCH4flux_WPT_1rtol.vul')
 Z1_pc_V_5xCH4f_482SZA, Z1_pc_spec_5xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_5xCH4flux_WPT_1rtol.vul')
 Z1_pc_V_1xCH4f_482SZA, Z1_pc_spec_1xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_1xCH4flux_WPT_1rtol.vul')
 Z1_pc_V_05xCH4f_482SZA, Z1_pc_spec_05xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_0.5xCH4flux_WPT_1rtol.vul')
 Z1_pc_V_01xCH4f_482SZA, Z1_pc_spec_01xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_0.1xCH4flux_WPT_1rtol.vul')
-'''
+
 #%% Cross sections and checks
 
 import pandas as pd
@@ -450,37 +459,61 @@ plt.yscale('log')
 #%% Read in Kasting simulations
 
 import re
-
+path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/'
 K_150pc_J = pd.read_csv(
-    "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/150pc/SZA_48.2/OUTPUT_PLOT.dat",
-    delim_whitespace=True, engine="python")
+    path+"150pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_150pc = K_150pc_J['PRESS']/1000
+K_150pc_J_45SZA = pd.read_csv(
+    path+"150pc/SZA_45/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_150pc_45SZA = K_150pc_J_45SZA['PRESS']/1000
+K_150pc_J_60SZA = pd.read_csv(
+    path+"150pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_150pc_60SZA = K_150pc_J_60SZA['PRESS']/1000
 z = K_150pc_J['Z']/1000
 
 K_100pc_J = pd.read_csv(
-    "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/100pc/SZA_48.2/OUTPUT_PLOT.dat",
-    delim_whitespace=True, engine="python")
-
+    path+"100pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_100pc = K_100pc_J['PRESS']/1000
+K_100pc_J_45SZA = pd.read_csv(
+    path+"100pc/SZA_45/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_100pc_45SZA = K_100pc_J_45SZA['PRESS']/1000
+K_100pc_J_60SZA = pd.read_csv(
+    path+"100pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_100pc_60SZA = K_100pc_J_60SZA['PRESS']/1000
 z = K_100pc_J['Z']/1000
 
 K_10pc_J = pd.read_csv(
-    "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/10pc/SZA_48.2/OUTPUT_PLOT.dat",
-    delim_whitespace=True, engine="python")
+    path+"10pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_10pc = K_10pc_J['PRESS']/1000
+K_10pc_J_45SZA = pd.read_csv(
+    path+"10pc/SZA_45/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_10pc_45SZA = K_10pc_J_45SZA['PRESS']/1000
+K_10pc_J_60SZA = pd.read_csv(
+    path+"10pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_10pc_60SZA = K_10pc_J_60SZA['PRESS']/1000
 z = K_10pc_J['Z']/1000
 
 K_1pc_J = pd.read_csv(
-    "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/1pc/SZA_48.2/OUTPUT_PLOT.dat",
-    delim_whitespace=True, engine="python")
+    path+"1pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_1pc = K_1pc_J['PRESS']/1000
+K_1pc_J_45SZA = pd.read_csv(
+    path+"1pc/SZA_45/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_1pc_45SZA = K_1pc_J_45SZA['PRESS']/1000
+K_1pc_J_60SZA = pd.read_csv(
+    path+"1pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_1pc_60SZA = K_1pc_J_60SZA['PRESS']/1000
 z = K_1pc_J['Z']/1000
 
 K_01pc_J = pd.read_csv(
-    "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/0.1pc/SZA_48.2/OUTPUT_PLOT.dat",
-    delim_whitespace=True, engine="python")
-p_01pc = K_01pc_J['PRESS']/1000
-z = K_01pc_J['Z']/1000
+    path+"0.1pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_01pc = K_1pc_J['PRESS']/1000
+K_01pc_J_45SZA = pd.read_csv(
+    path+"0.1pc/SZA_45/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_01pc_45SZA = K_1pc_J_45SZA['PRESS']/1000
+K_01pc_J_60SZA = pd.read_csv(
+    path+"0.1pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_01pc_60SZA = K_1pc_J_60SZA['PRESS']/1000
+z = K_1pc_J['Z']/1000
 
 #%% J rates plot
 
@@ -608,14 +641,31 @@ Now read in horribly formatted photolysis data
 
 import pandas as pd
 
-file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/100pc/SZA_48.2/PTZ_mixingratios_out.dist"
-Atmos_100pc = pd.read_csv(file_path, delim_whitespace=True)
-file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/10pc/SZA_48.2/PTZ_mixingratios_out.dist"
-Atmos_10pc = pd.read_csv(file_path, delim_whitespace=True)
-file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/1pc/SZA_48.2/PTZ_mixingratios_out.dist"
-Atmos_1pc = pd.read_csv(file_path, delim_whitespace=True)
-file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/0.1pc/SZA_48.2/PTZ_mixingratios_out.dist"
-Atmos_01pc = pd.read_csv(file_path, delim_whitespace=True)
+file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/100pc/"
+Atmos_100pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_01xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/0.1x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_05xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/0.5x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_1xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/1x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_2xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/2x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_3xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/3x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_4xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/4x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_5xCH4 = pd.read_csv(file_path+'../Methane_Perturbations/5x/PTZ_mixingratios_out.dist', delim_whitespace=True)
+
+Atmos_100pc_45SZA = pd.read_csv(file_path+'SZA_45/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_100pc_60SZA = pd.read_csv(file_path+'SZA_60/PTZ_mixingratios_out.dist', delim_whitespace=True)
+file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/10pc/"
+Atmos_10pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_10pc_45SZA = pd.read_csv(file_path+'SZA_45/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_10pc_60SZA = pd.read_csv(file_path+'SZA_60/PTZ_mixingratios_out.dist', delim_whitespace=True)
+file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/1pc/"
+Atmos_1pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_1pc_45SZA = pd.read_csv(file_path+'SZA_45/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_1pc_60SZA = pd.read_csv(file_path+'SZA_60/PTZ_mixingratios_out.dist', delim_whitespace=True)
+file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/0.1pc/"
+Atmos_01pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_01pc_45SZA = pd.read_csv(file_path+'SZA_45/PTZ_mixingratios_out.dist', delim_whitespace=True)
+Atmos_01pc_60SZA = pd.read_csv(file_path+'SZA_60/PTZ_mixingratios_out.dist', delim_whitespace=True)
+
 '''
 def Atmos_photo(file_path):
     
@@ -711,6 +761,8 @@ Photo_150pc_5CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_5
 '''
 path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/100pc/"
 Photo_PI = pd.read_csv(path+"Earth_100pc_48.2.txt", delim_whitespace=True)
+Photo_PI_60SZA = pd.read_csv(path+"Earth_100pc_60.txt", delim_whitespace=True)
+Photo_PI_45SZA = pd.read_csv(path+"Earth_100pc_45.txt", delim_whitespace=True)
 Photo_PI_01CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_0.1x_methane.txt", delim_whitespace=True)
 Photo_PI_05CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_0.5x_methane.txt", delim_whitespace=True)
 Photo_PI_1CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_1x_methane.txt", delim_whitespace=True)
@@ -720,18 +772,20 @@ Photo_PI_4CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_4x_m
 Photo_PI_5CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_100pc_48.2_5x_methane.txt", delim_whitespace=True)
 
 
-path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/10pc/Earth_10pc_48.2.txt"
-Photo_10pc = pd.read_csv(path, delim_whitespace=True)
+path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/10pc/"
+Photo_10pc = pd.read_csv(path+'Earth_10pc_48.2.txt', delim_whitespace=True)
+Photo_10pc_60SZA = pd.read_csv(path+'Earth_10pc_60.txt', delim_whitespace=True)
+Photo_10pc_45SZA = pd.read_csv(path+'Earth_10pc_45.txt', delim_whitespace=True)
 
+path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/1pc/"
+Photo_1pc = pd.read_csv(path+'Earth_1pc_48.2.txt', delim_whitespace=True)
+Photo_1pc_60SZA = pd.read_csv(path+'Earth_1pc_60.txt', delim_whitespace=True)
+Photo_1pc_45SZA = pd.read_csv(path+'Earth_1pc_45.txt', delim_whitespace=True)
 
-
-path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/1pc/Earth_1pc_48.2.txt"
-Photo_1pc = pd.read_csv(path, delim_whitespace=True)
-
-
-
-path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/0.1pc/Earth_0.1pc_48.2.txt"
-Photo_01pc = pd.read_csv(path, delim_whitespace=True)
+path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/0.1pc/"
+Photo_01pc = pd.read_csv(path+'Earth_0.1pc_48.2.txt', delim_whitespace=True)
+Photo_01pc_60SZA = pd.read_csv(path+'Earth_0.1pc_60.txt', delim_whitespace=True)
+Photo_01pc_45SZA = pd.read_csv(path+'Earth_0.1pc_45.txt', delim_whitespace=True)
 
 #%% color choices
 
@@ -764,12 +818,18 @@ One_pc_color = darkblue; Zero5_pc_color = blue; Zero1_pc_color = lightblue;
 verylightblue = blues(0.2)
 YS_color = 'm'; 
 #%% import file for pressure and gaussian weights
+
+
 File =  "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.PC_b.SSPO.016.cam.h0.0320-0320.nc" #file name
 
 Gw_file = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
 
 gw = Gw_file.gw.values
 Pressure = Gw_file.lev.values
+
+
+
+
 #%%
 def LWAV(DS, time = False):
     try:
@@ -787,6 +847,102 @@ def LWAV(DS, time = False):
     except:
         DS = np.sum(DS,axis=0)/gw.sum() #weighted mean 
     return DS #return a numpy array that has been modified above
+
+
+#%%
+
+import numpy as np
+import xarray as xr
+
+k_B = 1.380649e-23  # J/K
+
+def rayleigh_sigma_nm(wavelength_nm: float) -> float:
+    """Same closure as mo_jshort.F90 rayleigh_sigma_nm (cm^2 per molecule)."""
+    w_um = max(wavelength_nm * 1e-3, 1e-6)
+    w2 = w_um * w_um
+    w4 = w2 * w2
+    return 4.006e-28 * (1.0 + 0.0113 / w2 + 0.00013 / w4) / w4
+
+def air_density_molec_cm3(P_pa: np.ndarray, T_k: np.ndarray) -> np.ndarray:
+    """Ideal gas: n = P/(k_B T), return molecules cm^-3."""
+    return (P_pa / (k_B * np.maximum(T_k, 1.0))) / 1e6
+
+path = "/Users/gregcooke/H_escape/Earth_PI_SRB_scat.cam.h1.0001-01-01-01800.nc"
+ds = xr.open_dataset(path, decode_times=False)
+
+# --- adjust these names to match your file ---
+Z3 = ds["Z3"]          # geopotential height, often m; dims include lev
+PMID = ds["PMID"]      # midpoint pressure Pa
+T = ds["T"]            # temperature K
+O2_VMR = ds["O2"]      # mol/mol O2 (common name in chem-enabled CAM); fix if different
+
+# If you have explicit N2:
+# N2_VMR = ds["N2"]
+# else approximate dry air: ~0.79 N2 after removing O2 (crude; good enough for ratio sanity)
+try:
+    N2_VMR = ds["N2"]
+except KeyError:
+    N2_VMR = 0.79 * (1.0 - O2_VMR)  # crude; replace if you have real N2
+
+# Mean over time/lon like your LWAV helper (lat weights omitted for brevity — add gw if needed)
+Z3_m = Z3.mean(dim=("time", "lon"), skipna=True)
+P_m = PMID.mean(dim=("time", "lon"), skipna=True)
+T_m = T.mean(dim=("time", "lon"), skipna=True)
+o2_m = O2_VMR.mean(dim=("time", "lon"), skipna=True)
+n2_m = N2_VMR.mean(dim=("time", "lon"), skipna=True)
+
+z_m = Z3_m.values.ravel()      # height m at each lev (same ordering as ds['lev'])
+p_m = P_m.values.ravel()
+t_m = T_m.values.ravel()
+o2v = o2_m.values.ravel()
+n2v = n2_m.values.ravel()
+
+n_air = air_density_molec_cm3(p_m, t_m)
+n_o2 = o2v * n_air
+n_n2 = n2v * n_air
+
+# dz between consecutive midpoints (positive thickness)
+# lev dimension is typically ordered top -> bottom or bottom -> top; np.diff(z) works either way if we take abs
+dz_m = np.abs(np.diff(z_m))
+dz_cm = dz_m * 1e2
+
+# optical depths live on layers between midpoints; pair with inner midpoints:
+n_o2_layer = 0.5 * (n_o2[:-1] + n_o2[1:])
+n_n2_layer = 0.5 * (n_n2[:-1] + n_n2[1:])
+sig_ray = rayleigh_sigma_nm(175.0)
+tau_ray = sig_ray * (n_o2_layer + n_n2_layer) * dz_cm
+
+# OPTIONAL: plug a literature O2 absorption cross section at 175 nm (cm^2) for tau_abs rough estimate
+sigma_o2_abs_cm2 = 3.0e-23   # <<< REPLACE with value from your CRS table / paper at chosen wavelength
+tau_o2_abs = sigma_o2_abs_cm2 * n_o2_layer * dz_cm
+
+ratio = tau_ray / np.maximum(tau_o2_abs, 1e-99)
+
+# Report upper layers: assume lev coordinate increases downward in pressure — pick top ~5 interfaces
+print("layer dz_cm [top interfaces], tau_ray, tau_o2_abs (rough), ratio")
+for i in range(min(5, len(tau_ray))):
+    print(i, dz_cm[i], tau_ray[i], tau_o2_abs[i], ratio[i])
+    
+#%% SRB
+
+SRB = xr.open_dataset('/Users/gregcooke/H_escape/Earth_PI_SRB_no_scat.cam.h1.0001-01-01-01800.nc',decode_times=False) #open the file and decode time as false
+SRB_scat = xr.open_dataset('/Users/gregcooke/H_escape/Earth_PI_SRB_scat.cam.h1.0001-01-01-01800.nc',decode_times=False) #open the file and decode time as false
+
+print(LWAV(SRB.jo2_a+SRB.jo2_b))
+print(LWAV(SRB_scat.jo2_a+SRB_scat.jo2_b))
+
+
+plt.figure()
+plt.plot(LWAV(SRB.jo2_a+SRB.jo2_b), SRB.lev)
+plt.plot(LWAV(SRB.jo2_a), SRB.lev)
+plt.plot(LWAV(SRB.jo2_b), SRB.lev)
+plt.plot(LWAV(SRB_scat.jo2_a+SRB_scat.jo2_b), SRB_scat.lev)
+plt.plot(LWAV(SRB_scat.jo2_a), SRB_scat.lev)
+plt.plot(LWAV(SRB_scat.jo2_b), SRB_scat.lev)
+plt.ylim(1e3, 1e-6); plt.yscale('log')
+#plt.xlim(0,2)
+plt.xscale('log')
+plt.xlim(1e-13, 1e-7)
 
 #%% define ozone column calculation function
 
@@ -969,7 +1125,6 @@ One_0obq = xr.open_dataset(File,decode_times=False) #open the file and decode ti
 
 File = path+"b.e21.BWma1850.f19_g17.0.1pc_o2.no_obliq.001.cam.h0.0066.nc"  
 Zero1_0obq = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
-
 
 #%% Read in low oxygen cases
 path = '/Users/gregcooke/H_escape/'
@@ -2080,8 +2235,9 @@ else:
 '''
 VULCAN columns
 '''
+
 One50_col = V_O3_col_z_trapz(One50_pc_V_482SZA)
-#One50_10xCH4_col = V_O3_col_z_trapz(One50_pc_V_10xCH4_482SZA)
+One50_10xCH4_col = V_O3_col_z_trapz(One50_pc_V_10xCH4_482SZA)
 One50_5xCH4_col = V_O3_col_z_trapz(One50_pc_V_5xCH4_482SZA)
 One50_05xCH4_col = V_O3_col_z_trapz(One50_pc_V_05xCH4_482SZA)
 One50_01xCH4_col = V_O3_col_z_trapz(One50_pc_V_01xCH4_482SZA)
@@ -2146,17 +2302,35 @@ One_5xCH4_col = V_O3_col_z_trapz(One_pc_V_5xCH4_482SZA)
 One_05xCH4_col = V_O3_col_z_trapz(One_pc_V_05xCH4_482SZA)
 One_01xCH4_col = V_O3_col_z_trapz(One_pc_V_01xCH4_482SZA)
 
+One_10xCH4f_col = V_O3_col_z_trapz(One_pc_V_10xCH4f_482SZA)
+One_5xCH4f_col = V_O3_col_z_trapz(One_pc_V_5xCH4f_482SZA)
+One_1xCH4f_col = V_O3_col_z_trapz(One_pc_V_1xCH4f_482SZA)
+One_05xCH4f_col = V_O3_col_z_trapz(One_pc_V_05xCH4f_482SZA)
+One_01xCH4f_col = V_O3_col_z_trapz(One_pc_V_01xCH4f_482SZA)
+
 Z5_col = V_O3_col_z_trapz(Z5_pc_V_482SZA)
 Z5_10xCH4_col = V_O3_col_z_trapz(Z5_pc_V_10xCH4_482SZA)
 Z5_5xCH4_col = V_O3_col_z_trapz(Z5_pc_V_5xCH4_482SZA)
 Z5_05xCH4_col = V_O3_col_z_trapz(Z5_pc_V_05xCH4_482SZA)
 Z5_01xCH4_col = V_O3_col_z_trapz(Z5_pc_V_01xCH4_482SZA)
 
+Z5_10xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_10xCH4f_482SZA)
+Z5_5xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_5xCH4f_482SZA)
+Z5_1xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_1xCH4f_482SZA)
+Z5_05xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_05xCH4f_482SZA)
+Z5_01xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_01xCH4f_482SZA)
+
 Z1_col = V_O3_col_z_trapz(Z1_pc_V_482SZA)
 Z1_10xCH4_col = V_O3_col_z_trapz(Z1_pc_V_10xCH4_482SZA)
 Z1_5xCH4_col = V_O3_col_z_trapz(Z1_pc_V_5xCH4_482SZA)
 Z1_05xCH4_col = V_O3_col_z_trapz(Z1_pc_V_05xCH4_482SZA)
 Z1_01xCH4_col = V_O3_col_z_trapz(Z1_pc_V_01xCH4_482SZA)
+
+Z1_10xCH4f_col = V_O3_col_z_trapz(Z1_pc_V_10xCH4f_482SZA)
+Z1_5xCH4f_col = V_O3_col_z_trapz(Z1_pc_V_5xCH4f_482SZA)
+Z1_1xCH4f_col = V_O3_col_z_trapz(Z1_pc_V_1xCH4f_482SZA)
+Z1_05xCH4f_col = V_O3_col_z_trapz(Z1_pc_V_05xCH4f_482SZA)
+Z1_01xCH4f_col = V_O3_col_z_trapz(Z1_pc_V_01xCH4f_482SZA)
 
 # Data mapping to make looping possible
 # Format: (Title, Methane_Data_List, Column_Data_List, has_fixed_flux)
@@ -2166,9 +2340,9 @@ plot_configs = [
     ('50% PAL', [0.1, 0.5, 1, 5, 10], [Fifty_01xCH4_col, Fifty_05xCH4_col, Fifty_col, Fifty_5xCH4_col, Fifty_10xCH4_col], True),
     ('10% PAL', [0.1, 0.5, 1, 5, 10], [Ten_01xCH4_col, Ten_05xCH4_col, Ten_col, Ten_5xCH4_col, Ten_10xCH4_col], True),
     ('5% PAL', [0.1, 0.5, 1, 5, 10], [Five_01xCH4_col, Five_05xCH4_col, Five_col, Five_5xCH4_col, Five_10xCH4_col], True),
-    ('1% PAL', [0.1, 0.5, 1, 5, 10], [One_01xCH4_col, One_05xCH4_col, One_col, One_5xCH4_col, One_10xCH4_col], False),
-    ('0.5% PAL', [0.1, 0.5, 1, 5, 10], [Z1_01xCH4_col, Z1_05xCH4_col, Z5_col, Z5_5xCH4_col, Z5_10xCH4_col], False),
-    ('0.1% PAL', [0.1, 0.5, 1, 5, 10], [Z1_01xCH4_col, Z1_05xCH4_col, Z1_col, Z1_5xCH4_col, Z1_10xCH4_col], False)
+    ('1% PAL', [0.1, 0.5, 1, 5, 10], [One_01xCH4_col, One_05xCH4_col, One_col, One_5xCH4_col, One_10xCH4_col], True),
+    ('0.5% PAL', [0.1, 0.5, 1, 5, 10], [Z5_01xCH4_col, Z5_05xCH4_col, Z5_col, Z5_5xCH4_col, Z5_10xCH4_col], True),
+    ('0.1% PAL', [0.1, 0.5, 1, 5, 10], [Z1_01xCH4_col, Z1_05xCH4_col, Z1_col, Z1_5xCH4_col, Z1_10xCH4_col], True)
 ]
 
 '''
@@ -2188,7 +2362,7 @@ Photo_PI_5CH4_col = Photochem_O3_col(Photo_PI_5CH4, g=9.81, MO2 = 0.21)
 Plot figure
 '''
 
-fig = plt.figure(figsize=(22, 12))
+fig = plt.figure(figsize=(22, 10))
 gs = gridspec.GridSpec(2, 4, hspace=0.15, wspace=0.25)
 
 for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
@@ -2196,7 +2370,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
     
     # Plot standard Fixed MR
     methane_array = np.array(meth_vals) * 0.8e-6
-    ax.plot(methane_array, col_vals, lw=lw, color='magenta', label='Fixed MR, VULCAN')
+    ax.plot(methane_array, col_vals, lw=lw,  marker='s', ls='', color='m', label='VULCAN')
     
     # Special case for PI Fixed Flux
     if has_flux:
@@ -2210,7 +2384,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 One50_pc_V_01xCH4f_482SZA['variable']['ymix'][:,One50_pc_spec_01xCH4f_482SZA.index('CH4')][0]
             ]
             flux_cols = [One50_10xCH4f_col, One50_5xCH4f_col, One50_1xCH4f_col, One50_05xCH4f_col, One50_01xCH4f_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='m', ls='--', label='Fixed Flux, VULCAN')
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='')#, label='VULCAN')
 
         if (i == 1):
             flux_methane = [
@@ -2221,7 +2395,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 PI_V_10xCH4f_482SZA['variable']['ymix'][:,PI_pc_spec_10xCH4f_482SZA.index('CH4')][0]
             ]
             flux_cols = [PI_01xCH4f_col, PI_05xCH4f_col, PI_1xCH4f_col, PI_5xCH4f_col, PI_10xCH4f_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='magenta', ls='--', label='Fixed Flux, VULCAN')
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='')#, label='Fixed Flux, VULCAN')
             
             flux_methane = [
                 Photo_PI_01CH4['CH4'][0],Photo_PI_05CH4['CH4'][0],Photo_PI_1CH4['CH4'][0],
@@ -2230,8 +2404,11 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
             ]
             flux_cols = [Photo_PI_01CH4_col, Photo_PI_05CH4_col, Photo_PI_1CH4_col, Photo_PI_2CH4_col,
                          Photo_PI_3CH4_col, Photo_PI_4CH4_col, Photo_PI_5CH4_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='b', ls='-', label='Fixed MR, Photochem')
-
+            ax.plot(flux_methane, flux_cols, lw=lw, color='b', marker='s', ls='', label='Photochem')
+            
+            flux_cols = [251.93, 256.11,259.7,264.68,268.17,270.79,272.83]
+            ax.plot(0.808e-6*np.array([0.1,.5,1,2,3,4,5]), flux_cols, lw=lw, color=color_Atmos, marker='s', ls='', label='Atmos')
+            
         if (i == 2):
             flux_methane = [
                 Fifty_pc_V_01xCH4f_482SZA['variable']['ymix'][:,Fifty_pc_spec_01xCH4f_482SZA.index('CH4')][0],
@@ -2241,7 +2418,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 Fifty_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Fifty_pc_spec_10xCH4f_482SZA.index('CH4')][0]
                 ]
             flux_cols = [Fifty_01xCH4f_col, Fifty_05xCH4f_col, Fifty_1xCH4f_col, Fifty_5xCH4f_col, Fifty_10xCH4f_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='magenta', ls='--', label='Fixed Flux, VULCAN')
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
 
         if (i == 3):
             flux_methane = [
@@ -2252,7 +2429,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 Ten_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Ten_pc_spec_10xCH4f_482SZA.index('CH4')][0]
                 ]
             flux_cols = [Ten_01xCH4f_col, Ten_05xCH4f_col, Ten_1xCH4f_col, Ten_5xCH4f_col, Ten_10xCH4f_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='magenta', ls='--', label='Fixed Flux, VULCAN')
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
         
         if (i == 4):
             flux_methane = [
@@ -2263,7 +2440,41 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 Five_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Five_pc_spec_10xCH4f_482SZA.index('CH4')][0]
                 ]
             flux_cols = [Five_01xCH4f_col, Five_05xCH4f_col, Five_1xCH4f_col, Five_5xCH4f_col, Five_10xCH4f_col]
-            ax.plot(flux_methane, flux_cols, lw=lw, color='magenta', ls='--', label='Fixed Flux, VULCAN')
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
+        
+        if (i == 5):
+            flux_methane = [
+                One_pc_V_01xCH4f_482SZA['variable']['ymix'][:,One_pc_spec_01xCH4f_482SZA.index('CH4')][0],
+                One_pc_V_05xCH4f_482SZA['variable']['ymix'][:,One_pc_spec_05xCH4f_482SZA.index('CH4')][0],
+                One_pc_V_1xCH4f_482SZA['variable']['ymix'][:,One_pc_spec_1xCH4f_482SZA.index('CH4')][0],
+                One_pc_V_5xCH4f_482SZA['variable']['ymix'][:,One_pc_spec_5xCH4f_482SZA.index('CH4')][0],
+                One_pc_V_10xCH4f_482SZA['variable']['ymix'][:,One_pc_spec_10xCH4f_482SZA.index('CH4')][0]
+                ]
+            flux_cols = [One_01xCH4f_col, One_05xCH4f_col, One_1xCH4f_col, One_5xCH4f_col, One_10xCH4f_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
+        
+        
+        if (i == 6):
+            flux_methane = [
+                Z5_pc_V_01xCH4f_482SZA['variable']['ymix'][:,Z5_pc_spec_01xCH4f_482SZA.index('CH4')][0],
+                Z5_pc_V_05xCH4f_482SZA['variable']['ymix'][:,Z5_pc_spec_05xCH4f_482SZA.index('CH4')][0],
+                Z5_pc_V_1xCH4f_482SZA['variable']['ymix'][:,Z5_pc_spec_1xCH4f_482SZA.index('CH4')][0],
+                Z5_pc_V_5xCH4f_482SZA['variable']['ymix'][:,Z5_pc_spec_5xCH4f_482SZA.index('CH4')][0],
+                Z5_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Z5_pc_spec_10xCH4f_482SZA.index('CH4')][0]
+                ]
+            flux_cols = [Z5_01xCH4f_col, Z5_05xCH4f_col, Z5_1xCH4f_col, Z5_5xCH4f_col, Z5_10xCH4f_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
+        
+        if (i == 7):
+            flux_methane = [
+                Z1_pc_V_01xCH4f_482SZA['variable']['ymix'][:,Z1_pc_spec_01xCH4f_482SZA.index('CH4')][0],
+                Z1_pc_V_05xCH4f_482SZA['variable']['ymix'][:,Z1_pc_spec_05xCH4f_482SZA.index('CH4')][0],
+                Z1_pc_V_1xCH4f_482SZA['variable']['ymix'][:,Z1_pc_spec_1xCH4f_482SZA.index('CH4')][0],
+                Z1_pc_V_5xCH4f_482SZA['variable']['ymix'][:,Z1_pc_spec_5xCH4f_482SZA.index('CH4')][0],
+                Z1_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Z1_pc_spec_10xCH4f_482SZA.index('CH4')][0]
+                ]
+            flux_cols = [Z1_01xCH4f_col, Z1_05xCH4f_col, Z1_1xCH4f_col, Z1_5xCH4f_col, Z1_10xCH4f_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
         
 
     # Formatting
@@ -2279,7 +2490,7 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
     
     # Place legend only on the first or second plot to avoid clutter
     if i == 1:
-        ax.legend(loc='best', fontsize=12)
+        ax.legend(loc=(0), fontsize=15, frameon = False)
 
 plt.savefig('/Users/gregcooke/python_output/Varying_CH4_O3_col.png')
 
@@ -2332,61 +2543,71 @@ plt.yscale('log')
 
 #%% Ozone column plot
 
+#Photo_150pc_60SZA_col = calculate_column_height_method(Photo_150pc_60SZA)
+Photo_PI_60SZA_col = calculate_column_height_method(Photo_PI_60SZA)
+Photo_10pc_60SZA_col = calculate_column_height_method(Photo_10pc_60SZA)
+Photo_1pc_60SZA_col = calculate_column_height_method(Photo_1pc_60SZA)
+Photo_01pc_60SZA_col = calculate_column_height_method(Photo_01pc_60SZA)
+
+#Photo_150pc_45SZA_col = calculate_column_height_method(Photo_150pc_45SZA)
+Photo_PI_45SZA_col = calculate_column_height_method(Photo_PI_45SZA)
+Photo_10pc_45SZA_col = calculate_column_height_method(Photo_10pc_45SZA)
+Photo_1pc_45SZA_col = calculate_column_height_method(Photo_1pc_45SZA)
+Photo_01pc_45SZA_col = calculate_column_height_method(Photo_01pc_45SZA)
+
 alpha = 0.25
-photochem = [P_col_01pc, P_col_1pc, P_col_10pc, P_col_PI, P_col_150pc]
-photochem_45 = [61.82, 155.41, 278.6, 365.87, 361.38]
-#photochem1 = [P_01pc_col*1.01, P_1pc_col*1.01, P_10pc_col*1.01, P_PI_col*1.01]
+photochem_60 = [Photo_01pc_60SZA_col, Photo_1pc_60SZA_col, Photo_10pc_60SZA_col, Photo_PI_60SZA_col]
+photochem_45 = [Photo_01pc_45SZA_col, Photo_1pc_45SZA_col, Photo_10pc_45SZA_col, Photo_PI_45SZA_col]
 
 o2_conc_less = [0.001, 0.01, 0.1, 1, 1.5]
-kasting_45sza = [60.5, 96.4, 244.1, 403.79, 422.4]
-kasting_60sza = [32.96, 86.8, 202.3, 308.7, 316.6]
-#WACCM_0obq = [LWAV(Zero1_0obq_col), LWAV(One_0obq_col), LWAV(Ten_0obq_col), LWAV(Pre_0obq_col)]
-#WACCM_0obq_max = [Zero1_0obq_col.max(), One_0obq_col.max(), Ten_0obq_col.max(), Pre_0obq_col.max()]
-#WACCM_0obq_min = [Zero1_0obq_col.min(), One_0obq_col.min(), Ten_0obq_col.min(), Pre_0obq_col.min()]
+o2_conc_photo = [0.001, 0.01, 0.1, 1]
+kasting_45sza = [29.89765538, 106.2858206, 247.7112021, 353.0815035, 352.3557871]
+kasting_60sza = [28.87458132, 93.61369557, 205.1246744, 264.4175661, 256.4346855]
 
 #Atmos
-A_SZA_60 = [45.52, 145.28, 190.81, 207.26, 203.2]
-A_SZA_45 = [54.21, 187.43, 251.14, 280.12, 277.57]
+A_SZA_60 = [80.38, 148.79, 191.42, 204.83, 200.47]
+A_SZA_45 = [92.6, 178.54, 239.41, 272.85, 272.57]
+#VULCAN
+
+One50_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_45SZA)
+PI_V_45SZA_O3_col = V_O3_col_z_trapz(PI_V_45SZA)
+Fifty_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_45SZA)
+Ten_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Ten_pc_V_45SZA)
+One_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One_pc_V_45SZA)
+Five_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Five_pc_V_45SZA)
+Z5_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Z5_pc_V_45SZA)
+Z1_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Z1_pc_V_45SZA)
+
+One50_pc_V_60SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_60SZA)
+PI_V_60SZA_O3_col = V_O3_col_z_trapz(PI_V_60SZA)
+Fifty_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_60SZA)
+Ten_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Ten_pc_V_60SZA)
+One_pc_V_60SZA_O3_col = V_O3_col_z_trapz(One_pc_V_60SZA)
+Five_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Five_pc_V_60SZA)
+Z5_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Z5_pc_V_60SZA)
+Z1_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Z1_pc_V_60SZA)
+
+V_SZA_60 = [Z1_pc_V_60SZA_O3_col, Z5_pc_V_60SZA_O3_col, One_pc_V_60SZA_O3_col, Five_pc_V_60SZA_O3_col,
+            Ten_pc_V_60SZA_O3_col, Fifty_pc_V_60SZA_O3_col, PI_V_60SZA_O3_col, One50_pc_V_60SZA_O3_col]
+V_SZA_45 = [Z1_pc_V_45SZA_O3_col, Z5_pc_V_45SZA_O3_col, One_pc_V_45SZA_O3_col, Five_pc_V_45SZA_O3_col,
+            Ten_pc_V_45SZA_O3_col, Fifty_pc_V_45SZA_O3_col, PI_V_45SZA_O3_col, One50_pc_V_45SZA_O3_col]
 
 o2_conc = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 1.5]
 WACCM = [LWAV(Zero1_col), LWAV(Zero5_col), LWAV(One_col), LWAV(Five_col), LWAV(Ten_col), LWAV(Fifty_col), LWAV(Pre_col), LWAV(One50_col)]
 WACCM_max = [Zero1_col.max(), Zero5_col.max(), One_col.max(), Five_col.max(), Ten_col.max(), Fifty_col.max(), Pre_col.max(), One50_col.max()]
 WACCM_min = [Zero1_col.min(), Zero5_col.min(), One_col.min(), Five_col.min(), Ten_col.min(), Fifty_col.min(), Pre_col.min(), One50_col.min()]
-'''
-SZA_58 = [E_WPT_V_01pc_60SZA, E_WPT_V_05pc_60SZA, E_WPT_V_1pc_60SZA,
-          E_WPT_V_5pc_60SZA, E_WPT_V_10pc_60SZA, E_WPT_V_50pc_60SZA,
-          E_WPT_V_60SZA, E_WPT_V_150pc_60SZA]
-'''
-
-
-SZA_58 = [Earth_V_58SZA_01pc_O3_col, Earth_V_58SZA_05pc_O3_col, Earth_V_58SZA_1pc_O3_col,
-          Earth_V_58SZA_5pc_O3_col, Earth_V_58SZA_10pc_O3_col,  Earth_V_58SZA_50pc_O3_col,
-          Earth_V_58SZA_O3_col, Earth_V_58SZA_150pc_O3_col]
-SZA_45 = [Earth_V_45SZA_01pc_O3_col, Earth_V_45SZA_05pc_O3_col, Earth_V_45SZA_1pc_O3_col,
-          Earth_V_45SZA_5pc_O3_col, Earth_V_45SZA_10pc_O3_col,  Earth_V_45SZA_50pc_O3_col,
-          Earth_V_45SZA_O3_col, Earth_V_45SZA_150pc_O3_col]
-
-SZA_58 = [E_WPT_V_01pc_60SZA_O3_col, E_WPT_V_05pc_60SZA_O3_col, E_WPT_V_1pc_60SZA_O3_col,
-          E_WPT_V_5pc_60SZA_O3_col, E_WPT_V_10pc_60SZA_O3_col, E_WPT_V_50pc_60SZA_O3_col,
-          E_WPT_V_60SZA_O3_col, E_WPT_V_150pc_60SZA_O3_col]
-
-SZA_45 = [E_WPT_V_01pc_45SZA_O3_col, E_WPT_V_05pc_45SZA_O3_col, E_WPT_V_1pc_45SZA_O3_col,
-          E_WPT_V_5pc_45SZA_O3_col, E_WPT_V_10pc_45SZA_O3_col, E_WPT_V_50pc_45SZA_O3_col,
-          E_WPT_V_45SZA_O3_col, E_WPT_V_150pc_45SZA_O3_col]
 
 plt.figure(figsize = (12,6))
-#plt.fill_between(o2_conc_0obq, WACCM_0obq_min,WACCM_0obq_max, alpha = alpha, color = 'b', label = 'WACCM6; Cooke et al. (2022)')
-#plt.plot(o2_conc_0obq, WACCM_0obq, color = 'b')
-#plt.fill_between(o2_conc, photochem, photochem1, alpha = alpha, color = 'b', label = 'Photochem, ?'+r'$^\circ$'+' SZA')
-#plt.plot(o2_conc_less, photochem, color = 'b', label = 'Photochem, 60'+r'$^\circ$'+' SZA')
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
+plt.fill_between(o2_conc_photo, photochem_60, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
+plt.fill_between(o2_conc, V_SZA_45, V_SZA_60, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
 plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
 plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
+plt.fill_between(o2_conc_less, kasting_60sza, kasting_45sza, alpha = alpha, color = 'teal', label = 'Kasting 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
 plt.plot(o2_conc, WACCM, color = 'k')
 plt.xscale('log')
 thick_axes(top = True)
 #plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
+'''
 if (P_test == True and trapz == True):
     plt.title('P method, trapz', fontsize = 15, weight = 'bold')
     save = '_P_trapz'
@@ -2399,6 +2620,7 @@ if (P_test == False and trapz == True):
 if (P_test == False and trapz == False):
     plt.title('Z method, sum', fontsize = 15, weight = 'bold')
     save = '_Z_sum'
+'''
 plt.title('')
 plt.xlim(1e-3, 1.5)
 markersize = 7
@@ -2416,18 +2638,18 @@ plt.savefig('/Users/gregcooke/python_output/Ozone_column_vs_o2_curve.png', dpi =
 o2_common = [1e-3, 5e-3, 1e-2, 5e-2, 1e-1, 0.5, 1, 1.5] # Grid from 1e-3 to ~1.5 PAL
 
 # Interpolate all 1D models onto the common grid
-photo_interp = np.interp(o2_common, o2_conc_less, photochem)
-photo45_interp = np.interp(o2_common, o2_conc_less, photochem_45)
-vulcan45_interp = np.interp(o2_common, o2_conc, SZA_45)
-vulcan58_interp = np.interp(o2_common, o2_conc, SZA_58)
+photo60_interp = np.interp(o2_common, o2_conc_photo, photochem_60)
+photo45_interp = np.interp(o2_common, o2_conc_photo, photochem_45)
+vulcan45_interp = np.interp(o2_common, o2_conc, V_SZA_45)
+vulcan60_interp = np.interp(o2_common, o2_conc, V_SZA_60)
 atmos45_interp = np.interp(o2_common, o2_conc_less, A_SZA_45)
 atmos60_interp = np.interp(o2_common, o2_conc_less, A_SZA_60)
 kasting45_interp = np.interp(o2_common, o2_conc_less, kasting_45sza)
 kasting60_interp = np.interp(o2_common, o2_conc_less, kasting_60sza)
 
 # 2. Calculate the collective 1D envelope
-all_1d_stack = np.vstack([photo_interp, photo45_interp, 
-                          vulcan45_interp, vulcan58_interp, 
+all_1d_stack = np.vstack([photo45_interp, photo60_interp,  
+                          vulcan45_interp, vulcan60_interp, 
                           atmos45_interp, atmos60_interp, 
                           kasting45_interp, kasting60_interp])
 
@@ -2449,11 +2671,11 @@ def plot_panel(ax, highlight=None, show_legend=False, show_ylabel=True):
     elif highlight == 'kasting':
         ax.fill_between(o2_conc_less, kasting_60sza, kasting_45sza, color='teal',  alpha=0.3, label='Kasting 1D range')
     elif highlight == 'photochem':
-        ax.fill_between(o2_conc_less, photochem, photochem_45, color='b', alpha=0.3, label='Photochem range')
+        ax.fill_between(o2_conc_photo, photochem_60, photochem_45, color='b', alpha=0.3, label='Photochem range')
     elif highlight == 'atmos':
         ax.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, color='darkorange', alpha=0.3, label='Atmos range')
     elif highlight == 'vulcan':
-        ax.fill_between(o2_conc, SZA_45, SZA_58, color='m', alpha=0.3, label='VULCAN range')
+        ax.fill_between(o2_conc, V_SZA_45, V_SZA_60, color='m', alpha=0.3, label='VULCAN range')
 
     # Formatting
     ax.set_xscale('log')
@@ -2484,6 +2706,12 @@ ax3.set_xlabel('Oxygen mixing ratio [PAL]', fontsize=15, weight='bold')
 ax4.set_xlabel('Oxygen mixing ratio [PAL]', fontsize=15, weight='bold')
 thick_axes(top=True, labelleft = False)
 plt.savefig('/Users/gregcooke/python_output/Ozone_column_vs_o2_curve.png', dpi = 200, bbox_inches = 'tight')
+
+plt.figure(figsize = (5,5))
+ax0 = plt.subplot()
+ax0.set_xlabel('Oxygen mixing ratio [PAL]', fontsize=15, weight='bold')
+plot_panel(ax0, highlight='unified_1d', show_legend=True)
+ax0.set_title("O"+sub(2)+"-O"+sub(3)+" curve between 1D models and WACCM6", fontsize=15, weight='bold')
 
 #%% Big panel money plot
 import matplotlib.pyplot as plt
@@ -2909,6 +3137,14 @@ Five_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Five_pc_V_482SZA)
 Z5_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Z5_pc_V_482SZA)
 Z1_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Z1_pc_V_482SZA)
 
+One50_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_45SZA)
+Fifty_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_45SZA)
+Ten_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Ten_pc_V_45SZA)
+One_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One_pc_V_45SZA)
+Five_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Five_pc_V_45SZA)
+Z5_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Z5_pc_V_45SZA)
+Z1_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Z1_pc_V_45SZA)
+
 One50_pc_V_60SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_60SZA)
 Fifty_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_60SZA)
 Ten_pc_V_60SZA_O3_col = V_O3_col_z_trapz(Ten_pc_V_60SZA)
@@ -2967,6 +3203,45 @@ PCb_W_O3_col = O3_col(PCb, time = False, O2_mr = 0.21, lon = True, g = 9.81)
 PCb_W_10pc_O3_col = O3_col(PCb_10pc, time = False, O2_mr = 0.21, lon = True, g = 9.81)
 PCb_W_1pc_O3_col = O3_col(PCb_1pc, time = False, O2_mr = 0.21, lon = True, g = 9.81)
 PCb_W_01pc_O3_col = O3_col(PCb_01pc, time = False, O2_mr = 0.21, lon = True, g = 9.81)
+
+PCB_W_cols = [LWAV(PCb_W_01pc_O3_col), LWAV(PCb_W_1pc_O3_col), 
+              LWAV(PCb_W_10pc_O3_col), LWAV(PCb_W_O3_col)]
+
+PCb_V_482SZA_O3_col = V_O3_col_z_trapz(PCb_V)
+PCb_50pc_V_482SZA_O3_col = V_O3_col_z_trapz(PCb_50pc_V)
+PCb_10pc_V_482SZA_O3_col = V_O3_col_z_trapz(PCb_10pc_V)
+PCb_1pc_V_482SZA_O3_col = V_O3_col_z_trapz(PCb_1pc_V)
+#PCb_01pc_V_482SZA_O3_col = V_O3_col_z_trapz(PCb_01pc_V)
+PCB_V_cols = [PCb_1pc_V_482SZA_O3_col, PCb_10pc_V_482SZA_O3_col, PCb_V_482SZA_O3_col]
+
+
+path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/Proxima_Centauri/"
+PCb_photo_data = pd.read_csv(path+'Proxima_100pc_48.2.txt', delim_whitespace=True)
+PCb_10pc_photo_data = pd.read_csv(path+'Proxima_10pc_48.2.txt', delim_whitespace=True)
+PCb_1pc_photo_data = pd.read_csv(path+'Proxima_1pc_48.2.txt', delim_whitespace=True)
+PCb_01pc_photo_data = pd.read_csv(path+'Proxima_0.1pc_48.2.txt', delim_whitespace=True)
+
+Photo_PCb_col = Photochem_O3_col(PCb_photo_data, g=9.81, MO2 = 0.21)
+Photo_PCb_10pc_col = Photochem_O3_col(PCb_10pc_photo_data, g=9.81, MO2 = 0.21)
+Photo_PCb_1pc_col = Photochem_O3_col(PCb_1pc_photo_data, g=9.81, MO2 = 0.21)
+Photo_PCb_01pc_col = Photochem_O3_col(PCb_01pc_photo_data, g=9.81, MO2 = 0.21)
+
+PCB_P_cols = [Photo_PCb_01pc_col, Photo_PCb_1pc_col, Photo_PCb_10pc_col, Photo_PCb_col]
+
+markersize = 9
+plt.figure(figsize = (9,5))
+plt.plot([0.001, 0.01, 0.1, 1], PCB_W_cols, color = 'k', marker = 's', markersize = markersize, ls = '', label = 'WACCM6')
+plt.plot([0.01, 0.1, 1], PCB_V_cols, color = 'm', marker = 'o', markersize = markersize, ls = '', label = 'VULCAN')
+plt.plot([0.001, 0.01, 0.1, 1], PCB_P_cols, color = 'b', marker = 'v', markersize = markersize, ls = '', label = 'Photochem')
+plt.xscale('log')
+plt.yscale('log')
+thick_axes(top = True)
+plt.legend(loc=(1.0,0.76), fontsize = 15,
+           frameon = False, ncol = 1)
+plt.title('Proxima Centauri b simulations', fontsize = 15, weight = 'bold')
+plt.ylabel('O'+sub(3)+' column [DU]', fontsize = 15, weight = 'bold')
+plt.xlabel('O'+sub(2)+' mixing ratio [PAL]', fontsize = 15, weight = 'bold')
+plt.savefig('/Users/gregcooke/python_output/PCb_ozone_cols.png', bbox_inches = 'tight', dpi = 400)
 
 #%% Create new VULCAN files
 
@@ -3369,50 +3644,6 @@ GJ551['Flux'] = flux
 GJ551.to_csv('/Users/gregcooke/photochem/examples/TOI1468c/sflux-TOI-1468_0.0_albedo.txt',
                index = False,        sep = '\t')
 
-#%% Include Her
-
-plt.figure(figsize=(14, 7))
-gs = gridspec.GridSpec(1, 2)
-
-# Subplot 1: GCSE
-plt.subplot(gs[0, 0])
-plt.title('Ages 14 - 16 (GCSE / NQ5)', fontsize=15, weight = 'bold')
-bars1 = plt.bar(['Women', 'Men'], [1, 76], color=['#1c579e', '#1c9e79'], alpha = 0.9)
-plt.ylabel('Number of scientists', fontsize=15, weight = 'bold')
-plt.xticks(fontsize=15)  # Set x-axis fontsize
-plt.ylim(0, 80)          # Increased slightly to fit labels
-plt.grid(False)
-
-
-# Add labels to GCSE bars
-counter = 0
-for bar in bars1:
-    counter = counter +1
-    yval = bar.get_height()
-    if (counter == 1):
-        plt.text(bar.get_x() + bar.get_width()/2, 3 , yval, ha='center', va='bottom', fontsize=15)
-    else:
-        plt.text(bar.get_x() + bar.get_width()/2, yval/2, yval, ha='center', va='bottom', fontsize=15)
-thick_axes(top = True)
-# Subplot 2: A-Level
-plt.subplot(gs[0, 1])
-plt.title('Ages 16 - 18 (A-Level / Scottish Highers)', fontsize=15, weight = 'bold')
-bars2 = plt.bar(['Women', 'Men'], [3, 162], color=['#1c579e', '#1c9e79'], alpha = 0.9)
-plt.xticks(fontsize=15)  # Set x-axis fontsize
-plt.ylim(0, 170)         # Increased slightly to fit labels
-plt.grid(False)
-# Add labels to A-Level bars
-counter = 0
-for bar in bars2:
-    counter = counter +1
-    yval = bar.get_height()
-    if (counter == 1):
-        plt.text(bar.get_x() + bar.get_width()/2, 3 , yval, ha='center', va='bottom', fontsize=15)
-    else:
-        plt.text(bar.get_x() + bar.get_width()/2, yval/2, yval, ha='center', va='bottom', fontsize=15)
-thick_axes(top = True)
-# Save the complete figure
-plt.savefig('/Users/gregcooke/python_output/A-Level_Number_of_Scientists.png', bbox_inches = 'tight')
 
 #%% O2 photolysis Earth
 
@@ -3599,10 +3830,125 @@ in
 
 #%% O2 photolysis Earth
 
+path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/Proxima_Centauri/"
+Photo_PCb_100pc_txt = pd.read_csv(path+"Proxima_100pc_48.2.txt", delim_whitespace=True)
+Photo_PCb_10pc_txt = pd.read_csv(path+"Proxima_10pc_48.2.txt", delim_whitespace=True)
+Photo_PCb_1pc_txt = pd.read_csv(path+"Proxima_1pc_48.2.txt", delim_whitespace=True)
+Photo_PCb_01pc_txt = pd.read_csv(path+"Proxima_0.1pc_48.2.txt", delim_whitespace=True)
+
+plt.figure(figsize = (14,10))
+plt.plot(LWAV(PCb.O3), PCb.lev, color = 'k')
+plt.plot(Photo_PCb_100pc_txt['O3'], Photo_PCb_100pc_txt['press']*1e3, ls = ':', color = 'k', lw = lw)
+O3 = PCb_V['variable']['ymix'][:,PCb_V_spec.index('O3')]
+plt.plot(O3, PCb_V['atm']['pco']/1e3, ls = '--', color = Ten_pc_color, lw = lw)
+
+plt.plot(LWAV(PCb_10pc.O3), PCb.lev, color = Ten_pc_color, lw = lw)
+O3 = PCb_10pc_V['variable']['ymix'][:,PCb_V_spec.index('O3')]
+plt.plot(O3, PCb_10pc_V['atm']['pco']/1e3, ls = '--', color = Ten_pc_color, lw = lw)
+plt.plot(Photo_PCb_10pc_txt['O3'], Photo_PCb_10pc_txt['press']*1e3, ls = ':', color = Ten_pc_color, lw = lw)
+
+plt.plot(LWAV(PCb_1pc.O3), PCb.lev, color = One_pc_color, lw = lw)
+O3 = PCb_1pc_V['variable']['ymix'][:,PCb_V_spec.index('O3')]
+plt.plot(O3, PCb_1pc_V['atm']['pco']/1e3, ls = '--', color = Ten_pc_color, lw = lw)
+plt.plot(Photo_PCb_1pc_txt['O3'], Photo_PCb_1pc_txt['press']*1e3, ls = ':', color = One_pc_color, lw = lw)
+
+plt.plot(LWAV(PCb_01pc.O3), PCb.lev, color = Zero1_pc_color, lw = lw)
+plt.plot(Photo_PCb_01pc_txt['O3'], Photo_PCb_01pc_txt['press']*1e3, ls = ':', color = Zero1_pc_color, lw = lw)
+plt.yscale('log')
+plt.xscale('log');  thick_axes(top = True);
+plt.xlim(1e-10, 1e-4)
+plt.ylim(1e3, 1e-5)
+
 ylim = (1e3, 1e-3)
 xlim = (1e11, 6e12)
 
 P_path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/'
+
+PCb_photo, p_PCb_photo = compute_ox_production(
+    mech_file=P_path+"Old sims/zahnle_earth.yaml",
+    settings_file=P_path+"Proxima_Centauri/input/settings_100pc.yaml",
+    flux_file=P_path+"Proxima_Centauri/input/Proxima_Centauri.txt",
+    pt_file=P_path+"Proxima_Centauri/Proxima_100pc_48.2.txt",
+    atol=1e-23,
+    verbose=0
+)
+
+PCb_photo_10pc, p_PCb_photo_10pc = compute_ox_production(
+    mech_file=P_path+"Old sims/zahnle_earth.yaml",
+    settings_file=P_path+"Proxima_Centauri/input/settings_10pc.yaml",
+    flux_file=P_path+"Proxima_Centauri/input/Proxima_Centauri.txt",
+    pt_file=P_path+"Proxima_Centauri/Proxima_10pc_48.2.txt",
+    atol=1e-23,
+    verbose=0
+)
+
+PCb_photo_1pc, p_PCb_photo_1pc = compute_ox_production(
+    mech_file=P_path+"Old sims/zahnle_earth.yaml",
+    settings_file=P_path+"Proxima_Centauri/input/settings_1pc.yaml",
+    flux_file=P_path+"Proxima_Centauri/input/Proxima_Centauri.txt",
+    pt_file=P_path+"Proxima_Centauri/Proxima_1pc_48.2.txt",
+    atol=1e-23,
+    verbose=0
+)
+
+PCb_photo_01pc, p_PCb_photo_01pc = compute_ox_production(
+    mech_file=P_path+"Old sims/zahnle_earth.yaml",
+    settings_file=P_path+"Proxima_Centauri/input/settings_0.1pc.yaml",
+    flux_file=P_path+"Proxima_Centauri/input/Proxima_Centauri.txt",
+    pt_file=P_path+"Proxima_Centauri/Proxima_0.1pc_48.2.txt",
+    atol=1e-23,
+    verbose=0
+)
+
+plt.figure(figsize = (14,10))
+gs = gridspec.GridSpec(2,2)
+gs.update(wspace = 0.2, hspace = 0.1)
+plt.subplot(gs[0,0])
+plt.title('100% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
+plt.plot(LWAV(prox_ox_W(PCb)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(PCb_photo, p_PCb_photo/10, color = 'b', label = 'Photochem', lw = 2)
+plt.plot(prox_ox_V(PCb_V, PCb_V_spec)*3/8, PCb_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
+plt.yscale('log')
+plt.xscale('log');  thick_axes(top = True);
+plt.xlim(1e10, 5e12)
+plt.ylim(1e3, 1e-5)
+plt.legend(loc = (0), handlelength = 0.5, ncol=1, 
+           fontsize = 15, frameon = False, columnspacing = 0.5)
+plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
+
+plt.subplot(gs[0,1])
+plt.title('10% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
+plt.plot(LWAV(prox_ox_W(PCb_10pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(PCb_photo_10pc, p_PCb_photo_10pc/10, color = 'b', label = 'Photochem', lw = 2)
+plt.plot(prox_ox_V(PCb_10pc_V, PCb_V_spec)*3/8, PCb_10pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
+plt.yscale('log')
+plt.xscale('log');  thick_axes(top = True);
+plt.xlim(1e10, 5e12)
+plt.ylim(1e3, 1e-5)
+plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
+
+
+plt.subplot(gs[1,0])
+plt.title('1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
+plt.plot(LWAV(prox_ox_W(PCb_1pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(PCb_photo_1pc, p_PCb_photo_1pc/10, color = 'b', label = 'Photochem', lw = 2)
+plt.plot(prox_ox_V(PCb_1pc_V, PCb_V_spec)*3/8, PCb_1pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
+plt.yscale('log')
+plt.xscale('log');  thick_axes(top = True);
+plt.xlim(1e10, 5e12)
+plt.ylim(1e3, 1e-5)
+plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
+
+plt.subplot(gs[1,1])
+plt.title('0.1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
+plt.plot(LWAV(prox_ox_W(PCb_01pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(PCb_photo_01pc, p_PCb_photo_01pc/10, color = 'b', label = 'Photochem', lw = 2)
+#plt.plot(prox_ox_V(PCb_01pc_V, PCb_V_spec)*3/8, PCb_1pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
+plt.yscale('log')
+plt.xscale('log');  thick_axes(top = True);
+plt.xlim(1e10, 5e12)
+plt.ylim(1e3, 1e-5)
+plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 ox_prod_100pc_photo, p_100pc_photo = compute_ox_production(
     mech_file=P_path+"Old sims/zahnle_earth.yaml",
@@ -4013,16 +4359,16 @@ def vulcan_integrated_JO2(data, Vulcan_factor=Vulcan_factor):
     
     # total O2 photolysis rate
     JO2 = (
-        data['variable']['J_sp']['O2',0] +
-        data['variable']['J_sp']['O2',1] +
-        data['variable']['J_sp']['O2',2]
+        data['variable']['J_sp']['O2',0]# +
+        #data['variable']['J_sp']['O2',1] +
+        #data['variable']['J_sp']['O2',2]
     )
     
     # layer thickness (cm)
-    dz = data['atm']['dz']/1000
+    dz = data['atm']['dz']/100
     
     # local production per layer (cm^-2 s^-1)
-    layer_prod = Vulcan_factor * JO2 * O2_dens * dz
+    layer_prod = Vulcan_factor * JO2 * O2_dens * dz * 3/8
     
     # cumulative integral from top of atmosphere downward
     int_JO2 = layer_prod[::-1].cumsum()[::-1]
@@ -4031,7 +4377,7 @@ def vulcan_integrated_JO2(data, Vulcan_factor=Vulcan_factor):
 
 
 # --- Compute VULCAN integrated JO2 ---
-int_JO2_PI = vulcan_integrated_JO2(PI_pc_V_482SZA)
+int_JO2_PI = vulcan_integrated_JO2(PI_V_482SZA)
 int_JO2_Ten = vulcan_integrated_JO2(Ten_pc_V_482SZA)
 int_JO2_One = vulcan_integrated_JO2(One_pc_V_482SZA)
 int_JO2_Zero1 = vulcan_integrated_JO2(Z1_pc_V_482SZA)
@@ -4056,7 +4402,7 @@ plt.subplot(gs[0,0])
 # WACCM6
 plt.plot(cum_int_base, base.lev, color='k', label='WACCM6', lw = lw)
 # VULCAN case
-plt.plot(int_JO2_PI, PI_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw, label='VULCAN')
+plt.plot(int_JO2_PI, PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw, label='VULCAN')
 plt.plot(int_ox_prod_100pc_photo, Photo_PI['press']*1e3, color = 'b', lw = lw, label='Photochem')
 plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 plt.legend(loc = 0, fontsize = 15, frameon = False)
@@ -4418,13 +4764,13 @@ Should include integrated photolysis rate too!
 
 xlim=(1e9, 1e13)
 ylim=(1e3, 1e-5)
-
+'''
 plt.figure(figsize = (14,10))
 gs = gridspec.GridSpec(2,2)
 
 plt.subplot(gs[0, 0])
 PCb_W_JO2 = prox_ox_W(PCb)
-PCb_V_JO2 = prox_ox_V(PCb_V_60SZA, PCb_spec_V_60SZA)
+PCb_V_JO2 = prox_ox_V(PCb_V, PCb_spec_V)
 plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
@@ -4433,7 +4779,7 @@ plt.xscale('log'); thick_axes(top = True)
 
 plt.subplot(gs[0, 1])
 PCb_W_JO2 = prox_ox_W(PCb_10pc)
-PCb_V_JO2 = prox_ox_V(PCb_10pc_V_60SZA, PCb_10pc_spec_V_60SZA)
+#PCb_V_JO2 = prox_ox_V(PCb_10pc_V, PCb_10pc_spec_V)
 plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
@@ -4442,7 +4788,7 @@ plt.xscale('log'); thick_axes(top = True)
 
 plt.subplot(gs[1, 0])
 PCb_W_JO2 = prox_ox_W(PCb_1pc)
-PCb_V_JO2 = prox_ox_V(PCb_1pc_V_60SZA, PCb_1pc_spec_V_60SZA)
+#PCb_V_JO2 = prox_ox_V(PCb_1pc_V, PCb_1pc_spec_V)
 plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
@@ -4450,33 +4796,33 @@ plt.xscale('log'); thick_axes(top = True)
 
 plt.subplot(gs[1, 1])
 PCb_W_JO2 = prox_ox_W(PCb_01pc)
-PCb_V_JO2 = prox_ox_V(PCb_01pc_V_60SZA, PCb_01pc_spec_V_60SZA)
+#PCb_V_JO2 = prox_ox_V(PCb_01pc_V, PCb_01pc_spec_V)
 plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
-
+'''
 
 '''
 Now plot integrated photolysis rate
 '''
 
-int_JO2_PI = vulcan_integrated_JO2(PCb_V_60SZA)
-int_JO2_Ten = vulcan_integrated_JO2(PCb_10pc_V_60SZA)
-int_JO2_One = vulcan_integrated_JO2(PCb_1pc_V_60SZA)
-int_JO2_Zero1 = vulcan_integrated_JO2(PCb_01pc_V_60SZA)
+int_JO2_PI = vulcan_integrated_JO2(PCb_V)
+int_JO2_Ten = vulcan_integrated_JO2(PCb_10pc_V)
+int_JO2_One = vulcan_integrated_JO2(PCb_1pc_V)
+#int_JO2_Zero1 = vulcan_integrated_JO2(PCb_01pc_V)
 # --- Existing cumulative calculations ---
 cum_int_base = cum_int_O2_photo(PCb, O2=0.21, g=9.81)
 cum_int_ten = cum_int_O2_photo(PCb_10pc, O2=0.021, g=9.81)
 cum_int_one = cum_int_O2_photo(PCb_1pc, O2=0.0021, g=9.81)
-cum_int_zero1 = cum_int_O2_photo(PCb_01pc, O2=0.00021, g=9.81)
+#cum_int_zero1 = cum_int_O2_photo(PCb_01pc, O2=0.00021, g=9.81)
 
 xlim = 1e14, 1e17
 plt.figure(figsize = (14,10))
 gs = gridspec.GridSpec(2,2)
 
 plt.subplot(gs[0, 0])
-plt.plot(int_JO2_PI, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
+plt.plot(int_JO2_PI, PCb_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.plot(cum_int_base, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4484,14 +4830,14 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 
 plt.subplot(gs[0, 1])
-plt.plot(int_JO2_Ten, PCb_10pc_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
+plt.plot(int_JO2_Ten, PCb_10pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.plot(cum_int_ten, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
 
 
 plt.subplot(gs[1, 0])
-plt.plot(int_JO2_One, PCb_1pc_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
+plt.plot(int_JO2_One, PCb_1pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.plot(cum_int_one, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4499,7 +4845,7 @@ plt.xlabel('Integrated O2 photolysis', fontsize = 15, weight = 'bold')
 plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1, 1])
-plt.plot(int_JO2_Zero1, PCb_01pc_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
+#plt.plot(int_JO2_Zero1, PCb_01pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.plot(cum_int_zero1, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4809,15 +5155,7 @@ plt.savefig('/Users/gregcooke/python_output/O3_loss_all_models.png')
 
 
 #%% VULCAN Proxima Centauri runs
-PCb_V, PCb_V_spec = Read_O3_Run(file_path='PCb_1e12s_482SZA_WBC_WPT_1rtol.vul')
-PCb_50pc_V, PCb_50pc_V_spec = Read_O3_Run(file_path='PCb_50pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
-PCb_10pc_V, PCb_10pc_V_spec = Read_O3_Run(file_path='PCb_10pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
-PCb_5pc_V, PCb_5pc_V_spec = Read_O3_Run(file_path='PCb_5pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
-PCb_1pc_V, PCb_1pc_V_spec = Read_O3_Run(file_path='PCb_1pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
 
-PCb_V_col = V_O3_col_z_trapz(PCb_V)
-PCb_10pc_V_col = V_O3_col_z_trapz(PCb_10pc_V)
-PCb_1pc_V_col = V_O3_col_z_trapz(PCb_1pc_V)
 
 plt.figure()
 
@@ -4830,3 +5168,160 @@ plt.plot(O3, PCb_1pc_V['atm']['pco']/1e3, color = 'm', ls = '--', lw = 2)
 
 plt.yscale('log'); plt.xscale('log')
 plt.ylim(1e3, 1e-5); plt.xlim(1e-8, 1e-5)
+
+#%% TUV outputs
+
+import pandas as pd
+import re
+import matplotlib.pyplot as plt
+
+
+def read_usrout(filepath):
+    """
+    Read UVSPEC-style output file.
+
+    Returns
+    -------
+    spectral_df : pandas.DataFrame
+    dose_df : pandas.DataFrame
+    """
+
+    with open(filepath, "r") as f:
+        text = f.read()
+
+    # ================================================================
+    # Spectral irradiance table
+    # ================================================================
+
+    spectral_pattern = r"wc, nm.*?\n(.*?)\n-+"
+
+    match = re.search(spectral_pattern, text, re.S)
+
+    if not match:
+        raise ValueError(f"Could not find spectral table in {filepath}")
+
+    lines = [
+        line for line in match.group(1).splitlines()
+        if line.strip()
+    ]
+
+    spectral_data = [
+        [float(x) for x in line.split()]
+        for line in lines
+    ]
+
+    spectral_columns = [
+        "wavelength_nm",
+        "sza_40",
+        "sza_45",
+        "sza_50",
+        "sza_55",
+        "sza_60",
+    ]
+
+    spectral_df = pd.DataFrame(
+        spectral_data,
+        columns=spectral_columns
+    )
+
+    # ================================================================
+    # Dose rate table
+    # ================================================================
+
+    dose_pattern = r"sza, deg\..*?\n(.*?)\n-+"
+
+    match = re.search(dose_pattern, text, re.S)
+
+    if not match:
+        raise ValueError(f"Could not find dose table in {filepath}")
+
+    lines = [
+        line for line in match.group(1).splitlines()
+        if line.strip()
+    ]
+
+    dose_data = [
+        [float(x) for x in line.split()]
+        for line in lines
+    ]
+
+    dose_columns = [
+        "sza_deg",
+        "UVB_280_315",
+        "UVBstar_280_320",
+        "UVA_315_400",
+        "DNA_damage",
+        "UV_index",
+        "P_Dam_C_1971",
+        "P_Dam_FC_2003",
+        "P_Dam_FC_2003_ext390",
+    ]
+
+    dose_df = pd.DataFrame(
+        dose_data,
+        columns=dose_columns
+    )
+
+    return spectral_df, dose_df
+
+
+# ===================================================================
+# Read multiple files
+# ===================================================================
+
+files = {
+    "Ten": "/Users/gregcooke/usrout_10pc.txt",
+    "One": "/Users/gregcooke/usrout_1pc.txt",
+    "Z1": "/Users/gregcooke/usrout_0.1pc.txt",
+}
+
+spectral = {}
+dose = {}
+
+for name, path in files.items():
+    spectral[name], dose[name] = read_usrout(path)
+
+# Optional aliases
+df_Ten = spectral["Ten"]
+df_One = spectral["One"]
+df_Z1  = spectral["Z1"]
+
+
+# ===================================================================
+# Example plots
+# ===================================================================
+
+DNA = pd.read_csv('/Users/gregcooke/V5.4/DATAS1/dna.setlow.new', delim_whitespace=True, 
+                  names = ['Wav', 'Func'], skiprows = 10)
+
+
+plt.figure()
+
+for name, df in spectral.items():
+    plt.plot(df["wavelength_nm"], df["sza_40"], label=name)
+plt.plot(DNA['Wav'], DNA['Func'] )
+plt.yscale('log')
+plt.yscale('log'); plt.ylim(1e-4, 3)
+plt.xlabel("Wavelength (nm)")
+plt.ylabel("Spectral irradiance")
+plt.legend()
+
+plt.figure()
+for name, df in dose.items():
+    plt.plot(df["sza_deg"], df["UV_index"], label=name)
+
+plt.xlabel("Solar zenith angle")
+plt.ylabel("UV index")
+plt.legend()
+
+plt.figure()
+for name, df in dose.items():
+    plt.plot(df["sza_deg"], df["DNA_damage"], label=name)
+plt.xlabel("Solar zenith angle")
+plt.ylabel("DNA damage")
+plt.yscale('log')
+plt.legend()
+
+#%%
+
+
