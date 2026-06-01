@@ -1,168 +1,36 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Wed May 31 19:52:47 2023
+Early Earth 1D model comparisons — main script.
 
-@author: Greg Cooke (gjc53@cam.ac.uk)
+Loads model output, runs diagnostics, and generates figures.
+All functions and shared constants: early_earth_lib.py (imported below).
+
+File layout
+-----------
+1. early_earth_lib.py  — imports, paths, O3 budget, plotting, I/O, column integrals
+2. Early_Earth.py      — data loading, then analysis cells (#%%) in execution order
+
+Run this file cell-by-cell in Spyder, or execute the whole script.
 """
 
-#%% imports
-import xarray as xr
+from early_earth_lib import thick_axes, Read_O3_Run, V_O3_col_z_trapz
+from early_earth_lib import _o3_loss_fraction_figure
+from early_earth_lib import *
 import matplotlib.pyplot as plt
+from early_earth_lib import Photochem_O3_col, plot_o3_nox_hox_fraction_vulcan_vs_photo
+from early_earth_lib import waccm_o3_catalytic_budget, waccm_has_o3_loss_diagnostics
+import pandas as pd
+import xarray as xr
 import numpy as np
-import matplotlib.gridspec as gridspec
-import matplotlib.colors as colors
-from matplotlib import rcParams
-from photochem import EvoAtmosphere
 
-#%% 
-'''
-Instructions for user to go here
-'''
+#%% import file for pressure and gaussian weights
+File =  "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.PC_b.SSPO.016.cam.h0.0320-0320.nc" #file name
 
-#%% Other functions
+Gw_file = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
 
-def compute_ox_production(
-    mech_file="zahnle_earth.yaml",
-    settings_file="input/settings_100pc.yaml",
-    flux_file="input/Sun_0.0Ga.txt",
-    pt_file="100pc_PT_profile/100%PAL_Sun_0.0Ga.txt",
-    atol=1e-23,
-    verbose=0
-):
-    """
-    Compute Ox production from O2 photolysis.
-
-    Returns
-    -------
-    ox_prod_m3 : np.ndarray
-        Ox production rate (molecules/m^3/s)
-    pressure_hpa : np.ndarray
-        Pressure profile (hPa)
-    """
-
-    # Initialize model
-    pc = EvoAtmosphere(
-        mech_file,
-        settings_file,
-        flux_file,
-        pt_file
-    )
-    
-    pc.var.verbose = verbose
-    pc.var.atol = atol
-
-    # Get production/loss and solution
-    pl = pc.production_and_loss('O2', pc.wrk.usol)
-    sol = pc.mole_fraction_dict()
-    pressure_hpa = sol['pressure'] / 1e2  # Pa → hPa
-
-    # Find indices for O2 photolysis reactions
-    idx_o_o = -1
-    idx_o_o1d = -1
-
-    for i, rx in enumerate(pl.loss_rx):
-        if rx == 'O2 + hv => O + O':
-            idx_o_o = i
-        elif rx == 'O2 + hv => O + O1D':
-            idx_o_o1d = i
-
-    # Optional safety check
-    if idx_o_o == -1 or idx_o_o1d == -1:
-        raise ValueError("Could not find required O2 photolysis reactions in network.")
-
-    # Compute Ox production (cm^-3 s^-1 → m^-3 s^-1)
-    ox_prod_cm3 = (2 * pl.loss[:, idx_o_o]) + (2 * pl.loss[:, idx_o_o1d])
-    ox_prod_m3 = ox_prod_cm3 * 1e6
-
-    return ox_prod_m3, pressure_hpa
-
-P_path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/'
-def compute_o3loss(
-    mech_file="zahnle_earth.yaml",
-    settings_file="input/settings_100pc.yaml",
-    flux_file="input/Sun_0.0Ga.txt",
-    pt_file="100pc_PT_profile/100%PAL_Sun_0.0Ga.txt",
-    atol=1e-23,
-    verbose=0
-):
-    """
-    Compute Ox production from O2 photolysis.
-
-    Returns
-    -------
-    ox_prod_m3 : np.ndarray
-        Ox production rate (molecules/m^3/s)
-    pressure_hpa : np.ndarray
-        Pressure profile (hPa)
-    """
-
-    # Initialize model
-    pc = EvoAtmosphere(
-        mech_file,
-        settings_file,
-        flux_file,
-        pt_file
-    )
-    
-    pc.var.verbose = verbose
-    pc.var.atol = atol
-
-    # Get production/loss and solution
-    pl = pc.production_and_loss('O3', pc.wrk.usol)
-    sol = pc.mole_fraction_dict()
-    pressure_hpa = sol['pressure'] / 1e3  # → hPa
-
-    # Find indices for O2 photolysis reactions
-    idx_o_o3 = -1
-    for i, rx in enumerate(pl.loss_rx):
-        if rx == 'O + O3 => O2 + O2':
-            idx_o_o3 = i
-            print('yay')
-
-    # Optional safety check
-    if idx_o_o3 == -1:
-        raise ValueError("Could not find required O2 photolysis reactions in network.")
-
-    # Compute Ox production (cm^-3 s^-1 → m^-3 s^-1)
-    o3loss_cm3 = pl.loss[:, idx_o_o3]
-    o3_loss = o3loss_cm3 * 1e6
-
-    return o3_loss, pressure_hpa
-
-rcParams['font.weight'] = 'bold' 
-
-#%% return thick lw on axes
-
-def thick_axes(top = False, labelleft = True, right = True, direction = 'in'):
-    # Accessing the axes object and setting linewidth
-    plt.gca().spines['top'].set_linewidth(2)  # Top axis
-    plt.gca().spines['bottom'].set_linewidth(2)  # Bottom axis
-    plt.gca().spines['left'].set_linewidth(2)  # Left axis
-    plt.gca().spines['right'].set_linewidth(2)  # Right axis
-    plt.grid(False)
-    plt.tick_params(which = 'major', axis = 'both', direction = direction, labelsize = 15, length = 6, width = 2, labelleft = labelleft, right = right, top = top)
-    plt.tick_params(which = 'minor',axis = 'both', direction = direction, labelsize = 15, length = 3, width = 1, labelleft = labelleft, right = right, top = top)
-
-#%% return subscript number or text
-def sub(num):
-    return r'$_{'+str(num)+'}$'
-
-#%% return superscript number or text
-
-def sup(num):
-    return r'$^{'+str(num)+'}$'
-
-#%% return specific LWAV
-def LWAV_spec(DS, time = False, latitude = np.arange(0,96)):
-    File =  "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.PC_b.SSPO.016.cam.h0.0320-0320.nc" #file name
-
-    Gw_file = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
-
-    gw = Gw_file.gw.values
-    
-    DS = DS.isel(lat=latitude)
-    gw = gw[latitude]
+gw = Gw_file.gw.values
+Pressure = Gw_file.lev.values
+#%%
+def LWAV(DS, time = False):
     try:
         DS = DS.mean(dim='lon')
     except:
@@ -179,44 +47,17 @@ def LWAV_spec(DS, time = False, latitude = np.arange(0,96)):
         DS = np.sum(DS,axis=0)/gw.sum() #weighted mean 
     return DS #return a numpy array that has been modified above
 
-dpi = 200
-
-#%% Colour bar definition
-
-def cbar(model, label = True, clabel = 'O'+ sub(3) +' column [DU]', orientation='vertical', tick = False, ticks = [2,3], shrink = 1):
-    cbar = plt.colorbar(model, orientation = orientation, shrink = shrink)
-    if (label == True):
-        clabel = clabel
-        cbar.set_label(clabel,size=15, weight = 'bold')
-    cbar.ax.tick_params(labelsize=15)
-    if (tick == True):
-        cbar.set_ticks(ticks)
-        
-#%% Read in VULCAN files
-
-import pickle
-
-def read_pickle_file(file_path):
-    try:
-        with open(file_path, 'rb') as file:
-            data = pickle.load(file)
-            return data
-    except FileNotFoundError:
-        print(f"File '{file_path}' not found.")
-        return None
-    except Exception as e:
-        print(f"An error occurred while reading the pickle file: {e}")
-        return None
+#%% User notes
+"""
+Instructions for user to go here
+"""
 
 figure = plt.figure(figsize = (8,5))
 lw = 2
 
 plt.title('Ozone profiles', fontsize = 15, weight = 'bold')
 
-def Read_O3_Run(file_path=''):
-    DS = read_pickle_file('/Users/gregcooke/VIH_cases/output/'+file_path)
-    spec = DS['variable']['species']
-    return DS, spec
+#%% Read in VULCAN files
 
 #%% VULCAN PCb runs
 PCb_V, PCb_V_spec = Read_O3_Run(file_path='PCb_1e12s_482SZA_WBC_WPT_1rtol.vul')
@@ -225,7 +66,6 @@ PCb_10pc_V, PCb_10pc_V_spec = Read_O3_Run(file_path='PCb_10pc_o2_1e12s_482SZA_WB
 PCb_5pc_V, PCb_5pc_V_spec = Read_O3_Run(file_path='PCb_5pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
 PCb_1pc_V, PCb_1pc_V_spec = Read_O3_Run(file_path='PCb_1pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
 PCb_05pc_V, PCb_1pc_V_spec = Read_O3_Run(file_path='PCb_0.5pc_o2_1e12s_482SZA_WBC_WPT_1rtol.vul')
-
 
 #%% VULCAN regular oxygen cases
 
@@ -243,6 +83,7 @@ Fifty_pc_V_45SZA, Fifty_pc_spec_45SZA = Read_O3_Run(file_path='Earth_50pc_o2_1e1
 
 Ten_pc_V_60SZA, Ten_pc_spec_60SZA = Read_O3_Run(file_path='Earth_10pc_o2_1e12s_60SZA_WPT_1rtol.vul')
 Ten_pc_V_482SZA, Ten_pc_spec_482SZA = Read_O3_Run(file_path='Earth_10pc_o2_1e12s_48.2SZA_WPT_1rtol.vul')
+Ten_pc_V_482SZA_T, Ten_pc_spec_482SZA_T = Read_O3_Run(file_path='Earth_10pc_o2_1e12s_48.2SZA_WPT_Temp_1rtol.vul')
 Ten_pc_V_45SZA, Ten_pc_spec_45SZA = Read_O3_Run(file_path='Earth_10pc_o2_1e12s_45SZA_WPT_1rtol.vul')
 
 Five_pc_V_60SZA, Five_pc_spec_60SZA = Read_O3_Run(file_path='Earth_5pc_o2_1e12s_60SZA_WPT_1rtol.vul')
@@ -251,6 +92,7 @@ Five_pc_V_45SZA, Five_pc_spec_45SZA = Read_O3_Run(file_path='Earth_5pc_o2_1e12s_
 
 One_pc_V_60SZA, One_pc_spec_60SZA = Read_O3_Run(file_path='Earth_1pc_o2_1e12s_60SZA_WPT_1rtol.vul')
 One_pc_V_482SZA, One_pc_spec_482SZA = Read_O3_Run(file_path='Earth_1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul')
+One_pc_V_482SZA_T, One_pc_spec_482SZA_T = Read_O3_Run(file_path='Earth_1pc_o2_1e12s_48.2SZA_WPT_Temp_1rtol.vul')
 One_pc_V_45SZA, One_pc_spec_45SZA = Read_O3_Run(file_path='Earth_1pc_o2_1e12s_45SZA_WPT_1rtol.vul')
 
 Z5_pc_V_60SZA, Z5_pc_spec_60SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_60SZA_WPT_1rtol.vul')
@@ -259,6 +101,7 @@ Z5_pc_V_45SZA, Z5_pc_spec_45SZA = Read_O3_Run(file_path='Earth_0.5pc_o2_1e12s_45
 
 Z1_pc_V_60SZA, Z1_pc_spec_60SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_60SZA_WPT_1rtol.vul')
 Z1_pc_V_482SZA, Z1_pc_spec_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul')
+Z1_pc_V_482SZA_T, Z1_pc_spec_482SZA_T = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_WPT_Temp_1rtol.vul')
 Z1_pc_V_45SZA, Z1_pc_spec_45SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_45SZA_WPT_1rtol.vul')
 
 #%% VULCAN cases with different methane
@@ -351,114 +194,71 @@ Z1_pc_V_05xCH4f_482SZA, Z1_pc_spec_05xCH4f_482SZA = Read_O3_Run(file_path='Earth
 Z1_pc_V_01xCH4f_482SZA, Z1_pc_spec_01xCH4f_482SZA = Read_O3_Run(file_path='Earth_0.1pc_o2_1e12s_48.2SZA_0.1xCH4flux_WPT_1rtol.vul')
 
 #%% Cross sections and checks
+# Cross sections and the wavelength grid are in photos.pdat (read by READPHOTO),
+# not in OUTPUT_PLOT.dat (that file is only Z, P, photolysis rates J, etc.).
 
-import pandas as pd
-import io
+KASTING_PHOTOS_PDAT = (
+    '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/'
+    'Old sims/Kasting model/DATA/photos.pdat'
+)
 
-file_path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/100pc/SZA_48.2/OUTPUT_PLOT.dat'
-
-def read_kasting_file(path):
-    with open(path, 'r') as f:
-        lines = f.readlines()
-
-    blocks = {}
-    current_lines = []
-    current_header = None
-
-    for line in lines:
-        # Detect the start of the Wavelength/Flux block
-        if "Range (A)" in line:
-            current_header = "flux_block"
-            headers = ["Int", "Range_A", "Flux", "Ozone1", "Ozone2", "CH3CHO", "CH3COCH3"]
-            continue
-        
-        # Detect the start of the Assorted Cross Sections block
-        if "Assorted cross sections" in line:
-            current_header = "cross_sections"
-            # Move down to find the actual column names
-            continue
-        
-        if current_header == "cross_sections" and "Int #" in line:
-            headers = ["Int", "O2", "H2O", "CO2", "HO2", "N2O", "HCl", "CCl2F2", "CHClF2", "CH3Cl", "CH3CCL3"]
-            continue
-
-        # If we hit the separator "====", start collecting data
-        if "====" in line and current_header:
-            current_lines = []
-            continue
-
-        # Collect data lines (must start with a number)
-        strip_line = line.strip()
-        if strip_line and strip_line[0].isdigit():
-            current_lines.append(strip_line)
-        # If we hit a blank line or new text, save the block
-        elif current_lines and not strip_line:
-            df = pd.read_csv(io.StringIO("\n".join(current_lines)), sep='\s+', names=headers)
-            blocks[current_header] = df
-            current_header = None
-            current_lines = []
-
-    # Catch the last block if file doesn't end in blank line
-    if current_lines and current_header:
-        df = pd.read_csv(io.StringIO("\n".join(current_lines)), sep='\s+', names=headers)
-        blocks[current_header] = df
-
-    return blocks
-'''
-# Execute
-data_blocks = read_kasting_file(file_path)
-
-# Extract your two main tables
+data_blocks = read_kasting_file(KASTING_PHOTOS_PDAT)
 df_flux = data_blocks['flux_block']
 df_cross = data_blocks['cross_sections']
 
-# Optional: Split the 'Range_A' into min and max wavelengths
-df_flux[['Wave_Min', 'Wave_Max']] = df_flux['Range_A'].str.split('-', expand=True).astype(float)
+df_flux[['Wave_Min', 'Wave_Max']] = (
+    df_flux['Range_A'].str.split('-', expand=True).astype(float)
+)
+# Wavelength at bin centre [nm] (photos.pdat uses Angstrom)
+wav_nm_flux = (df_flux['Wave_Min'] + df_flux['Wave_Max']) / 20.0
+n_cross = len(df_cross)
+wav_nm_cross = wav_nm_flux.iloc[:n_cross].to_numpy()
 
-print("--- Wavelength & Flux Table ---")
-print(df_flux[['Int', 'Wave_Min', 'Wave_Max', 'Flux']].head())
+print("--- Wavelength & flux (first 10 bins) ---")
+print(df_flux[['Int', 'Wave_Min', 'Wave_Max', 'Flux']].head(10))
 
-print("\n--- Cross Sections Table ---")
-print(df_cross[['Int', 'O2', 'H2O', 'N2O']].head())
+print("\n--- Cross sections (first 10 bins) ---")
+print(df_cross[['Int', 'O2', 'H2O', 'CO2', 'N2O']].head(10))
 
-plt.figure()
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['N2O',1])
-plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['N2O'])
-plt.xlim(1, 300)
-plt.yscale('log')
+# O2 in the SR bands: use Ozone1 + Ozone2 from the flux table (not the O2 column,
+# which is zero there because O2 uses correlated-k, not a single sigma per bin).
+sigma_o2_sr = df_flux['Ozone1'].iloc[:n_cross] + df_flux['Ozone2'].iloc[:n_cross]
 
-plt.figure()
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['O2',1]+PI_V_482SZA['variable']['cross_J']['O2',2], color = 'k')
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['O3',1]+PI_V_482SZA['variable']['cross_J']['O3',2], color = 'm')
-plt.ylim(1e-25, 1e-16)
-#plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['O2'], color = 'teal')
-plt.xlim(1, 300)
-plt.yscale('log')
+species_plots = [
+    ('H2O', df_cross['H2O'], None),
+    ('N2O', df_cross['N2O'], None),
+    ('CO2', df_cross['CO2'], None),
+    ('HO2', df_cross['HO2'], None),
+    ('O2 (Ozone1+Ozone2, SR grid)', sigma_o2, None),
+]
 
-plt.figure()
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['H2O',1], color = 'm')
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['H2O',2], color = 'm')
-plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['H2O'], color = 'teal')
-plt.xlim(1, 300)
-plt.yscale('log')
-
-plt.figure()
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['CO2',1], color = 'm')
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['CO2',2], color = 'm')
-plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['CO2'], color = 'teal')
-plt.xlim(1, 300)
-plt.yscale('log')
-
-
-plt.figure()
-plt.plot(PI_V_482SZA['variable']['bins'], PI_V_482SZA['variable']['cross_J']['HO2',1], color = 'm')
-plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['HO2'], color = 'teal')
-plt.xlim(1, 300)
-plt.yscale('log')
-'''
+for title, sigma, _ in species_plots:
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(wav_nm_cross, sigma, color='teal', lw=2, label='Kasting photos.pdat')
+    # Optional overlay with VULCAN (requires PI_V_482SZA loaded above)
+    if 'PI_V_482SZA' in globals():
+        vul_bins = PI_V_482SZA['variable']['bins']
+        cj = PI_V_482SZA['variable']['cross_J']
+        if title.startswith('H2O'):
+            ax.plot(vul_bins, cj['H2O', 1], color='m', alpha=0.7, label='VULCAN branch 1')
+            ax.plot(vul_bins, cj['H2O', 2], color='m', ls='--', alpha=0.7, label='VULCAN branch 2')
+        elif title.startswith('N2O'):
+            ax.plot(vul_bins, cj['N2O', 1], color='m', alpha=0.7, label='VULCAN')
+        elif title.startswith('O2'):
+            ax.plot(
+                vul_bins, cj['O2', 1] + cj['O2', 2],
+                color='black', alpha=0.7, label='VULCAN O2 (branches 1+2)',
+            )
+    ax.set_yscale('log')
+    ax.set_xlim(1, 300)
+    ax.set_xlabel('Wavelength [nm]')
+    ax.set_ylabel('Cross section [cm²]')
+    ax.set_title(title)
+    ax.legend(loc='best')
+    thick_axes()
+    plt.tight_layout()
 #%% Read in Kasting simulations
 
-import re
 path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/'
 K_150pc_J = pd.read_csv(
     path+"150pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
@@ -471,6 +271,12 @@ K_150pc_J_60SZA = pd.read_csv(
 p_150pc_60SZA = K_150pc_J_60SZA['PRESS']/1000
 z = K_150pc_J['Z']/1000
 
+
+
+K_100pc_J_8G = pd.read_csv(
+    path+"100pc/8point/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_100pc_8G = K_100pc_J_8G['PRESS']/1000
+
 K_100pc_J = pd.read_csv(
     path+"100pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_100pc = K_100pc_J['PRESS']/1000
@@ -481,6 +287,10 @@ K_100pc_J_60SZA = pd.read_csv(
     path+"100pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_100pc_60SZA = K_100pc_J_60SZA['PRESS']/1000
 z = K_100pc_J['Z']/1000
+
+K_10pc_J_8G = pd.read_csv(
+    path+"10pc/8point/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_10pc_8G = K_10pc_J_8G['PRESS']/1000
 
 K_10pc_J = pd.read_csv(
     path+"10pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
@@ -493,6 +303,11 @@ K_10pc_J_60SZA = pd.read_csv(
 p_10pc_60SZA = K_10pc_J_60SZA['PRESS']/1000
 z = K_10pc_J['Z']/1000
 
+
+K_1pc_J_8G = pd.read_csv(
+    path+"1pc/8point/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_1pc_8G = K_1pc_J_8G['PRESS']/1000
+
 K_1pc_J = pd.read_csv(
     path+"1pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_1pc = K_1pc_J['PRESS']/1000
@@ -503,6 +318,10 @@ K_1pc_J_60SZA = pd.read_csv(
     path+"1pc/SZA_60/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
 p_1pc_60SZA = K_1pc_J_60SZA['PRESS']/1000
 z = K_1pc_J['Z']/1000
+
+K_01pc_J_8G = pd.read_csv(
+    path+"0.1pc/8point/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
+p_01pc_8G = K_01pc_J_8G['PRESS']/1000
 
 K_01pc_J = pd.read_csv(
     path+"0.1pc/SZA_48.2/OUTPUT_PLOT.dat", delim_whitespace=True, engine="python")
@@ -517,129 +336,27 @@ z = K_1pc_J['Z']/1000
 
 #%% J rates plot
 
-def n_dens(ds, var = 'H2O'):
-    k = 1.381e-23
-    ndens = ds[var]*ds.lev*100/(ds.T*k)
-    return ndens
-
-def Kasting_HOX(DS):
-    
-    # Specify the columns involved in the calculation
-    cols = ['FOH', 'FHO2', 'FH2O2', 'FH']
-    
-    # 1. Convert columns to numeric: malformed strings become NaN
-    # 2. fillna(0): Replace those NaNs with 0.0
-    temp_df = DS[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    # Calculate the sum using the cleaned numeric values
-    HOX = temp_df['FH'] + temp_df['FHO2'] + temp_df['FH2O2'] + temp_df['FOH']
-    
-    return HOX
-
-def Kasting_NOX(DS):
-    # Select the columns we need
-    cols = ['FNO', 'FNO2']
-    
-    # 1. Convert to numeric: invalid strings (like 8.966-223) become NaN
-    # 2. fillna(0): Replace those NaNs with 0
-    temp_df = DS[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    # Sum the cleaned numeric values
-    return temp_df['FNO'] + temp_df['FNO2']
 
 
-def J_rates_K(data):
-    po2 = data['PO2']
-    po2D = data['PO2D']
-    for i in range(len(po2D)):
-        try:
-            po2D[i] = float(po2D[i])  
-        except:
-            po2D[i] = float(0)  
-    JO2 = po2+po2D
-    return 2*JO2 # factor for 2*O
 
-def prox_ox_K(data):
-    return J_rates_K(data) * data['NumO2'] * 1e6 # factor for density
 
-def J_rates_W(DS):
-    JO2 = (DS.jo2_a+DS.jo2_b)
-    return 2*JO2
 
-def prox_ox_W(DS):
-    return J_rates_W(DS) * n_dens(DS, 'O2')
 
-def J_rates_V(data):
-    JO2 = (
-        data['variable']['J_sp']['O2',0]
-    )
-    return 2*JO2
 
-def prox_ox_V(data, data_spec):
-    return J_rates_V(data) * data['variable']['y'][:,data_spec.index('O2')] * 1e6
+
+
 
 
 #%% Read in Atmos files
 
+
 import pandas as pd
-
-
-def fix_exponents(line):
-    # Fix cases like 5.004-232 → 5.004E-232
-    return re.sub(r'(\d\.\d+)([-+]\d+)', r'\1E\2', line)
-
-def Read_Atmos(file_path):
-
-    # Read and fix file
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-    
-    # Fix all lines except header
-    header = lines[0]
-    data_lines = [fix_exponents(line) for line in lines[1:]]
-    
-    # Combine back
-    fixed_text = header + ''.join(data_lines)
-    
-    # Read into pandas
-    from io import StringIO
-    df = pd.read_csv(StringIO(fixed_text), delim_whitespace=True)
-    return df
-
-def Atmos_dens(DS):
-    k = 1.381e-23
-    dens = DS["PRESS"]*1e5 / (k*DS["TEMP"])
-    return dens
-
-def Atmos_HOX(DS):
-    # Specify the columns involved in the calculation
-    cols = ['OH', 'HO2', 'H2O2', 'H']
-    
-    # 1. Convert columns to numeric: malformed strings become NaN
-    # 2. fillna(0): Replace those NaNs with 0.0
-    temp_df = DS[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    # Calculate the sum using the cleaned numeric values
-    HOX = temp_df['H'] + temp_df['HO2'] + temp_df['H2O2'] + temp_df['OH']
-    
-    return HOX
-def Atmos_NOX(DS):
-    # Select the columns we need
-    cols = ['N', 'NO', 'NO2']
-    
-    # 1. Convert to numeric: invalid strings (like 8.966-223) become NaN
-    # 2. fillna(0): Replace those NaNs with 0
-    temp_df = DS[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    # Sum the cleaned numeric values
-    return temp_df['N'] + temp_df['NO'] + temp_df['NO2']
 
 
 '''
 Now read in horribly formatted photolysis data
 '''
 
-import pandas as pd
 
 file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/100pc/"
 Atmos_100pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_whitespace=True)
@@ -666,66 +383,6 @@ Atmos_01pc = pd.read_csv(file_path+'SZA_48.2/PTZ_mixingratios_out.dist', delim_w
 Atmos_01pc_45SZA = pd.read_csv(file_path+'SZA_45/PTZ_mixingratios_out.dist', delim_whitespace=True)
 Atmos_01pc_60SZA = pd.read_csv(file_path+'SZA_60/PTZ_mixingratios_out.dist', delim_whitespace=True)
 
-'''
-def Atmos_photo(file_path):
-    
-    def fix_exponents(s):
-        # Fix cases like 5.44-173 → 5.44E-173
-        return re.sub(r'(\d\.\d+)([-+]\d+)', r'\1E\2', s)
-    
-    def safe_float(x):
-        try:
-            return float(x)
-        except ValueError:
-            return 0.0
-    
-    with open(file_path) as f:
-        lines = f.readlines()
-    
-    # --- find photolysis section ---
-    start_idx = None
-    for i, line in enumerate(lines):
-        if "PHOTOLYSIS RATES" in line:
-            start_idx = i
-            break
-    
-    header = lines[start_idx + 2].split()
-    
-    # --- read data block ---
-    data = []
-    ncols = len(header)
-    
-    for line in lines[start_idx + 3:]:
-        s = line.strip()
-        
-        if s == "":
-            break
-        
-        parts = fix_exponents(s).split()
-        
-        # stop if structure changes
-        if len(parts) != ncols:
-            break
-        
-        # convert safely
-        row = [safe_float(x) for x in parts]
-        data.append(row)
-    
-    df = pd.DataFrame(data, columns=header)
-    O2_Photo = df["PO2_O1D"]+df["PO2_O3P"]
-    return df, df["Z"], O2_Photo
-'''
-def Atmos_photo(file_path):
-    
-    df = pd.read_csv(file_path, names = ['Z', 'PO2_1', "PO2_2"], delim_whitespace=True)
-    JO2 = 2*(df["PO2_1"]+df["PO2_2"])
-    return df["Z"], JO2
-
-def Atmos_dens(DS):
-    k = 1.381e-23
-    dens = DS["PRESS"]*1e5/(k*DS["TEMP"])
-    return dens
-
 file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/100pc/SZA_48.2/out.O2prates"
 Atmos_XS_100pc_Z, Atmos_XS_100pc_JO2 = Atmos_photo(file_path)
 file_path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/10pc/SZA_48.2/out.O2prates"
@@ -747,7 +404,6 @@ Atmos_XS_01pc_Z, Atmos_XS_01pc_JO2= Atmos_photo(file_path)
 #%% Read in Phtoochem files
 
 # Photochem Ozone column 
-import pandas as pd
 path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/150pc/"
 Photo_150pc = pd.read_csv(path+"Earth_150pc_48.2.txt", delim_whitespace=True)
 '''
@@ -776,16 +432,37 @@ path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/10pc/"
 Photo_10pc = pd.read_csv(path+'Earth_10pc_48.2.txt', delim_whitespace=True)
 Photo_10pc_60SZA = pd.read_csv(path+'Earth_10pc_60.txt', delim_whitespace=True)
 Photo_10pc_45SZA = pd.read_csv(path+'Earth_10pc_45.txt', delim_whitespace=True)
+Photo_10pc_01CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_0.1x_methane.txt", delim_whitespace=True)
+Photo_10pc_05CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_0.5x_methane.txt", delim_whitespace=True)
+Photo_10pc_1CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_1x_methane.txt", delim_whitespace=True)
+Photo_10pc_2CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_2x_methane.txt", delim_whitespace=True)
+Photo_10pc_3CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_3x_methane.txt", delim_whitespace=True)
+Photo_10pc_4CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_4x_methane.txt", delim_whitespace=True)
+Photo_10pc_5CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_10pc_48.2_5x_methane.txt", delim_whitespace=True)
 
 path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/1pc/"
 Photo_1pc = pd.read_csv(path+'Earth_1pc_48.2.txt', delim_whitespace=True)
 Photo_1pc_60SZA = pd.read_csv(path+'Earth_1pc_60.txt', delim_whitespace=True)
 Photo_1pc_45SZA = pd.read_csv(path+'Earth_1pc_45.txt', delim_whitespace=True)
+Photo_1pc_01CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_0.1x_methane.txt", delim_whitespace=True)
+Photo_1pc_05CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_0.5x_methane.txt", delim_whitespace=True)
+Photo_1pc_1CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_1x_methane.txt", delim_whitespace=True)
+Photo_1pc_2CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_2x_methane.txt", delim_whitespace=True)
+Photo_1pc_3CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_3x_methane.txt", delim_whitespace=True)
+Photo_1pc_4CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_4x_methane.txt", delim_whitespace=True)
+Photo_1pc_5CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_1pc_48.2_5x_methane.txt", delim_whitespace=True)
 
 path = "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/0.1pc/"
 Photo_01pc = pd.read_csv(path+'Earth_0.1pc_48.2.txt', delim_whitespace=True)
 Photo_01pc_60SZA = pd.read_csv(path+'Earth_0.1pc_60.txt', delim_whitespace=True)
 Photo_01pc_45SZA = pd.read_csv(path+'Earth_0.1pc_45.txt', delim_whitespace=True)
+Photo_01pc_01CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_0.1x_methane.txt", delim_whitespace=True)
+Photo_01pc_05CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_0.5x_methane.txt", delim_whitespace=True)
+Photo_01pc_1CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_1x_methane.txt", delim_whitespace=True)
+Photo_01pc_2CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_2x_methane.txt", delim_whitespace=True)
+Photo_01pc_3CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_3x_methane.txt", delim_whitespace=True)
+Photo_01pc_4CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_4x_methane.txt", delim_whitespace=True)
+Photo_01pc_5CH4 = pd.read_csv(path+"../Methane_Perturbations/Earth_0.1pc_48.2_5x_methane.txt", delim_whitespace=True)
 
 #%% color choices
 
@@ -811,7 +488,7 @@ darkpurple = purples(1.0)
 purple = purples(0.75)
 lightpurple = purples(0.4)
 
-PI_color = 'k'; 
+PI_color = 'black'; 
 One_50_color = 'grey'
 Fifty_pc_color = darkgreen; Ten_pc_color = green; Five_pc_color = lightgreen
 One_pc_color = darkblue; Zero5_pc_color = blue; Zero1_pc_color = lightblue; 
@@ -831,102 +508,20 @@ Pressure = Gw_file.lev.values
 
 
 #%%
-def LWAV(DS, time = False):
-    try:
-        DS = DS.mean(dim='lon')
-    except:
-        DS = DS
-    if (time == False):
-        try:
-            DS = DS.mean(dim='time')
-        except:
-            DS = DS
-    DS = gw*DS #multiply by gaussian weights
-    try:
-        DS = np.sum(DS,axis=1)/gw.sum() #weighted mean
-    except:
-        DS = np.sum(DS,axis=0)/gw.sum() #weighted mean 
-    return DS #return a numpy array that has been modified above
 
 
 #%%
 
-import numpy as np
-import xarray as xr
-
 k_B = 1.380649e-23  # J/K
-
-def rayleigh_sigma_nm(wavelength_nm: float) -> float:
-    """Same closure as mo_jshort.F90 rayleigh_sigma_nm (cm^2 per molecule)."""
-    w_um = max(wavelength_nm * 1e-3, 1e-6)
-    w2 = w_um * w_um
-    w4 = w2 * w2
-    return 4.006e-28 * (1.0 + 0.0113 / w2 + 0.00013 / w4) / w4
-
-def air_density_molec_cm3(P_pa: np.ndarray, T_k: np.ndarray) -> np.ndarray:
-    """Ideal gas: n = P/(k_B T), return molecules cm^-3."""
-    return (P_pa / (k_B * np.maximum(T_k, 1.0))) / 1e6
 
 path = "/Users/gregcooke/H_escape/Earth_PI_SRB_scat.cam.h1.0001-01-01-01800.nc"
 ds = xr.open_dataset(path, decode_times=False)
-
-# --- adjust these names to match your file ---
-Z3 = ds["Z3"]          # geopotential height, often m; dims include lev
-PMID = ds["PMID"]      # midpoint pressure Pa
-T = ds["T"]            # temperature K
-O2_VMR = ds["O2"]      # mol/mol O2 (common name in chem-enabled CAM); fix if different
-
-# If you have explicit N2:
-# N2_VMR = ds["N2"]
-# else approximate dry air: ~0.79 N2 after removing O2 (crude; good enough for ratio sanity)
-try:
-    N2_VMR = ds["N2"]
-except KeyError:
-    N2_VMR = 0.79 * (1.0 - O2_VMR)  # crude; replace if you have real N2
-
-# Mean over time/lon like your LWAV helper (lat weights omitted for brevity — add gw if needed)
-Z3_m = Z3.mean(dim=("time", "lon"), skipna=True)
-P_m = PMID.mean(dim=("time", "lon"), skipna=True)
-T_m = T.mean(dim=("time", "lon"), skipna=True)
-o2_m = O2_VMR.mean(dim=("time", "lon"), skipna=True)
-n2_m = N2_VMR.mean(dim=("time", "lon"), skipna=True)
-
-z_m = Z3_m.values.ravel()      # height m at each lev (same ordering as ds['lev'])
-p_m = P_m.values.ravel()
-t_m = T_m.values.ravel()
-o2v = o2_m.values.ravel()
-n2v = n2_m.values.ravel()
-
-n_air = air_density_molec_cm3(p_m, t_m)
-n_o2 = o2v * n_air
-n_n2 = n2v * n_air
-
-# dz between consecutive midpoints (positive thickness)
-# lev dimension is typically ordered top -> bottom or bottom -> top; np.diff(z) works either way if we take abs
-dz_m = np.abs(np.diff(z_m))
-dz_cm = dz_m * 1e2
-
-# optical depths live on layers between midpoints; pair with inner midpoints:
-n_o2_layer = 0.5 * (n_o2[:-1] + n_o2[1:])
-n_n2_layer = 0.5 * (n_n2[:-1] + n_n2[1:])
-sig_ray = rayleigh_sigma_nm(175.0)
-tau_ray = sig_ray * (n_o2_layer + n_n2_layer) * dz_cm
-
-# OPTIONAL: plug a literature O2 absorption cross section at 175 nm (cm^2) for tau_abs rough estimate
-sigma_o2_abs_cm2 = 3.0e-23   # <<< REPLACE with value from your CRS table / paper at chosen wavelength
-tau_o2_abs = sigma_o2_abs_cm2 * n_o2_layer * dz_cm
-
-ratio = tau_ray / np.maximum(tau_o2_abs, 1e-99)
-
-# Report upper layers: assume lev coordinate increases downward in pressure — pick top ~5 interfaces
-print("layer dz_cm [top interfaces], tau_ray, tau_o2_abs (rough), ratio")
-for i in range(min(5, len(tau_ray))):
-    print(i, dz_cm[i], tau_ray[i], tau_o2_abs[i], ratio[i])
     
 #%% SRB
 
 SRB = xr.open_dataset('/Users/gregcooke/H_escape/Earth_PI_SRB_no_scat.cam.h1.0001-01-01-01800.nc',decode_times=False) #open the file and decode time as false
 SRB_scat = xr.open_dataset('/Users/gregcooke/H_escape/Earth_PI_SRB_scat.cam.h1.0001-01-01-01800.nc',decode_times=False) #open the file and decode time as false
+SRB_scat2 = xr.open_dataset('/Users/gregcooke/H_escape/Earth_PI_SRB_test_scat.cam.h1.0001-01-01-01800.nc',decode_times=False) #open the file and decode time as false
 
 print(LWAV(SRB.jo2_a+SRB.jo2_b))
 print(LWAV(SRB_scat.jo2_a+SRB_scat.jo2_b))
@@ -934,11 +529,16 @@ print(LWAV(SRB_scat.jo2_a+SRB_scat.jo2_b))
 
 plt.figure()
 plt.plot(LWAV(SRB.jo2_a+SRB.jo2_b), SRB.lev)
+'''
 plt.plot(LWAV(SRB.jo2_a), SRB.lev)
 plt.plot(LWAV(SRB.jo2_b), SRB.lev)
+'''
 plt.plot(LWAV(SRB_scat.jo2_a+SRB_scat.jo2_b), SRB_scat.lev)
+plt.plot(LWAV(SRB_scat2.jo2_a+SRB_scat2.jo2_b), SRB_scat2.lev)
+'''
 plt.plot(LWAV(SRB_scat.jo2_a), SRB_scat.lev)
 plt.plot(LWAV(SRB_scat.jo2_b), SRB_scat.lev)
+'''
 plt.ylim(1e3, 1e-6); plt.yscale('log')
 #plt.xlim(0,2)
 plt.xscale('log')
@@ -946,171 +546,7 @@ plt.xlim(1e-13, 1e-7)
 
 #%% define ozone column calculation function
 
-def O3_col_trapz(ds, time=False, O2_mr=0.21, lon=True, g=9.81):
-    """
-    Calculate ozone column in Dobson Units using explicit loops
-    and trapezoidal integration over hybrid-pressure layers.
-    """
-    
-    g = g  # gravity acceleration m/s^2
-    to_DU = 1./2.6867e20  # convert mol/m^2 to DU
-    N2_mr = 1-O2_mr
-    m_avg = ((28*N2_mr) + (O2_mr*32)) * 1.661e-27  # kg per molecule? (used here for consistency)
-    
-    # O3 variable
-    o3 = ds['O3'].values
-    
-    # Hybrid pressure variables
-    ps = ds['PS'].values
-    p0 = ds['P0'].values
-    hyai = ds['hyai'].values
-    hybi = ds['hybi'].values
-    
-    nt = ds['time'].size if 'time' in ds.dims else 0
-    ny = ds['lat'].size
-    nz = ds['lev'].size
-    nx = ds['lon'].size
-    
-    # Initialize layer thickness array
-    if nt > 0:
-        dp = np.zeros((nz-1, ny, nx), dtype=np.float32)
 
-    else:
-        dp = np.zeros((nz-1, ny, nx), dtype=np.float32)
-
-    
-    # Compute layer thickness dp using trapezoid (average between interfaces)
-    if nt > 0:
-        for i in range(nt):
-            for j in range(ny):
-                for k in range(nx):
-                    # Compute interface pressures
-                    p_interfaces = hyai * p0 + hybi * ps[i, j, k]
-                    for iz in range(nz-1):
-                        dp[iz, j, k] = p_interfaces[iz+1] - p_interfaces[iz]
-
-    else:
-        for j in range(ny):
-            for k in range(nx):
-                p_interfaces = hyai * p0 + hybi * ps[j, k]
-                for iz in range(nz-1):
-                    dp[iz, j, k] = p_interfaces[iz+1] - p_interfaces[iz]
-
-    
-    # Apply trapezoidal integration: multiply layer thickness by mean of O3 at layer
-    if nt > 0:
-        o3_col = np.zeros((nt, ny, nx), dtype=np.float32)
-        for i in range(nt):
-            for j in range(ny):
-                for k in range(nx):
-                    # Trapezoid: sum over vertical layers
-                    o3_col[i, j, k] = np.sum((o3[i, :-1, j, k] + o3[i, 1:, j, k])/2 * dp[i, :, j, k])
-    else:
-        o3_col = np.zeros((ny, nx), dtype=np.float32)
-        for j in range(ny):
-            for k in range(nx):
-                o3_col[j, k] = np.sum((o3[:-1, j, k] + o3[1:, j, k])/2 * dp[:, j, k])
-    
-    # Divide by gravity to get column (mol/m^2)
-    o3_col /= g
-    
-    # Convert to Dobson Units
-    o3_col *= to_DU
-    
-    # Optional averaging over lon/time
-    if not lon:
-        o3_col = o3_col.mean(axis=-1)  # longitude
-    if not time and nt > 0:
-        o3_col = o3_col.mean(axis=0)  # time
-    
-    print("O3 columns calculated using trapezoid")
-    return o3_col/m_avg 
-
-def O3_col(ds, time = False, O2_mr = 0.21, lon = True, g = 9.81):
-    
-    g = g # gravity acceleration (cm/sec2)
-    to_DU = 1./2.6867e20  # convert colunm density / cm^2 to Dobson units
-    N2_mr = 1-O2_mr #nitrogen mixing ratio
-    m_avg = ((28*N2_mr)+(O2_mr*32))*1.661e-27 # average weight of atmosphere
-    
-    #calcualte column integrals 
-    o3 = ds['O3']
-    
-    # variables to calcualate hybrid pressure on model interfaces
-    ps = ds['PS'].values # surface pressure
-    p0 = ds['P0'].values
-    hyai = ds['hyai'].values
-    hybi = ds['hybi'].values
-    
-    #col = np.ndarray(ps.shape, np.float32)
-    dp = np.ndarray(o3.shape, np.float32)
-    
-    nt = 1
-    try:
-        nt = ds['time'].size
-    except:
-        nt = 0
-    ny = ds['lat'].size
-    nz = ds['lev'].size
-    nx = ds['lon'].size
-    
-    press = np.ndarray(nz, np.float32)
-    if (nt > 0):
-        for i in range(nt):
-            for j in range(ny):
-                for k in range(nx):
-                    press = hyai * p0 + hybi * ps[i,j,k]
-                    for iz in range(nz):
-                        dp[i,iz,j,k] = (press[iz+1]-press[iz])
-    else:
-        for j in range(ny):
-            for k in range(nx):
-                press = hyai * p0 + hybi * ps[j,k]
-                for iz in range(nz):
-                    dp[iz,j,k] = (press[iz+1]-press[iz])
-                    
-    #calcualte column integrals 
-    o3 = o3 * dp / m_avg
-    
-    if (nt > 0):
-        for i in range(nt):
-            for j in range(96):
-                for k in range(144):
-                    o3[i,:,j,k] = o3[i,:,j,k]/g    
-    else:
-        for j in range(96):
-            for k in range(144):
-                o3[:,j,k] = o3[:,j,k]/g
-    
-    if (nt > 0):
-        o3col = np.sum(o3, axis = 1) * to_DU # convert to DU
-    else:
-        o3col = np.sum(o3, axis = 0) * to_DU # convert to DU
-    if (lon == False):
-        o3col  = o3col.mean(dim='lon')
-    if (time == False):
-        try:
-            o3col  = o3col.mean(dim='time')
-        except:
-            o3col  = o3col
-    print('O3 columns calculated')
-    return o3col
-
-#%%
-'''
-# Pre-industrial baseliine run (PI; 100% PAL of O2)
-File =  "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.baseline.cam.h0.0013-0017.nc" #file name
-Pre_pc_h0 = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
-
-col = O3_col(Pre_pc_h0.mean(dim='time'), time = False, O2_mr = 0.21, lon = True, g = 9.81)
-col_trapz = O3_col_trapz(Pre_pc_h0.mean(dim='time'), time = False, O2_mr = 0.21, lon = True, g = 9.81)
-
-col_zm = col_trapz.mean(axis=1)   # shape (96,)
-global_mean = np.sum(gw * col_zm) / 2.0
-
-col_zm = O3_col.mean(axis=1)   # shape (96,)
-global_mean = np.sum(gw * col_zm) / 2.0
-'''
 #%% K stars
 path = '/Users/gregcooke/H_escape/'
 
@@ -1164,6 +600,9 @@ Zero1_pc_h2 = xr.open_dataset(File,decode_times=False) #open the file and decode
 File = path+"b.e21.BWma1850.f19_g17.baseline.cam.h0.0014-0017.nc"
 PI = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
 
+File =  "/Users/gregcooke/CESM_data/Earth_baseline_PI.cam.h0.0001.nc" #file name
+Pre_h0 = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
+
 # Pre-industrial baseliine run (PI; 100% PAL of O2)
 File =  "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.baseline.cam.h0.0013-0017.nc" #file name
 Pre_pc_h0 = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
@@ -1195,6 +634,46 @@ Zero1_pc_h0 = xr.open_dataset(File,decode_times=False) #open the file and decode
 File =  path+"b.e21.BWma1850.f19_g17.150pc_o2.002.cam.h0.0034-0037.nc" #file name
 One50_pc_h0 = xr.open_dataset(File,decode_times=False) #open the file and decode time as false
 
+#%% P-T profile plot
+alpha = 0.2
+plt.figure(figsize = (14,7))
+
+plt.plot(LWAV(Pre_pc_h0.T), Pre_pc_h0.lev, lw = lw, ls = '-', color = 'black', label = '100% PAL')
+T_min = np.empty(0); T_max = np.empty(0)
+for i in range(len(LWAV(Pre_pc_h0.T))):
+    T_min = np.append(T_min, Pre_pc_h0.T.isel(lev = i).min())
+    T_max = np.append(T_max, Pre_pc_h0.T.isel(lev = i).max())
+plt.fill_betweenx(Pre_pc_h0.lev, T_min, T_max, color = 'black', alpha = alpha)
+
+plt.plot(LWAV(Ten_pc_h0.T), Pre_pc_h0.lev, lw = lw, ls = '-', color = Ten_pc_color, label = '10% PAL')
+T_min = np.empty(0); T_max = np.empty(0)
+for i in range(len(LWAV(Ten_pc_h0.T))):
+    T_min = np.append(T_min, Ten_pc_h0.T.isel(lev = i).min())
+    T_max = np.append(T_max, Ten_pc_h0.T.isel(lev = i).max())
+plt.fill_betweenx(Ten_pc_h0.lev, T_min, T_max, color = Ten_pc_color, alpha =  alpha)
+
+plt.plot(LWAV(One_pc_h0.T), Pre_pc_h0.lev, lw = lw, ls = '-', color = One_pc_color, label = '1% PAL')
+T_min = np.empty(0); T_max = np.empty(0)
+for i in range(len(LWAV(Ten_pc_h0.T))):
+    T_min = np.append(T_min, One_pc_h0.T.isel(lev = i).min())
+    T_max = np.append(T_max, One_pc_h0.T.isel(lev = i).max())
+plt.fill_betweenx(One_pc_h0.lev, T_min, T_max, color = One_pc_color, alpha =  alpha)
+
+plt.plot(LWAV(Zero1_pc_h0.T), Pre_pc_h0.lev, lw = lw, ls = '-', color = Zero1_pc_color, label = '0.1% PAL')
+T_min = np.empty(0); T_max = np.empty(0)
+for i in range(len(LWAV(Ten_pc_h0.T))):
+    T_min = np.append(T_min, Zero1_pc_h0.T.isel(lev = i).min())
+    T_max = np.append(T_max, Zero1_pc_h0.T.isel(lev = i).max())
+plt.fill_betweenx(One_pc_h0.lev, T_min, T_max, color = Zero1_pc_color, alpha =  alpha)
+
+plt.ylim(1e3, 1e-4); plt.yscale('log')
+plt.xlabel('Temperature [K]', fontsize = 15, weight = 'bold')
+plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
+plt.xlim(145, 300)
+thick_axes(top = True)
+plt.legend(loc = (0.71, 0.06), fontsize = 15, 
+           frameon = False, ncol = 1)
+plt.savefig('/Users/gregcooke/python_output/P-T_profiles', dpi = 400, bbox_inches = 'tight')
 #%% Now calculate ozone columns
 
 One50_col = O3_col(One50_pc_h0.mean(dim='time'), time = False, O2_mr = 0.21*1.5, lon = True, g = 9.81)
@@ -1225,7 +704,6 @@ plt.figure()
 Zero1_pc_h0.V.isel(lev = 44).plot(cmap = 'RdBu_r', vmax = 5, vmin = -5)
 
 #%% Tropospheric polar vortex
-import cartopy.crs as ccrs  
 
 lev = 500
 geopotential_height = Pre_pc_h0['Z3'].sel(lev=lev, method='nearest')
@@ -1378,7 +856,7 @@ plt.yscale('log')
 plt.ylabel('Cross section')
 plt.xlabel('Wavelength [nm]')
 
-#%%
+#%% Kasting photo files
 
 
 file_path = "/Users/gregcooke/Aoshuang_2_CorrK4_clean/DATA/photos.pdat"
@@ -1503,25 +981,11 @@ FarUV_Wav_arr = np.array(L_list)
 FarUV_SFX_arr = np.array(SFX_list)
 
 
-def convert_photons_to_energy(wav, flux):
-    
-    # Physical constants
-    h = 6.626e-34  # Planck constant (J·s)
-    c = 2.998e8    # speed of light (m/s)
-
-    # Convert wavelength to meters
-    wav = wav * 1e-10
-
-    # Conversion: photons/cm²/s → W/m²/nm
-    irradiance = flux * (h * c / wav) * 1e4
-    
-    return irradiance
 
 FarUV_SFX_3D_arr_corrected = convert_photons_to_energy(FarUV_3D_Wav_arr/10, FarUV_3D_SFX_arr)
 FarUV_SFX_arr_corrected = convert_photons_to_energy(FarUV_Wav_arr/10, FarUV_SFX_arr)
 Flux_arr_corrected = convert_photons_to_energy(wav/10, flux_arr)
 
-import pandas as pd
 VULCAN_Sun = pd.read_csv('/Users/gregcooke/VULCAN/atm/stellar_flux/VPL_solar.txt', 
                          skiprows = 1,  delim_whitespace = True,
                          names = ['Wav', 'Flux'])
@@ -1553,10 +1017,10 @@ plt.figure(figsize = (10,5))
 plt.plot(WACCM_wavelength, WACCM_Flux, color = 'orange', lw = 2, label = 'WACCM6')
 #plt.plot(VULCAN_Sun['Wav'][88:175], VULCAN_Sun['Flux'][88:175]/VULCAN_factor, color = 'b', lw = 2, label = 'VULCAN')
 plt.plot(VULCAN_Sun_EUV['Wav'], VULCAN_Sun_EUV['Flux']/VULCAN_factor, color = 'b', lw = 2)
-plt.plot(wav/10, Flux_arr_corrected/Kasting_factor, color = 'k', lw = 2, label = 'Kasting 1D model')
-#plt.plot(wav/10, 3*Flux_arr_corrected/Kasting_factor, color = 'k', lw = 2, label = 'Kasting 1D model')
-#plt.plot(FarUV_Wav_arr/10, FarUV_SFX_arr_corrected/Kasting_factor, color = 'k', lw = 2)#, label = 'Kasting 1D model')
-#plt.plot(FarUV_3D_Wav_arr/10, FarUV_SFX_3D_arr_corrected/Kasting_factor, color = 'k', lw = 2)#, label = 'Kasting 1D model')
+plt.plot(wav/10, Flux_arr_corrected/Kasting_factor, color = 'black', lw = 2, label = 'Kasting')
+#plt.plot(wav/10, 3*Flux_arr_corrected/Kasting_factor, color = 'black', lw = 2, label = 'Kasting')
+#plt.plot(FarUV_Wav_arr/10, FarUV_SFX_arr_corrected/Kasting_factor, color = 'black', lw = 2)#, label = 'Kasting 1D model')
+#plt.plot(FarUV_3D_Wav_arr/10, FarUV_SFX_3D_arr_corrected/Kasting_factor, color = 'black', lw = 2)#, label = 'Kasting 1D model')
 
 plt.yscale('log')
 plt.xlim(100,870)
@@ -1591,7 +1055,7 @@ Sun_2_4 = pd.read_csv(File, delim_whitespace=True,
 plt.figure(figsize = (10,5))
 
 plt.plot(WACCM_wavelength, WACCM_Flux, color = 'orange', lw = 2, label = 'WACCM6')
-plt.plot(Sun_0_0['Wav'], Sun_0_0['Flux'], color = 'k', lw = 2, label = 'Sun 0.0 Ga')
+plt.plot(Sun_0_0['Wav'], Sun_0_0['Flux'], color = 'black', lw = 2, label = 'Sun 0.0 Ga')
 plt.plot(Sun_0_5['Wav'], Sun_0_5['Flux'], color = 'grey', lw = 2, label = 'Sun 0.5 Ga')
 plt.plot(Sun_1_0['Wav'], Sun_1_0['Flux'], color = 'b', lw = 2, label = 'Sun 1.0 Ga')
 plt.plot(Sun_2_0['Wav'], Sun_2_0['Flux'], color = 'cyan', lw = 2, label = 'Sun 2.0 Ga')
@@ -1600,220 +1064,74 @@ plt.plot(Sun_2_4['Wav'], Sun_2_4['Flux'], color = 'g', lw = 2, label = 'Sun 2.4 
 #plt.yscale('log')
 plt.xlim(10,1000)
 #plt.ylim(1e-3)
-#%% Cross sections
+#%% Cross section comparison
 
-path = '/Users/gregcooke/K2_18_XS/'
-v_path = '/Users/gregcooke/VULCAN/thermo/photo_cross/'
-csv_a_H2O = pd.read_csv(path+'H2O.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
-csv_a_CO2 = pd.read_csv(path+'CO2.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
+def load_photochem_photodiss_xs(species):
+    """Effective photodissociation cross section [cm^2] from photochem_clima_data HDF5."""
+    import h5py
+    from photochem_clima_data import DATA_DIR
 
-csv_v_H2O = pd.read_csv(v_path+'H2O/H2O_cross.csv', skiprows=1, names=['Wav', 'XS', 'XS1', 'XS2'])
-csv_v_CO2 = pd.read_csv(v_path+'CO2/CO2_cross.csv', skiprows=1, names=['Wav', 'XS', 'XS1', 'XS2'])
+    filename = f"{DATA_DIR}/xsections/{species}.h5"
+    with h5py.File(filename, "r") as f:
+        w_nm = f["wavelengths"][:].astype(float)
+        sigma = f["photodissociation"][:].astype(float)
+        if "photodissociation-qy" in f:
+            qy_group = f["photodissociation-qy"]
+            w_qy = qy_group["wavelengths"][:].astype(float)
+            sigma_eff = np.zeros_like(sigma)
+            for branch in qy_group.keys():
+                if branch == "wavelengths":
+                    continue
+                qy = np.interp(w_nm, w_qy, qy_group[branch][:].astype(float))
+                sigma_eff += sigma * qy
+            return w_nm, sigma_eff
+        return w_nm, sigma
+
+
+atmos_path = '/Users/gregcooke/atmos/PHOTOCHEM/DATA/XSECTIONS/'
+csv_a_O2 = pd.read_csv(atmos_path+'O2/Yoshino92.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
+csv_a_O2 = pd.read_csv(atmos_path+'O2/O2_alinc.dat', delim_whitespace=True, skiprows=7, names=['Wav', 'XS'])
+csv_a_O3 = pd.read_csv(atmos_path+'O3/O3.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
+
+# path = '/Users/gregcooke/K2_18_XS/'
+# v_path = '/Users/gregcooke/VULCAN/thermo/photo_cross/'
+# csv_a_H2O = pd.read_csv(path+'H2O.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
+# csv_a_CO2 = pd.read_csv(path+'CO2.XS.dat', delim_whitespace=True, skiprows=4, names=['Wav', 'XS'])
+# csv_v_H2O = pd.read_csv(v_path+'H2O/H2O_cross.csv', skiprows=1, names=['Wav', 'XS', 'XS1', 'XS2'])
+# csv_v_CO2 = pd.read_csv(v_path+'CO2/CO2_cross.csv', skiprows=1, names=['Wav', 'XS', 'XS1', 'XS2'])
+
+w_pc_O2, xs_pc_O2 = load_photochem_photodiss_xs('O2')
+w_pc_O3, xs_pc_O3 = load_photochem_photodiss_xs('O3')
 
 wav = (range_min+range_max)/2
-plt.figure(figsize = (9,5))
-plt.plot(wav/10, ozone1_arr)
-plt.plot(wav/10, ozone2_arr)
-plt.plot((wav/10)[:35], o2_arr, color = 'cyan', label = 'O2')
-plt.plot((wav/10)[:35], n2o_arr, color = 'purple', label = 'N2O')
-plt.plot((wav/10)[:35], co2_arr, color = 'g', lw = 2, ls = '-', label = 'CO2')
-plt.plot(csv_a_CO2['Wav']/10, csv_a_CO2['XS'], color = 'g', lw = 2, ls = '--')
-plt.plot(csv_v_CO2['Wav'], csv_v_CO2['XS'], color = 'g', lw = 2, ls = ':')
-plt.plot((wav/10)[:35], h2o_arr, color = 'b', lw = 2, ls = '-', label = 'H2O')
-plt.plot(csv_a_H2O['Wav']/10, csv_a_H2O['XS'], color = 'b', lw = 2, ls = '--')
-plt.plot(csv_v_H2O['Wav'], csv_v_H2O['XS'], color = 'b', lw = 2, ls = ':')
+plt.figure(figsize = (11,5))
+plt.plot(wav/10, ozone1_arr, 'teal', label = 'O3 (Kasting)')
+plt.plot(wav/10, ozone2_arr, 'teal')
+O3 = PI_V_482SZA['variable']['cross_J']['O3',1]+PI_V_482SZA['variable']['cross_J']['O3',2]
+plt.plot(PI_V_482SZA['variable']['bins'], O3, 'm', lw=2,ls = '--', label = 'O3 (VULCAN)')
+O2 = PI_V_482SZA['variable']['cross_J']['O2',1]+PI_V_482SZA['variable']['cross_J']['O2',2]
+plt.plot(PI_V_482SZA['variable']['bins'], O2, 'm', lw=2,ls = '--', label = 'O2 (VULCAN)')
+plt.plot((wav/10)[:35], o2_arr, color = 'teal', lw=2,label = 'O2 (Kasting)')
+plt.plot(csv_a_O2['Wav']/10, csv_a_O2['XS'], color = 'orange',lw=2, ls = ':', label = 'O2 (atmos)')
+plt.plot(csv_a_O3['Wav'], csv_a_O3['XS'], color = 'orange', lw=2,ls = ':', label = 'O2 (atmos)')
+plt.plot(w_pc_O2, xs_pc_O2, color='b', ls='-.', lw=2, label='O2 (Photochem)')
+plt.plot(w_pc_O3, xs_pc_O3, color='b', ls='-.', lw=2, label='O3 (Photochem)')
+# plt.plot((wav/10)[:35], n2o_arr, color = 'purple', label = 'N2O')
+# plt.plot((wav/10)[:35], co2_arr, color = 'g', lw = 2, ls = '-', label = 'CO2')
+# plt.plot(csv_a_CO2['Wav']/10, csv_a_CO2['XS'], color = 'g', lw = 2, ls = '--')
+# plt.plot(csv_v_CO2['Wav'], csv_v_CO2['XS'], color = 'g', lw = 2, ls = ':')
+# plt.plot((wav/10)[:35], h2o_arr, color = 'b', lw = 2, ls = '-', label = 'H2O')
+# plt.plot(csv_a_H2O['Wav']/10, csv_a_H2O['XS'], color = 'b', lw = 2, ls = '--')
+# plt.plot(csv_v_H2O['Wav'], csv_v_H2O['XS'], color = 'b', lw = 2, ls = ':')
 thick_axes()
-plt.ylim(1e-27,1e-16)
+plt.ylim(1e-24,1e-17)
 plt.legend(loc = 0, fontsize = 15, frameon = False)
-plt.xlim(120,250)
+plt.xlim(150,250)
 plt.yscale('log')
 plt.ylabel('Cross section', fontsize = 15, weight = 'bold')
 plt.xlabel('Wavelength [nm]', fontsize = 15, weight = 'bold')
 
-data = read_pickle_file(file_path); ls = '-'
-ls1 = ':'
-plt.figure(figsize = (9,5))
-#species = data['variable']['species']
-plt.plot(Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('O3')], Z1_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(Z5_pc_V_482SZA['variable']['ymix'][:,Z5_pc_spec_482SZA.index('O3')], Z5_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = Zero5_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('O3')], One_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(Five_pc_V_482SZA['variable']['ymix'][:,Five_pc_spec_482SZA.index('O3')], Five_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = Five_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('O3')], Ten_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(Fifty_pc_V_482SZA['variable']['ymix'][:,Fifty_pc_spec_482SZA.index('O3')], Fifty_pc_V_482SZA['atm']['pco']/1e6, lw = lw, color = Fifty_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('O3')], PI_V_482SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ls, label = 'O'+sub(3))
-plt.plot(One50_pc_V_482SZA['variable']['ymix'][:,One50_pc_spec_482SZA.index('O3')], PI_V_482SZA['atm']['pco']/1e6, lw = lw, color = 'grey', ls = ls, label = 'O'+sub(3))
-plt.ylim(1, 1e-8)
-plt.xscale('log')
-plt.yscale('log')
-plt.xlim(1e-12, 1e-4)
-thick_axes()
-
-
-#%% 1D comparisons
-
-def P_dens(DS):
-    k = 1.381e-23
-    dens = DS['press'] * 1e5 / (k*DS['temp'])
-    return dens
-
-def P_NOX(DS):
-    N = DS['N']
-    NO = DS['NO']
-    NO2 = DS['NO2']
-    NOX = N+NO+NO2
-    return NOX
-
-def P_HOX(DS):
-    H = DS['H']
-    OH = DS['OH']
-    HO2 = DS['HO2']
-    H2O2 = DS['H2O2']
-    HOX = H+OH+HO2+H2O2
-    return HOX
-
-def calculate_column_height_method(df):
-    # Convert altitude from km to cm for unit consistency
-    # 1 km = 100,000 cm
-    z_cm = df['alt'].values * 100000 
-    
-    # Calculate Ozone number density (molecules/cm^3)
-    # Ensure mixing ratio is in absolute units (not ppm/ppb)
-    o3_num_den = df['O3'].values * df['den'].values
-    
-    # Integrate using the trapezoidal rule
-    # This sums the area under the ozone density vs. height curve
-    total_molecules = np.trapz(o3_num_den, z_cm)
-    
-    # Convert to Dobson Units
-    column_du = total_molecules / 2.687e16
-    return column_du
-
-def calculate_column_pressure_method(df):
-    # Constants
-    g = 9.80665          # m/s^2
-    m_air = 4.81e-26     # kg (approx mass of one air molecule)
-    
-    # Convert pressure from bar to Pascals
-    press_pa = df['press'].values * 1e5
-    
-    # Mixing ratio
-    o3_mixing = df['O3'].values
-    
-    # Integrate mixing ratio over pressure
-    # Note: we use negative np.trapz because pressure decreases with index/altitude
-    integral = -np.trapz(o3_mixing, press_pa)
-    
-    # Calculate total molecules per square meter
-    total_molecules_m2 = integral / (g * m_air)
-    
-    # Convert m^-2 to cm^-2 (divide by 10,000)
-    total_molecules_cm2 = total_molecules_m2 / 10000
-    
-    # Convert to Dobson Units
-    column_du = total_molecules_cm2 / 2.687e16
-    return column_du
-
-print(calculate_column_pressure_method(Photo_PI))
-print(calculate_column_height_method(Photo_PI))
-
-P_col_150pc = calculate_column_height_method(Photo_150pc)
-P_col_PI = calculate_column_height_method(Photo_PI)
-P_col_10pc = calculate_column_height_method(Photo_10pc)
-P_col_1pc = calculate_column_height_method(Photo_1pc)
-P_col_01pc = calculate_column_height_method(Photo_01pc)
-
 #%%
-
-def method_A(df):
-    ozone_index = df['O3']
-    #  no. density (molecules/cm^3)
-    ozone_density = df['den']*ozone_index
-    altitudes = df['alt']
-    # density over alt to get column (molecules/cm^2)
-    column_density = np.trapz(ozone_density, altitudes)
-    dobson_units = column_density / 2.6867e16 # Convert to DU
-    print(f"Ozone column: {dobson_units:.2f} Dobson Units")
-    
-    return 1e5*dobson_units
-
-def method_W(df):
-    #wogans method
-    ozone_index = df['O3']
-    ozone_density = df['den']*ozone_index
-    dz = df['alt'][1] - df['alt'][0]
-    column_density = np.sum(ozone_density * dz)
-    dobson_units = column_density / 2.6867e16 # Convert to DU
-    print(f"Ozone column Wogan: {dobson_units:.2f} Dobson Units")
-    
-    return 1e5*dobson_units
-
-
-def o3_trapz(df):
-    ozone_density = df['O3']*df['den']*1e6 #retrieving number density (molecules/cm3)
-    altitudes = df['alt']*1e3
-    column_density = np.trapz(ozone_density, altitudes) #trapezoidal rule approximation to integrate the number density
-    dobson_units = column_density / 2.6867e20  #loschmidt constant
-    return dobson_units
-
-
-def o3_mass_conserving_trapz(df, g=9.81, MO2=0.21):
-    # mean molecular mass of dry air [kg]
-    m_air = ((1 - MO2) * 28 + MO2 * 32) * 1.66054e-27
-
-    # sort so highest pressure first
-    df = df.sort_values('press', ascending=False)
-
-    chi = df['O3'].to_numpy()                 # volume mixing ratio
-    p = df['press'].to_numpy() * 1e5          # pressure [Pa]
-
-    # Trapezoidal integration in pressure coordinates
-    # Integral chi dp ≈ sum 0.5 * (chi[i] + chi[i+1]) * (p[i] - p[i+1])
-    integral = np.trapz(chi, p)
-
-    # mass-conserving column
-    N_O3 = integral / (m_air * g)
-
-    return N_O3 / 2.6867e20  # Dobson units
-
-
-def o3_mass_conserving(df, g=9.81, MO2=0.21):
-    # mean molecular mass of dry air [kg]
-    m_air = ((1-MO2)*28 + MO2*32)*1.66054e-27
-
-    # sort so highest pressure first
-    df = df.sort_values('press', ascending=False)
-
-    chi = df['O3'].to_numpy()
-    p = df['press'].to_numpy()*1e5
-
-    dp = -np.diff(p)  # pressure difference per layer
-
-    # mass-conserving column
-    N_O3 = np.sum(chi[:-1] * dp) / (m_air * g)
-    
-    # See Salby 1996
-
-    return N_O3 / 2.6867e20  # Dobson units
-
-def compare_columns(df, tol=0.05):
-    # compute columns both ways
-    du_pressure = o3_mass_conserving(df)
-    # height-based trapezoidal with correct units
-    ozone_density = df['O3'] * df['den']*1e6
-    heights = df['alt'] * 1e3  # km→cm
-    du_height = np.trapz(ozone_density, heights) / 2.6867e20
-
-    # percentage difference
-    pct_diff = 100*(du_height - du_pressure)/du_pressure
-
-    warning = abs(pct_diff) > 100*tol
-    return {
-        'pressure_DU': du_pressure,
-        'height_DU': du_height,
-        'pct_diff': pct_diff,
-        'warning': warning
-    }
-
 # Original (pressure-model) grid
 z_old = LWAV(Pre_pc_h0.Z3).values / 1000.0   # km
 o3_old = LWAV(Pre_pc_h0.O3).values           # mixing ratio
@@ -1845,45 +1163,10 @@ print(o3_mass_conserving(P_new_WACCM))
 print(o3_mass_conserving_trapz(P_new_WACCM, g=9.81, MO2=0.21))
 
 #%% Truncation error
-def layerwise_truncation_error(df, g=9.81, MO2=0.21):
-    m_air = ((1-MO2)*28 + MO2*32)*1.66054e-27  # kg
-
-    df_sorted = df.sort_values('press', ascending=False)
-    
-    chi = df_sorted['O3'].to_numpy()
-    n_m3 = chi* (df_sorted['den'].to_numpy() * 1e6 )   # cm3 → m3
-    z_m = df_sorted['alt'].to_numpy() * 1e3    # km → m
-    p = df_sorted['press'].to_numpy() * 1e5    # hPa → Pa
-
-    dp = -np.diff(p)
-    dz = np.diff(z_m)
-
-    # Mass-conserving layer
-    N_O3_layer_pressure = chi[:-1] * dp / (g * m_air)
-    
-    # Height-trapezoid layer
-    N_O3_layer_height = 0.5*(n_m3[:-1]+n_m3[1:]) * dz
-
-    # Convert to Dobson Units
-    to_DU = 1/2.6867e20
-    N_O3_layer_pressure_DU = N_O3_layer_pressure * to_DU
-    print(np.sum(N_O3_layer_pressure_DU))
-    N_O3_layer_height_DU = N_O3_layer_height * to_DU
-    print(np.sum(N_O3_layer_height_DU))
-
-    pct_error = 100*(N_O3_layer_height_DU - N_O3_layer_pressure_DU) / N_O3_layer_pressure_DU
-
-    return {
-        'layer_pressure_DU': N_O3_layer_pressure_DU,
-        'layer_height_DU': N_O3_layer_height_DU,
-        'pct_error': pct_error,
-        'z_mid': 0.5*(z_m[:-1]+z_m[1:])/1e3  # km
-    }
 
 # Example usage
 errors = layerwise_truncation_error(P_new_WACCM)
 
-import matplotlib.pyplot as plt
 
 plt.figure()
 plt.plot(errors['pct_error'], errors['z_mid'])
@@ -1892,60 +1175,12 @@ plt.ylabel('Altitude (km)')
 plt.grid(True)
 plt.show()
 
-def total_pct_error(errors):
-    """
-    Compute the weighted total percentage error of height-based vs. pressure-based column.
-    Each layer is weighted by its pressure-column contribution.
-    """
-    layer_pressure = errors['layer_pressure_DU']
-    layer_height = errors['layer_height_DU']
-    
-    # Fractional weight of each layer in total column
-    weights = layer_pressure / np.sum(layer_pressure)
-    
-    # Weighted average of percentage error
-    total_error = np.sum(weights * 100*(layer_height - layer_pressure)/layer_pressure)
-    
-    return total_error
 
 # Example usage
 total_error = total_pct_error(errors)
 print(f"Total weighted % error: {total_error:f}%")
 
 
-def cumulative_column_and_error(errors):
-    layer_pressure = errors['layer_pressure_DU']
-    layer_height = errors['layer_height_DU']
-    z_mid = errors['z_mid']
-
-    # Cumulative sum from surface to top
-    cum_pressure = np.cumsum(layer_pressure)
-    cum_height = np.cumsum(layer_height)
-
-    # Cumulative % error at each layer
-    cum_pct_error = 100 * (cum_height - cum_pressure) / cum_pressure
-
-    # Plot
-    fig, ax1 = plt.subplots(figsize=(6,8))
-
-    # Left axis: cumulative ozone column
-    ax1.plot(cum_pressure, z_mid, label='Pressure-based', color='blue')
-    ax1.plot(cum_height, z_mid, label='Height-trapezoid', color='red', linestyle='--')
-    ax1.set_xlabel('Cumulative O$_3$ column [DU]')
-    ax1.set_ylabel('Altitude [km]')
-    ax1.set_xlim(left=0)
-    ax1.set_ylim(bottom=0)
-    ax1.legend(loc='upper left')
-    ax1.grid(True, linestyle=':')
-
-    # Right axis: cumulative % error
-    ax2 = ax1.twiny()
-    ax2.plot(cum_pct_error, z_mid, color='green', label='Cumulative % error')
-    ax2.set_xlabel('Cumulative % error')
-    ax2.legend(loc='upper right')
-
-    plt.title('Cumulative O$_3$ Column and Trapezoidal Error vs Altitude')
-    plt.show()
 
 # Example usage
 cumulative_column_and_error(errors)
@@ -1965,55 +1200,7 @@ plt.show()
 
 #%%
 
-def Photochem_O3_col_mid(df, g=9.81, MO2=0.21):
-    # Physical constants
-    m_air = ((1 - MO2) * 28 + MO2 * 32) * 1.66054e-27  # kg
 
-    # Sort surface → top (pressure decreasing)
-    df = df.sort_values('press', ascending=False)
-
-    # Midpoint values
-    chi = df['O3'].to_numpy()           # mixing ratio (dimensionless)
-    p_mid = df['press'].to_numpy() * 1e5  # Pa
-
-    # Reconstruct interface pressures (second-order)
-    p_half = 0.5 * (p_mid[:-1] + p_mid[1:])
-
-    # Add top and bottom boundaries by extrapolation
-    p_top = p_mid[-1] + (p_mid[-1] - p_half[-1])
-    p_surf = p_mid[0] + (p_mid[0] - p_half[0])
-
-    p_interfaces = np.concatenate(([p_surf], p_half, [p_top]))
-
-    # Layer pressure thicknesses
-    dp = p_interfaces[:-1] - p_interfaces[1:]
-
-    # Midpoint-rule column integral
-    N_O3 = np.sum(chi * dp) / (g * m_air)
-
-    # Convert to Dobson Units
-    return N_O3 / 2.6867e20
-
-def Photochem_O3_col(df, g=9.81, MO2 = 0.21):
-    # Sort top-to-bottom or bottom-to-top safely
-    # Physical constants
-    g = 9.81             # m s^-2
-    m_air = ((1-MO2)*28+(MO2*32)) * 1.66054e-27  # kg (mean molecular mass of air)
-
-    # Sort by pressure (surface → top)
-    df = df.sort_values('press', ascending=False)
-
-    chi = df['O3'].to_numpy() # mixing ratio
-    p = df['press'].to_numpy()*1e5
-
-    # Pressure layer thicknesses
-    dp = -np.diff(p)
-
-    # Column density [molecules m^-2]
-    N_O3 = np.sum(chi[:-1] * dp) / (g * m_air)
-
-    # Convert to Dobson Units
-    return N_O3 / 2.6867e20
 
 print(o3_trapz(Photo_PI))
 print(o3_trapz(Photo_10pc))
@@ -2060,29 +1247,7 @@ def V_O3_col_P_trapz(DS):
     
     return -O3_col
 '''
-def V_O3_col_z_sum(DS):
-    species = DS['variable']['species']
-    O3_dens = DS['variable']['y'][:,species.index('O3')] * 1e6
-    
-    z = np.array((DS['atm']['zco']/1e2))
-    dz = np.empty(0)
-    for i in range(len(DS['atm']['zco']/1e5)-1):
-        dz_new = z[i+1] - z[i]
-        dz = np.append(dz, dz_new)
-        
-    O3_col = (O3_dens * dz).sum() / 2.6867e20
-    
-    return O3_col
 
-def V_O3_col_z_trapz(DS):
-    species = DS['variable']['species']
-    O3_dens = DS['variable']['y'][:,species.index('O3')] * 1e6
-    
-    z = np.array((DS['atm']['zmco']/1e2))
-        
-    O3_col = np.trapz(O3_dens, z) / 2.6867e20
-    
-    return O3_col
 
 '''
 E_WPT_V_60SZA, E_WPT_V_spec_60SZA = Read_O3_Run(file_path='Earth_1e12s_60SZA_WPT_1rtol.vul')
@@ -2273,6 +1438,7 @@ Fifty_05xCH4f_col = V_O3_col_z_trapz(Fifty_pc_V_05xCH4f_482SZA)
 Fifty_01xCH4f_col = V_O3_col_z_trapz(Fifty_pc_V_01xCH4f_482SZA)
 
 Ten_col = V_O3_col_z_trapz(Ten_pc_V_482SZA)
+Ten_col_T = V_O3_col_z_trapz(Ten_pc_V_482SZA_T)
 Ten_10xCH4_col = V_O3_col_z_trapz(Ten_pc_V_10xCH4_482SZA)
 Ten_5xCH4_col = V_O3_col_z_trapz(Ten_pc_V_5xCH4_482SZA)
 Ten_05xCH4_col = V_O3_col_z_trapz(Ten_pc_V_05xCH4_482SZA)
@@ -2297,6 +1463,7 @@ Five_05xCH4f_col = V_O3_col_z_trapz(Five_pc_V_05xCH4f_482SZA)
 Five_01xCH4f_col = V_O3_col_z_trapz(Five_pc_V_01xCH4f_482SZA)
 
 One_col = V_O3_col_z_trapz(One_pc_V_482SZA)
+One_col_T = V_O3_col_z_trapz(One_pc_V_482SZA_T)
 One_10xCH4_col = V_O3_col_z_trapz(One_pc_V_10xCH4_482SZA)
 One_5xCH4_col = V_O3_col_z_trapz(One_pc_V_5xCH4_482SZA)
 One_05xCH4_col = V_O3_col_z_trapz(One_pc_V_05xCH4_482SZA)
@@ -2321,6 +1488,7 @@ Z5_05xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_05xCH4f_482SZA)
 Z5_01xCH4f_col = V_O3_col_z_trapz(Z5_pc_V_01xCH4f_482SZA)
 
 Z1_col = V_O3_col_z_trapz(Z1_pc_V_482SZA)
+Z1_col_T = V_O3_col_z_trapz(Z1_pc_V_482SZA_T)
 Z1_10xCH4_col = V_O3_col_z_trapz(Z1_pc_V_10xCH4_482SZA)
 Z1_5xCH4_col = V_O3_col_z_trapz(Z1_pc_V_5xCH4_482SZA)
 Z1_05xCH4_col = V_O3_col_z_trapz(Z1_pc_V_05xCH4_482SZA)
@@ -2357,6 +1525,33 @@ Photo_PI_2CH4_col = Photochem_O3_col(Photo_PI_2CH4, g=9.81, MO2 = 0.21)
 Photo_PI_3CH4_col = Photochem_O3_col(Photo_PI_3CH4, g=9.81, MO2 = 0.21)
 Photo_PI_4CH4_col = Photochem_O3_col(Photo_PI_4CH4, g=9.81, MO2 = 0.21)
 Photo_PI_5CH4_col = Photochem_O3_col(Photo_PI_5CH4, g=9.81, MO2 = 0.21)
+
+Photo_10pc_col = Photochem_O3_col(Photo_10pc, g=9.81, MO2 = 0.021)
+Photo_10pc_01CH4_col = Photochem_O3_col(Photo_10pc_01CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_05CH4_col = Photochem_O3_col(Photo_10pc_05CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_1CH4_col = Photochem_O3_col(Photo_10pc_1CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_2CH4_col = Photochem_O3_col(Photo_10pc_2CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_3CH4_col = Photochem_O3_col(Photo_10pc_3CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_4CH4_col = Photochem_O3_col(Photo_10pc_4CH4, g=9.81, MO2 = 0.021)
+Photo_10pc_5CH4_col = Photochem_O3_col(Photo_10pc_5CH4, g=9.81, MO2 = 0.021)
+
+Photo_1pc_col = Photochem_O3_col(Photo_1pc, g=9.81, MO2 = 0.0021)
+Photo_1pc_01CH4_col = Photochem_O3_col(Photo_1pc_01CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_05CH4_col = Photochem_O3_col(Photo_1pc_05CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_1CH4_col = Photochem_O3_col(Photo_1pc_1CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_2CH4_col = Photochem_O3_col(Photo_1pc_2CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_3CH4_col = Photochem_O3_col(Photo_1pc_3CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_4CH4_col = Photochem_O3_col(Photo_1pc_4CH4, g=9.81, MO2 = 0.0021)
+Photo_1pc_5CH4_col = Photochem_O3_col(Photo_1pc_5CH4, g=9.81, MO2 = 0.0021)
+
+Photo_01pc_col = Photochem_O3_col(Photo_01pc, g=9.81, MO2 = 0.00021)
+Photo_01pc_01CH4_col = Photochem_O3_col(Photo_01pc_01CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_05CH4_col = Photochem_O3_col(Photo_01pc_05CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_1CH4_col = Photochem_O3_col(Photo_01pc_1CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_2CH4_col = Photochem_O3_col(Photo_01pc_2CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_3CH4_col = Photochem_O3_col(Photo_01pc_3CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_4CH4_col = Photochem_O3_col(Photo_01pc_4CH4, g=9.81, MO2 = 0.00021)
+Photo_01pc_5CH4_col = Photochem_O3_col(Photo_01pc_5CH4, g=9.81, MO2 = 0.00021)
 
 '''
 Plot figure
@@ -2417,9 +1612,12 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 Fifty_pc_V_5xCH4f_482SZA['variable']['ymix'][:,Fifty_pc_spec_5xCH4f_482SZA.index('CH4')][0],
                 Fifty_pc_V_10xCH4f_482SZA['variable']['ymix'][:,Fifty_pc_spec_10xCH4f_482SZA.index('CH4')][0]
                 ]
+        
             flux_cols = [Fifty_01xCH4f_col, Fifty_05xCH4f_col, Fifty_1xCH4f_col, Fifty_5xCH4f_col, Fifty_10xCH4f_col]
             ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
 
+
+            
         if (i == 3):
             flux_methane = [
                 Ten_pc_V_01xCH4f_482SZA['variable']['ymix'][:,Ten_pc_spec_01xCH4f_482SZA.index('CH4')][0],
@@ -2431,6 +1629,15 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
             flux_cols = [Ten_01xCH4f_col, Ten_05xCH4f_col, Ten_1xCH4f_col, Ten_5xCH4f_col, Ten_10xCH4f_col]
             ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
         
+            flux_methane = [
+                Photo_10pc_01CH4['CH4'][0],Photo_10pc_05CH4['CH4'][0],Photo_10pc_1CH4['CH4'][0],
+                Photo_10pc_2CH4['CH4'][0], Photo_10pc_3CH4['CH4'][0], Photo_10pc_4CH4['CH4'][0],
+                Photo_10pc_5CH4['CH4'][0]
+            ]
+            flux_cols = [Photo_10pc_01CH4_col, Photo_10pc_05CH4_col, Photo_10pc_1CH4_col, Photo_10pc_2CH4_col,
+                         Photo_10pc_3CH4_col, Photo_10pc_4CH4_col, Photo_10pc_5CH4_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='b', marker='s', ls='', label='Photochem')
+            
         if (i == 4):
             flux_methane = [
                 Five_pc_V_01xCH4f_482SZA['variable']['ymix'][:,Five_pc_spec_01xCH4f_482SZA.index('CH4')][0],
@@ -2453,6 +1660,15 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
             flux_cols = [One_01xCH4f_col, One_05xCH4f_col, One_1xCH4f_col, One_5xCH4f_col, One_10xCH4f_col]
             ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
         
+            flux_methane = [
+                Photo_1pc_01CH4['CH4'][0],Photo_1pc_05CH4['CH4'][0],Photo_1pc_1CH4['CH4'][0],
+                Photo_1pc_2CH4['CH4'][0], Photo_1pc_3CH4['CH4'][0], Photo_1pc_4CH4['CH4'][0],
+                Photo_1pc_5CH4['CH4'][0]
+            ]
+            flux_cols = [Photo_1pc_01CH4_col, Photo_1pc_05CH4_col, Photo_1pc_1CH4_col, Photo_1pc_2CH4_col,
+                         Photo_1pc_3CH4_col, Photo_1pc_4CH4_col, Photo_1pc_5CH4_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='b', marker='s', ls='', label='Photochem')
+            
         
         if (i == 6):
             flux_methane = [
@@ -2475,7 +1691,16 @@ for i, (title, meth_vals, col_vals, has_flux) in enumerate(plot_configs):
                 ]
             flux_cols = [Z1_01xCH4f_col, Z1_05xCH4f_col, Z1_1xCH4f_col, Z1_5xCH4f_col, Z1_10xCH4f_col]
             ax.plot(flux_methane, flux_cols, lw=lw, color='m', marker='s', ls='', label='Fixed Flux, VULCAN')
-        
+            
+            flux_methane = [
+                Photo_01pc_01CH4['CH4'][0],Photo_01pc_05CH4['CH4'][0],Photo_01pc_1CH4['CH4'][0],
+                Photo_01pc_2CH4['CH4'][0], Photo_01pc_3CH4['CH4'][0], Photo_01pc_4CH4['CH4'][0],
+                Photo_01pc_5CH4['CH4'][0]
+            ]
+            flux_cols = [Photo_01pc_01CH4_col, Photo_01pc_05CH4_col, Photo_01pc_1CH4_col, Photo_01pc_2CH4_col,
+                         Photo_01pc_3CH4_col, Photo_01pc_4CH4_col, Photo_01pc_5CH4_col]
+            ax.plot(flux_methane, flux_cols, lw=lw, color='b', marker='s', ls='', label='Photochem')
+            
 
     # Formatting
     ax.set_xscale('log')
@@ -2519,7 +1744,7 @@ TP1e_MS_60SZA_col = V_O3_col_z_trapz(TP1e_MS_60SZA); TP1e_W21_60SZA_col = V_O3_c
 plt.figure()
 O2 = [1, 0.1, 0.01, 0.001]   
 cols = TP1e_MS_60SZA_col, TP1e_10pc_MS_60SZA_col, TP1e_1pc_MS_60SZA_col, TP1e_01pc_MS_60SZA_col
-plt.plot(O2, cols, marker = 's', color = 'k')
+plt.plot(O2, cols, marker = 's', color = 'black')
 O2 = [1, 0.1, 0.01] #, 0.001] 
 cols = TP1e_P19_60SZA_col, TP1e_10pc_P19_60SZA_col, TP1e_1pc_P19_60SZA_col
 plt.plot(O2, cols, marker = 's', color = 'orange')
@@ -2532,9 +1757,9 @@ plt.xscale('log')
 plt.figure(figsize = (10,6))
 gs = gridspec.GridSpec(2, 2)
 plt.subplot(gs[0,0])
-plt.plot(TP1e_MS_60SZA['variable']['ymix'][:,TP1e_MS_60SZA_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
-plt.plot(TP1e_P19_60SZA['variable']['ymix'][:,TP1e_MS_60SZA_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
-plt.plot(LWAV(Pre_pc_h0.O3), Pre_pc_h0.lev/1e3, color = 'k', lw = 2)
+plt.plot(TP1e_MS_60SZA['variable']['ymix'][:,TP1e_MS_60SZA_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'black', ls = '--', label = 'O'+sub(3))
+plt.plot(TP1e_P19_60SZA['variable']['ymix'][:,TP1e_MS_60SZA_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'black', ls = '--', label = 'O'+sub(3))
+plt.plot(LWAV(Pre_pc_h0.O3), Pre_pc_h0.lev/1e3, color = 'black', lw = 2)
 plt.xscale('log')
 plt.xlim(1e-9, 1e-3)
 plt.ylim(1e0, 1e-7)
@@ -2556,8 +1781,8 @@ Photo_1pc_45SZA_col = calculate_column_height_method(Photo_1pc_45SZA)
 Photo_01pc_45SZA_col = calculate_column_height_method(Photo_01pc_45SZA)
 
 alpha = 0.25
-photochem_60 = [Photo_01pc_60SZA_col, Photo_1pc_60SZA_col, Photo_10pc_60SZA_col, Photo_PI_60SZA_col]
-photochem_45 = [Photo_01pc_45SZA_col, Photo_1pc_45SZA_col, Photo_10pc_45SZA_col, Photo_PI_45SZA_col]
+photochem_60 = [Photo_01pc_60SZA_col, 106.851, Photo_1pc_60SZA_col, 191.3, Photo_10pc_60SZA_col, 265.73, Photo_PI_60SZA_col, 253.26]
+photochem_45 = [Photo_01pc_45SZA_col, 125.3, Photo_1pc_45SZA_col, 230.58, Photo_10pc_45SZA_col, 346.74, Photo_PI_45SZA_col, 365.15]
 
 o2_conc_less = [0.001, 0.01, 0.1, 1, 1.5]
 o2_conc_photo = [0.001, 0.01, 0.1, 1]
@@ -2565,8 +1790,13 @@ kasting_45sza = [29.89765538, 106.2858206, 247.7112021, 353.0815035, 352.3557871
 kasting_60sza = [28.87458132, 93.61369557, 205.1246744, 264.4175661, 256.4346855]
 
 #Atmos
-A_SZA_60 = [80.38, 148.79, 191.42, 204.83, 200.47]
-A_SZA_45 = [92.6, 178.54, 239.41, 272.85, 272.57]
+A_SZA_60 = [80.38, 130.55, 148.79, 175.8, 191.42, 199.49, 204.83, 200.47]
+A_SZA_45 = [92.6, 160, 178.54, 217.52, 239.41, 261.56, 272.85, 272.57]
+
+'''
+160 IS WRIBG FOR ATMOS 0.5 at 60 SZA need to change
+'''
+
 #VULCAN
 
 One50_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_45SZA)
@@ -2598,12 +1828,12 @@ WACCM_max = [Zero1_col.max(), Zero5_col.max(), One_col.max(), Five_col.max(), Te
 WACCM_min = [Zero1_col.min(), Zero5_col.min(), One_col.min(), Five_col.min(), Ten_col.min(), Fifty_col.min(), Pre_col.min(), One50_col.min()]
 
 plt.figure(figsize = (12,6))
-plt.fill_between(o2_conc_photo, photochem_60, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
+plt.fill_between(o2_conc, photochem_60, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
 plt.fill_between(o2_conc, V_SZA_45, V_SZA_60, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
+plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'black', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
+plt.fill_between(o2_conc, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
 plt.fill_between(o2_conc_less, kasting_60sza, kasting_45sza, alpha = alpha, color = 'teal', label = 'Kasting 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
+plt.plot(o2_conc, WACCM, color = 'black')
 plt.xscale('log')
 thick_axes(top = True)
 #plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
@@ -2626,7 +1856,7 @@ plt.xlim(1e-3, 1.5)
 markersize = 7
 plt.ylim(0,380)
 plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
+plt.plot([1],[292], color = 'black', marker = 'o', markersize = markersize)
 plt.legend(loc = 0, fontsize = 15, frameon = False)
 plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
 plt.ylabel('O'+sub(3)+' column [DU]', fontsize = 15, weight = 'bold')
@@ -2638,12 +1868,12 @@ plt.savefig('/Users/gregcooke/python_output/Ozone_column_vs_o2_curve.png', dpi =
 o2_common = [1e-3, 5e-3, 1e-2, 5e-2, 1e-1, 0.5, 1, 1.5] # Grid from 1e-3 to ~1.5 PAL
 
 # Interpolate all 1D models onto the common grid
-photo60_interp = np.interp(o2_common, o2_conc_photo, photochem_60)
-photo45_interp = np.interp(o2_common, o2_conc_photo, photochem_45)
+photo60_interp = np.interp(o2_common, o2_conc, photochem_60)
+photo45_interp = np.interp(o2_common, o2_conc, photochem_45)
 vulcan45_interp = np.interp(o2_common, o2_conc, V_SZA_45)
 vulcan60_interp = np.interp(o2_common, o2_conc, V_SZA_60)
-atmos45_interp = np.interp(o2_common, o2_conc_less, A_SZA_45)
-atmos60_interp = np.interp(o2_common, o2_conc_less, A_SZA_60)
+atmos45_interp = np.interp(o2_common, o2_conc, A_SZA_45)
+atmos60_interp = np.interp(o2_common, o2_conc, A_SZA_60)
 kasting45_interp = np.interp(o2_common, o2_conc_less, kasting_45sza)
 kasting60_interp = np.interp(o2_common, o2_conc_less, kasting_60sza)
 
@@ -2657,33 +1887,6 @@ one_d_min = np.min(all_1d_stack, axis=0)
 one_d_max = np.max(all_1d_stack, axis=0)
 
 # --- Updated Plotting Function ---
-def plot_panel(ax, highlight=None, show_legend=False, show_ylabel=True):
-    # WACCM Background (Always present)
-    ax.fill_between(o2_conc, WACCM_min, WACCM_max, alpha=0.3, color='k', label='WACCM6 Range')
-    ax.plot(o2_conc, WACCM, color='k', lw=2, label='WACCM6 Mean')
-
-    # Top Panel: Unified 1D Range
-    if highlight == 'unified_1d':
-        ax.fill_between(o2_common, one_d_min, one_d_max, alpha=0.4, color='tab:blue', 
-                        label='Total 1D Model Range', lw=0)
-        
-    # Bottom Panels: Specific Model Highlights
-    elif highlight == 'kasting':
-        ax.fill_between(o2_conc_less, kasting_60sza, kasting_45sza, color='teal',  alpha=0.3, label='Kasting 1D range')
-    elif highlight == 'photochem':
-        ax.fill_between(o2_conc_photo, photochem_60, photochem_45, color='b', alpha=0.3, label='Photochem range')
-    elif highlight == 'atmos':
-        ax.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, color='darkorange', alpha=0.3, label='Atmos range')
-    elif highlight == 'vulcan':
-        ax.fill_between(o2_conc, V_SZA_45, V_SZA_60, color='m', alpha=0.3, label='VULCAN range')
-
-    # Formatting
-    ax.set_xscale('log')
-    ax.set_xlim(1e-3, 1.5)
-    ax.set_ylim(0, 380)
-    if show_ylabel: ax.set_ylabel('O$_3$ column [DU]', weight='bold', fontsize=15)
-    if show_legend: ax.legend(loc='upper left', frameon=False, fontsize=10)
-    thick_axes(top=True, labelleft = True)
 
 # --- Execute Grid ---
 plt.figure(figsize=(14, 18))
@@ -2707,61 +1910,9 @@ ax4.set_xlabel('Oxygen mixing ratio [PAL]', fontsize=15, weight='bold')
 thick_axes(top=True, labelleft = False)
 plt.savefig('/Users/gregcooke/python_output/Ozone_column_vs_o2_curve.png', dpi = 200, bbox_inches = 'tight')
 
-plt.figure(figsize = (5,5))
-ax0 = plt.subplot()
-ax0.set_xlabel('Oxygen mixing ratio [PAL]', fontsize=15, weight='bold')
-plot_panel(ax0, highlight='unified_1d', show_legend=True)
-ax0.set_title("O"+sub(2)+"-O"+sub(3)+" curve between 1D models and WACCM6", fontsize=15, weight='bold')
 
 #%% Big panel money plot
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
-def plot_panel(ax, highlight=None, show_legend=False, show_ylabel=True):
-    """
-    highlight options: 'photochem', 'vulcan', 'atmos', 'kasting', 'all'
-    """
-    # 1. Always plot the WACCM background (The 3D benchmark)
-    ax.fill_between(o2_conc, WACCM_min, WACCM_max, alpha=0.2, color='k', 
-                    label='WACCM6 (Cooke 2022)', zorder=1)
-    ax.plot(o2_conc, WACCM, color='k', lw=2, zorder=2)
-
-    # 2. Plotting Logic
-    # We define the 1D model plotting as separate blocks so we can call them individually or all at once
-    
-    def add_photochem():
-        ax.fill_between(o2_conc_less, photochem, photochem_45, alpha=alpha, color='b', 
-                        label='Photochem', lw=2)
-    def add_vulcan():
-        ax.fill_between(o2_conc, SZA_45, SZA_58, alpha=alpha, color='m', 
-                        label='VULCAN', lw=2)
-    def add_atmos():
-        ax.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha=alpha, color='darkorange', 
-                        label='Atmos', lw=2)
-    def add_kasting():
-        ax.plot([0.001, 1], [18, 330], marker='s', ls='', color='teal', 
-                markersize=markersize, label='Kasting 1D (Ji 2024)')
-
-    if highlight == 'all':
-        add_photochem()
-        add_vulcan()
-        add_atmos()
-        add_kasting()
-    elif highlight == 'photochem': add_photochem()
-    elif highlight == 'vulcan':    add_vulcan()
-    elif highlight == 'atmos':     add_atmos()
-    elif highlight == 'kasting':   add_kasting()
-    
-    # Global Styling
-    ax.set_xscale('log')
-    ax.set_xlim(1e-3, 1.5)
-    ax.set_ylim(0, 380)
-    if show_ylabel:
-        ax.set_ylabel('O$_3$ column [DU]', fontsize=12, weight='bold')
-    if show_legend:
-        ax.legend(loc='upper left', fontsize=9, frameon=False, ncol=2)
-    
-    thick_axes(top=True)
 
 # --- Figure Creation ---
 plt.figure(figsize=(14, 18))
@@ -2786,314 +1937,14 @@ ax3.set_title("WACCM6 vs Atmos")
 ax4 = plt.subplot(gs[2, 2:4]); plot_panel(ax4, highlight='vulcan', show_legend=True, show_ylabel=False)
 ax4.set_title("WACCM6 vs VULCAN")
 
-#%%
-plt.figure(figsize = (14,18))
-gs = gridspec.GridSpec(3,4)
 
-plt.subplot(gs[0,:])
-
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
-plt.xscale('log')
-thick_axes(top = True)
-#plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
-if (P_test == True and trapz == True):
-    plt.title('P method, trapz', fontsize = 15, weight = 'bold')
-    save = '_P_trapz'
-if (P_test == True and trapz == False):
-    plt.title('P method, sum', fontsize = 15, weight = 'bold')
-    save = '_P_sum'
-if (P_test == False and trapz == True):
-    plt.title('Z method, trapz', fontsize = 15, weight = 'bold')
-    save = '_Z_trapz'
-if (P_test == False and trapz == False):
-    plt.title('Z method, sum', fontsize = 15, weight = 'bold')
-    save = '_Z_sum'
-plt.title('')
-markersize = 7
-plt.ylim(0,380)
-plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
-plt.legend(loc = 0, fontsize = 15, frameon = False)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.ylabel('O'+sub(3)+' column [DU]', fontsize = 15, weight = 'bold')
-plt.xlim(1e-3,1.5)
-
-plt.subplot(gs[1,0:2])
-
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
-plt.xscale('log')
-thick_axes(top = True)
-#plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
-if (P_test == True and trapz == True):
-    plt.title('P method, trapz', fontsize = 15, weight = 'bold')
-    save = '_P_trapz'
-if (P_test == True and trapz == False):
-    plt.title('P method, sum', fontsize = 15, weight = 'bold')
-    save = '_P_sum'
-if (P_test == False and trapz == True):
-    plt.title('Z method, trapz', fontsize = 15, weight = 'bold')
-    save = '_Z_trapz'
-if (P_test == False and trapz == False):
-    plt.title('Z method, sum', fontsize = 15, weight = 'bold')
-    save = '_Z_sum'
-plt.title('')
-markersize = 7
-plt.ylim(0,380)
-plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.ylabel('O'+sub(3)+' column [DU]', fontsize = 15, weight = 'bold')
-plt.xlim(1e-3,1.5)
-
-plt.subplot(gs[1,2:4])
-
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
-plt.xscale('log')
-thick_axes(top = True, labelleft = False)
-#plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
-if (P_test == True and trapz == True):
-    plt.title('P method, trapz', fontsize = 15, weight = 'bold')
-    save = '_P_trapz'
-if (P_test == True and trapz == False):
-    plt.title('P method, sum', fontsize = 15, weight = 'bold')
-    save = '_P_sum'
-if (P_test == False and trapz == True):
-    plt.title('Z method, trapz', fontsize = 15, weight = 'bold')
-    save = '_Z_trapz'
-if (P_test == False and trapz == False):
-    plt.title('Z method, sum', fontsize = 15, weight = 'bold')
-    save = '_Z_sum'
-plt.title('')
-markersize = 7
-plt.ylim(0,380)
-plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.xlim(1e-3,1.5)
-
-plt.subplot(gs[2,0:2])
-
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
-plt.xscale('log')
-thick_axes(top = True)
-#plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
-if (P_test == True and trapz == True):
-    plt.title('P method, trapz', fontsize = 15, weight = 'bold')
-    save = '_P_trapz'
-if (P_test == True and trapz == False):
-    plt.title('P method, sum', fontsize = 15, weight = 'bold')
-    save = '_P_sum'
-if (P_test == False and trapz == True):
-    plt.title('Z method, trapz', fontsize = 15, weight = 'bold')
-    save = '_Z_trapz'
-if (P_test == False and trapz == False):
-    plt.title('Z method, sum', fontsize = 15, weight = 'bold')
-    save = '_Z_sum'
-plt.title('')
-markersize = 7
-plt.ylim(0,380)
-plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.ylabel('O'+sub(3)+' column [DU]', fontsize = 15, weight = 'bold')
-plt.xlim(1e-3,1.5)
-
-plt.subplot(gs[2,2:4])
-
-plt.fill_between(o2_conc_less, photochem, photochem_45, alpha = alpha, color = 'b', label = 'Photochem, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, SZA_45, SZA_58, alpha = alpha, color = 'm', label = 'VULCAN, 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.fill_between(o2_conc, WACCM_min, WACCM_max, alpha = alpha, color = 'k', label = 'WACCM6; Cooke et al. (2022)', lw = 4)
-plt.fill_between(o2_conc_less, A_SZA_60, A_SZA_45, alpha = alpha, color = 'darkorange', label = 'Atmos 45'+r'$^\circ$'+'- 60'+r'$^\circ$'+' SZA', lw = 4)
-plt.plot(o2_conc, WACCM, color = 'k')
-plt.xscale('log')
-thick_axes(top = True, labelleft = False)
-#plt.title('Simulations with Cooke et al. (2022) WACCM6 boundary conditions', fontsize = 15, weight = 'bold')
-if (P_test == True and trapz == True):
-    plt.title('P method, trapz', fontsize = 15, weight = 'bold')
-    save = '_P_trapz'
-if (P_test == True and trapz == False):
-    plt.title('P method, sum', fontsize = 15, weight = 'bold')
-    save = '_P_sum'
-if (P_test == False and trapz == True):
-    plt.title('Z method, trapz', fontsize = 15, weight = 'bold')
-    save = '_Z_trapz'
-if (P_test == False and trapz == False):
-    plt.title('Z method, sum', fontsize = 15, weight = 'bold')
-    save = '_Z_sum'
-plt.title('')
-markersize = 7
-plt.ylim(0,380)
-plt.plot([0.001, 1], [18, 330], marker = 's', ls = '', color = 'teal', markersize = markersize, label = 'Kasting 1D model; Ji et al. (2024)')
-plt.plot([1],[292], color = 'k', marker = 'o', markersize = markersize)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.xlim(1e-3,1.5)
-
-plt.savefig('/Users/gregcooke/python_output/Ozone_column_vs_o2_curve.png', dpi = 200, bbox_inches = 'tight')
-
-#%%
-plt.figure(figsize = (11,6))
-plt.plot(o2_conc, np.array(SZA_58) / np.array(WACCM), color = 'm', ls = '-', lw = 2, label = 'VULCAN 60'+r'$^\circ$'+' SZA')
-plt.plot(o2_conc, np.array(SZA_45) / np.array(WACCM), color = 'm', ls = '--', lw = 2,  label = 'VULCAN 45'+r'$^\circ$'+' SZA')
-WACCM = [LWAV(Zero1_col), LWAV(One_col), LWAV(Ten_col),  LWAV(Pre_col), LWAV(One50_col)]
-plt.plot(o2_conc_less, np.array(A_SZA_60) / np.array(WACCM), color = 'darkorange', ls = '-', lw = 2,  label = 'Atmos 60'+r'$^\circ$'+' SZA')
-plt.plot(o2_conc_less, np.array(A_SZA_45) / np.array(WACCM), color = 'darkorange', ls = '--', lw = 2,  label = 'Atmos 45'+r'$^\circ$'+' SZA')
-plt.plot(o2_conc_less, np.array(photochem) / np.array(WACCM), color = 'b', ls = '-', lw = 2,  label = 'Photochem 60'+r'$^\circ$'+' SZA')
-plt.plot(o2_conc_less, np.array(photochem_45) / np.array(WACCM), color = 'b', ls = '--', lw = 2,  label = 'Photochem 45'+r'$^\circ$'+' SZA')
-plt.legend(loc = 0, fontsize = 15, frameon = False)
-plt.plot([1],[292/LWAV(Pre_col)], color = 'k', marker = 'o', markersize = markersize)
-plt.xscale('log')
-thick_axes(top = True)
-plt.xlabel('Oxygen concentration [PAL]', fontsize = 15, weight = 'bold')
-plt.axhline(1, color = 'k', lw = 2, ls = ':')
-plt.ylabel('O'+sub(3)+' column ratio to WACCM6 mean', fontsize = 15, weight = 'bold')
-
-#%%
-xlim = 1e-5
-
-plt.figure(figsize = (10,6))
-gs = gridspec.GridSpec(2, 2)
-plt.subplot(gs[0,0])
-plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_45SZA['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Pre_pc_h0.O3), Pre_pc_h0.lev/1e3, color = 'k', lw = 2)
-plt.xscale('log')
-plt.xlim(1e-9, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[0,1])
-plt.plot(Earth_V_10pc['variable']['ymix'][:,Earth_V_spec_10pc.index('O3')], Earth_V_10pc['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_10pc_45SZA['variable']['ymix'][:,Earth_V_spec_10pc_45SZA.index('O3')], Earth_V_10pc_45SZA['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Ten_pc_h0.O3), Ten_pc_h0.lev/1e3, color = Ten_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(1e-9, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,0])
-plt.plot(Earth_V_1pc['variable']['ymix'][:,Earth_V_spec_1pc.index('O3')], Earth_V_1pc['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_1pc_45SZA['variable']['ymix'][:,Earth_V_spec_1pc_45SZA.index('O3')], Earth_V_1pc_45SZA['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(One_pc_h0.O3), One_pc_h0.lev/1e3, color = One_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(1e-9, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,1])
-plt.plot(Earth_V_01pc['variable']['ymix'][:,Earth_V_spec_01pc.index('O3')], Earth_V_01pc['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = '--', label = 'O'+sub(3))
-#plt.plot(Earth_V_01pc_45SZA['variable']['ymix'][:,Earth_V_spec_01pc_45SZA.index('O3')], Earth_V_01pc_45SZA['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Zero1_pc_h0.O3), Zero1_pc_h0.lev/1e3, color = Zero1_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(1e-9, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-xlim = 1e-4
-xlim1 = 1e-8
-
-plt.figure(figsize = (10,6))
-gs = gridspec.GridSpec(2, 2)
-plt.subplot(gs[0,0])
-plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('H2O')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_45SZA['variable']['ymix'][:,Earth_V_spec.index('H2O')], Earth_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Pre_pc_h0.H2O), Pre_pc_h0.lev/1e3, color = 'k', lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[0,1])
-plt.plot(Earth_V_10pc['variable']['ymix'][:,Earth_V_spec_10pc.index('H2O')], Earth_V_10pc['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_10pc_45SZA['variable']['ymix'][:,Earth_V_spec_10pc_45SZA.index('H2O')], Earth_V_10pc_45SZA['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Ten_pc_h0.H2O), Ten_pc_h0.lev/1e3, color = Ten_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,0])
-plt.plot(Earth_V_1pc['variable']['ymix'][:,Earth_V_spec_1pc.index('H2O')], Earth_V_1pc['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_1pc_45SZA['variable']['ymix'][:,Earth_V_spec_1pc_45SZA.index('H2O')], Earth_V_1pc_45SZA['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(One_pc_h0.H2O), One_pc_h0.lev/1e3, color = One_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,1])
-plt.plot(Earth_V_01pc['variable']['ymix'][:,Earth_V_spec_01pc.index('H2O')], Earth_V_01pc['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = '--', label = 'O'+sub(3))
-#plt.plot(Earth_V_01pc_45SZA['variable']['ymix'][:,Earth_V_spec_01pc_45SZA.index('H2O')], Earth_V_01pc_45SZA['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Zero1_pc_h0.H2O), Zero1_pc_h0.lev/1e3, color = Zero1_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-
-xlim = 1e-6
-xlim1 = 1e-9
-mol = 'CH4'
-
-plt.figure(figsize = (10,6))
-gs = gridspec.GridSpec(2, 2)
-plt.subplot(gs[0,0])
-plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index(mol)], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_45SZA['variable']['ymix'][:,Earth_V_spec.index(mol)], Earth_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Pre_pc_h0[mol]), Pre_pc_h0.lev/1e3, color = 'k', lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[0,1])
-plt.plot(Earth_V_10pc['variable']['ymix'][:,Earth_V_spec_10pc.index(mol)], Earth_V_10pc['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_10pc_45SZA['variable']['ymix'][:,Earth_V_spec_10pc_45SZA.index(mol)], Earth_V_10pc_45SZA['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Ten_pc_h0[mol]), Ten_pc_h0.lev/1e3, color = Ten_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,0])
-plt.plot(Earth_V_1pc['variable']['ymix'][:,Earth_V_spec_1pc.index(mol)], Earth_V_1pc['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_1pc_45SZA['variable']['ymix'][:,Earth_V_spec_1pc_45SZA.index(mol)], Earth_V_1pc_45SZA['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(One_pc_h0[mol]), One_pc_h0.lev/1e3, color = One_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
-
-plt.subplot(gs[1,1])
-plt.plot(Earth_V_01pc['variable']['ymix'][:,Earth_V_spec_01pc.index(mol)], Earth_V_01pc['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = '--', label = 'O'+sub(3))
-plt.plot(Earth_V_01pc_45SZA['variable']['ymix'][:,Earth_V_spec_01pc_45SZA.index(mol)], Earth_V_01pc_45SZA['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = ':', label = 'O'+sub(3))
-plt.plot(LWAV(Zero1_pc_h0[mol]), Zero1_pc_h0.lev/1e3, color = Zero1_pc_color, lw = 2)
-plt.xscale('log')
-plt.xlim(xlim1, xlim)
-plt.ylim(1e0, 1e-7)
-plt.yscale('log')
 
 #%%
 
 
 plt.figure()
-plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '-', label = 'O'+sub(3))
-plt.plot(np.flip(LWAV(Pre_pc_h0.O3)), np.flip(Pre_pc_h0.lev/1e3), lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
+plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'black', ls = '-', label = 'O'+sub(3))
+plt.plot(np.flip(LWAV(Pre_pc_h0.O3)), np.flip(Pre_pc_h0.lev/1e3), lw = lw, color = 'black', ls = '--', label = 'O'+sub(3))
 plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('H2O')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'blue', ls = '-', label = 'O'+sub(3))
 plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('CO2')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'green', ls = '-', label = 'O'+sub(3))
 plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O2')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'grey', ls = '-', label = 'O'+sub(3))
@@ -3104,9 +1955,9 @@ plt.text(1e-5, 1e-4, str(int(Earth_V_58SZA_O3_col)) + ' DU')
 plt.yscale('log'); plt.ylim(1,1e-7)
 
 plt.figure()
-plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'k', ls = '-', label = 'O'+sub(3))
-plt.plot(Earth_V_45SZA['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ':', label = 'O'+sub(3))
-plt.plot(np.flip(LWAV(Pre_pc_h0.O3)), np.flip(Pre_pc_h0.lev/1e3), lw = lw, color = 'k', ls = '--', label = 'O'+sub(3))
+plt.plot(Earth_V['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V['atm']['pco']/1e6, lw = lw, color = 'black', ls = '-', label = 'O'+sub(3))
+plt.plot(Earth_V_45SZA['variable']['ymix'][:,Earth_V_spec.index('O3')], Earth_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'black', ls = ':', label = 'O'+sub(3))
+plt.plot(np.flip(LWAV(Pre_pc_h0.O3)), np.flip(Pre_pc_h0.lev/1e3), lw = lw, color = 'black', ls = '--', label = 'O'+sub(3))
 plt.plot(Earth_V_10pc['variable']['ymix'][:,Earth_V_spec_10pc.index('O3')], Earth_V_10pc['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = '-', label = 'O'+sub(3))
 plt.plot(np.flip(LWAV(Ten_pc_h0.O3)), np.flip(Ten_pc_h0.lev/1e3), lw = lw, color = Ten_pc_color, ls = '--', label = 'O'+sub(3))
 plt.plot(Earth_V_1pc['variable']['ymix'][:,Earth_V_spec_1pc.index('O3')], Earth_V_1pc['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = '-', label = 'O'+sub(3))
@@ -3132,10 +1983,13 @@ One50_pc_V_482SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_482SZA)
 PI_V_482SZA_O3_col = V_O3_col_z_trapz(PI_V_482SZA)
 Fifty_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_482SZA)
 Ten_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Ten_pc_V_482SZA)
+Ten_pc_V_482SZA_O3_col_T = V_O3_col_z_trapz(Ten_pc_V_482SZA_T)
 One_pc_V_482SZA_O3_col = V_O3_col_z_trapz(One_pc_V_482SZA)
+One_pc_V_482SZA_O3_col_T = V_O3_col_z_trapz(One_pc_V_482SZA_T)
 Five_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Five_pc_V_482SZA)
 Z5_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Z5_pc_V_482SZA)
 Z1_pc_V_482SZA_O3_col = V_O3_col_z_trapz(Z1_pc_V_482SZA)
+Z1_pc_V_482SZA_O3_col_T = V_O3_col_z_trapz(Z1_pc_V_482SZA_T)
 
 One50_pc_V_45SZA_O3_col = V_O3_col_z_trapz(One50_pc_V_45SZA)
 Fifty_pc_V_45SZA_O3_col = V_O3_col_z_trapz(Fifty_pc_V_45SZA)
@@ -3167,14 +2021,14 @@ plt.plot([5e-3, 5e-3, 5e-3], [Zero5_col.min(), LWAV(Zero5_col), Zero5_col.max()]
 plt.plot([1e-3, 1e-3, 1e-3], [Zero1_col.min(), LWAV(Zero1_col), Zero1_col.max()], marker = 's', color = 'crimson', markersize = markersize, lw = 0)
 
 #VULCAN results 48 degree solar zenith angle
-plt.plot([1.5], One50_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 0, label = 'VULCAN SZA = 48.2'+r'$^\circ$')
-plt.plot([1], PI_V_482SZA_O3_col, marker = 's', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.5], Fifty_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.1], Ten_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.05], Five_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.01], One_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.005], Z5_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
-plt.plot([0.001], Z1_pc_V_482SZA_O3_col, marker = 'o', color = 'k', markersize = markersize, lw = 2)
+plt.plot([1.5], One50_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 0, label = 'VULCAN SZA = 48.2'+r'$^\circ$')
+plt.plot([1], PI_V_482SZA_O3_col, marker = 's', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.5], Fifty_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.1], Ten_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.05], Five_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.01], One_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.005], Z5_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
+plt.plot([0.001], Z1_pc_V_482SZA_O3_col, marker = 'o', color = 'black', markersize = markersize, lw = 2)
 
 plt.legend(loc = 0, fontsize = 15, frameon = False)
 
@@ -3230,7 +2084,7 @@ PCB_P_cols = [Photo_PCb_01pc_col, Photo_PCb_1pc_col, Photo_PCb_10pc_col, Photo_P
 
 markersize = 9
 plt.figure(figsize = (9,5))
-plt.plot([0.001, 0.01, 0.1, 1], PCB_W_cols, color = 'k', marker = 's', markersize = markersize, ls = '', label = 'WACCM6')
+plt.plot([0.001, 0.01, 0.1, 1], PCB_W_cols, color = 'black', marker = 's', markersize = markersize, ls = '', label = 'WACCM6')
 plt.plot([0.01, 0.1, 1], PCB_V_cols, color = 'm', marker = 'o', markersize = markersize, ls = '', label = 'VULCAN')
 plt.plot([0.001, 0.01, 0.1, 1], PCB_P_cols, color = 'b', marker = 'v', markersize = markersize, ls = '', label = 'Photochem')
 plt.xscale('log')
@@ -3245,14 +2099,14 @@ plt.savefig('/Users/gregcooke/python_output/PCb_ozone_cols.png', bbox_inches = '
 
 #%% Create new VULCAN files
 
-DS = PCb
+DS = Fifty_pc_h0
 # --------------------------------------------------
 # Input / output files
 # --------------------------------------------------
 infile = "/Users/gregcooke/VIH_cases/atm/atm_Earth_Jan_Kzz.txt"
 outfile = "/Users/gregcooke/VIH_cases/atm/atm_Earth_PCb_0.1pc_o2_WACCM_Kzz.txt"
 #outfile = "/Users/gregcooke/Downloads/atm_Earth_PCb_PI_WACCM_Kzz.txt"
-#outfile = "/Users/gregcooke/VIH_cases/atm/atm_Earth_0.1pc_o2_WACCM_Kzz.txt"
+outfile = "/Users/gregcooke/VIH_cases/atm/atm_Earth_50pc_o2_WACCM_Kzz_Z3.txt"
 
 # --------------------------------------------------
 # Load original Kzz profile
@@ -3271,6 +2125,7 @@ Kzz_old = data[:, 2]  # cm^2/s
 # --------------------------------------------------
 P_new = np.flip(np.array(DS.lev/1e3) )    # dyne/cm^2
 T_new = np.flip(np.array(LWAV(DS.T)) )     # K
+Z3_new = np.flip(np.array(LWAV(DS.Z3)) )     # K
 
 # --------------------------------------------------
 # Ensure monotonic ordering for interpolation
@@ -3302,14 +2157,14 @@ Kzz_new = 10.0**logKzz_new
 # Write output file
 # --------------------------------------------------
 header = (
-    "# (bar) (K)     (cm2/s)\n"
-    "# Pressure        Temp     Kzz\n"
+    "# (bar)           (K)      (cm2/s)     (m)\n"
+    "# Pressure        Temp     Kzz     Alt\n"
 )
 
 with open(outfile, "w") as f:
     f.write(header)
-    for p, t, k in zip(P_new, T_new, Kzz_new):
-        f.write(f"{p:12.5E} {t:8.2f} {k:10.3E}\n")
+    for p, t, k, z in zip(P_new, T_new, Kzz_new, Z3_new):
+        f.write(f"{p:12.5E} {t:8.2f} {k:10.3E} {z:10.3E}\n")
 
 print(f"Wrote {outfile}")
 
@@ -3347,7 +2202,7 @@ ls = ':'
 plt.plot(PCb_01pc_V_45SZA['variable']['ymix'][:,PCb_01pc_spec_V_45SZA.index('O3')], PCb_01pc_V_45SZA['atm']['pco']/1e6, lw = lw, color = Zero1_pc_color, ls = ls, label = 'O'+sub(3))
 plt.plot(PCb_1pc_V_45SZA['variable']['ymix'][:,PCb_1pc_spec_V_45SZA.index('O3')], PCb_1pc_V_45SZA['atm']['pco']/1e6, lw = lw, color = One_pc_color, ls = ls, label = 'O'+sub(3))
 plt.plot(PCb_10pc_V_45SZA['variable']['ymix'][:,PCb_10pc_spec_V_45SZA.index('O3')], PCb_10pc_V_45SZA['atm']['pco']/1e6, lw = lw, color = Ten_pc_color, ls = ls, label = 'O'+sub(3))
-plt.plot(PCb_V_45SZA['variable']['ymix'][:,PCb_spec_V_45SZA.index('O3')], PCb_1pc_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'k', ls = ls, label = 'O'+sub(3))
+plt.plot(PCb_V_45SZA['variable']['ymix'][:,PCb_spec_V_45SZA.index('O3')], PCb_1pc_V_45SZA['atm']['pco']/1e6, lw = lw, color = 'black', ls = ls, label = 'O'+sub(3))
 plt.xlim(1e-9,1e-4)
 plt.xscale('log')
 plt.yscale('log')
@@ -3364,7 +2219,7 @@ plt.errorbar([0.01], M3D_cols_TL, yerr=[[M3D_cols_TL-0],[63-M3D_cols_TL]], capsi
 W_cols = np.array([LWAV(PCb_W_01pc_O3_col).values, LWAV(PCb_W_1pc_O3_col).values, LWAV(PCb_W_10pc_O3_col).values, LWAV(PCb_W_O3_col).values])
 W_min_cols = np.array([PCb_W_01pc_O3_col.min().values, PCb_W_1pc_O3_col.min().values, PCb_W_10pc_O3_col.min().values, PCb_W_O3_col.min().values])
 W_max_cols = np.array([PCb_W_01pc_O3_col.max().values, PCb_W_1pc_O3_col.max().values, PCb_W_10pc_O3_col.max().values, PCb_W_O3_col.max().values])
-plt.errorbar([0.001, 0.01, 0.1, 1], W_cols, yerr=[W_cols-W_min_cols,W_max_cols-W_cols], capsize = capsize,  lw = lw, marker = 's', markersize = markersize, color = 'k')
+plt.errorbar([0.001, 0.01, 0.1, 1], W_cols, yerr=[W_cols-W_min_cols,W_max_cols-W_cols], capsize = capsize,  lw = lw, marker = 's', markersize = markersize, color = 'black')
 V_cols = [PCb_01pc_V_45SZA_O3_col, PCb_1pc_V_45SZA_O3_col, PCb_10pc_V_45SZA_O3_col, PCb_V_45SZA_O3_col]
 plt.plot([0.001, 0.01, 0.1, 1], V_cols, color = 'magenta', lw = lw, marker = 'o', markersize = markersize)
 V_cols = [PCb_01pc_V_60SZA_O3_col, PCb_1pc_V_60SZA_O3_col, PCb_10pc_V_60SZA_O3_col, PCb_V_60SZA_O3_col]
@@ -3375,7 +2230,6 @@ plt.xscale('log')
 thick_axes(labelleft=True, top = True, right = True)
 
 #%% 
-import pandas as pd
 GJ551 = pd.read_csv('/Users/gregcooke/MUSCLES/sflux-GJ551_0.0_albedo.txt',
                        delim_whitespace = True, skiprows = 1, names = ['Wav','Flux'])
 
@@ -3391,7 +2245,7 @@ orbit_radius = 0.04856  # planet-star distance in A.U.
 
 plt.figure()
 flux = GJ551['Flux']*((r_star*r_sun)/(au*orbit_radius))**2
-plt.plot(GJ551['Wav'], flux, color = 'k')
+plt.plot(GJ551['Wav'], flux, color = 'black')
 
 x = np.trapz(flux, GJ551['Wav'])/1000
 
@@ -3414,7 +2268,6 @@ plt.xlim(1,10000)
 print(x)
 print(y)
 
-import pandas as pd
 GJ551 = pd.read_csv('/Users/gregcooke/MUSCLES/sflux-GJ551_0.0_albedo.txt',
                        delim_whitespace = True, skiprows = 1, names = ['Wav','Flux'])
 GJ551_W = pd.read_csv('/Users/gregcooke/MUSCLES/PCb_WACCM_0.0_albedo.txt',
@@ -3433,7 +2286,7 @@ orbit_radius = 	0.04848  # planet-star distance in A.U.
 plt.figure()
 
 flux = GJ551['Flux']*((r_star*r_sun)/(au*orbit_radius))**2
-plt.plot(GJ551['Wav'], flux, color = 'k')
+plt.plot(GJ551['Wav'], flux, color = 'black')
 flux = GJ551_W['Flux']*((r_star*r_sun)/(au*orbit_radius))**2
 plt.plot(GJ551_W['Wav'], flux, color = 'm')
 
@@ -3467,7 +2320,7 @@ ds = xr.open_dataset(solar_dir+solar_file)#attach file to dataset
 ssi = ds['ssi'].isel(time=0) #define dataset from file
 P19_Flux = ssi.values
 WACCM_wavelength = ssi.wavelength.values
-plt.plot(WACCM_wavelength, WACCM_Flux, color = 'k')
+plt.plot(WACCM_wavelength, WACCM_Flux, color = 'black')
 plt.plot(WACCM_wavelength, P19_Flux, color = 'darkorange')
 solar_file = 'TRAPPIST1_flux_at_e_W21.nc'#read in file
 ds = xr.open_dataset(solar_dir+solar_file)#attach file to dataset
@@ -3477,7 +2330,7 @@ WACCM_wavelength = ssi.wavelength.values
 plt.plot(WACCM_wavelength, W21_Flux, color = 'navy')
 
 flux = GJ551['Flux']*((r_star*r_sun)/(au*orbit_radius))**2
-plt.plot(GJ551['Wav'], flux, color = 'k')
+plt.plot(GJ551['Wav'], flux, color = 'black')
 plt.yscale('log')
 plt.xscale('log')
 plt.xlim(1,10000)
@@ -3569,7 +2422,7 @@ with open(path+out_name+'_'+str(albedo)+'_albedo.txt', 'w+') as f: f.write(new_s
 GJ551 = pd.read_csv('/Users/gregcooke/MUSCLES/sflux-TP-1e_0.0_albedo.txt',
                        delim_whitespace = True, skiprows = 1, names = ['Wav','Flux'])
 flux = GJ551['Flux']
-plt.plot(GJ551['Wav'], flux, color = 'k')
+plt.plot(GJ551['Wav'], flux, color = 'black')
 GJ551 = pd.read_csv('/Users/gregcooke/MUSCLES/TP-1e_P19_0.0_albedo.txt',
                        delim_whitespace = True, skiprows = 1, names = ['Wav','Flux'])
 flux = GJ551['Flux']
@@ -3664,75 +2517,6 @@ Zero1_pc_new = xr.open_dataset(File,decode_times=False) #open the file and decod
 jo2_z1 = Zero1_pc_new.jo2_a + Zero1_pc_new.jo2_b
 ox_prod_z1 = (Zero1_pc_new.jo2_a + Zero1_pc_new.jo2_b)*n_dens(Zero1_pc_new, 'O2')
 
-def cumulative_col(ds, time = False, var = 'O2', O2_mr = 0.21, lon = True, g = 9.80616):
-    
-    g = g # gravity acceleration (cm/sec2)
-    to_DU = 1./2.6867e20  # convert colunm density / cm^2 to Dobson units
-    N2_mr = 1-O2_mr #nitrogen mixing ratio
-    m_avg = ((28*N2_mr)+(O2_mr*32))*1.661e-27 # average weight of atmosphere
-    
-    #calcualte column integrals 
-    var = ds[var]
-    
-    # variables to calcualate hybrid pressure on model interfaces
-    ps = ds['PS'].values # surface pressure
-    p0 = ds['P0'].values
-    hyai = ds['hyai'].values
-    hybi = ds['hybi'].values
-    
-
-    #col = np.ndarray(ps.shape, np.float32)
-    dp = np.ndarray(var.shape, np.float32)
-    
-    nt = 1
-    try:
-        nt = ds['time'].size
-    except:
-        nt = 0
-    ny = ds['lat'].size
-    nz = ds['lev'].size
-    nx = ds['lon'].size
-    
-    press = np.ndarray(nz, np.float32)
-    if (nt > 0):
-        for i in range(nt):
-            for j in range(ny):
-                for k in range(nx):
-                    press = hyai * p0 + hybi * ps[i,j,k]
-                    for iz in range(nz):
-                        dp[i,iz,j,k] = (press[iz+1]-press[iz])
-    else:
-        for j in range(ny):
-            for k in range(nx):
-                press = hyai * p0 + hybi * ps[j,k]
-                for iz in range(nz):
-                    dp[iz,j,k] = (press[iz+1]-press[iz])
-                    
-    #calcualte column integrals 
-    var_col = var * dp / (m_avg * g)
-    
-    #o3col = np.sum(o3, axis = 0)  # convert to DU
-    if (lon == False):
-        var_col  = var_col.mean(dim='lon')
-    if (time == False):
-        try:
-            var_col  = var_col.mean(dim='time')
-        except:
-            var_col  = var_col
-    print('Columns calculated')
-    return var_col
-
-def int_O2_photo(DS, O2 = 0.21, g = 9.1454):
-    O2_num_dens = cumulative_col(DS, time = False, var = 'O2', O2_mr = O2, lon = True, g = g)
-    int_JO2 = O2_num_dens * 2*(DS.jo2_a+DS.jo2_b)
-    int_JO2 = int_JO2.sum(dim='lev').mean(dim = 'lon')
-    return int_JO2
-
-def cum_int_O2_photo(DS, O2 = 0.21, g = 9.1454):
-    O2_num_dens = cumulative_col(DS, time = False, var = 'O2', O2_mr = O2, lon = True, g = g)
-    int_JO2 = O2_num_dens * 2*(DS.jo2_a+DS.jo2_b)
-    int_JO2 = LWAV(int_JO2.cumsum(dim='lev'))
-    return int_JO2
 
 int_jo2_base = int_O2_photo(base, O2 = 0.21, g = 9.81)
 int_jo2_ten = int_O2_photo(Ten_pc_new, O2 = 0.021, g = 9.81)
@@ -3837,8 +2621,8 @@ Photo_PCb_1pc_txt = pd.read_csv(path+"Proxima_1pc_48.2.txt", delim_whitespace=Tr
 Photo_PCb_01pc_txt = pd.read_csv(path+"Proxima_0.1pc_48.2.txt", delim_whitespace=True)
 
 plt.figure(figsize = (14,10))
-plt.plot(LWAV(PCb.O3), PCb.lev, color = 'k')
-plt.plot(Photo_PCb_100pc_txt['O3'], Photo_PCb_100pc_txt['press']*1e3, ls = ':', color = 'k', lw = lw)
+plt.plot(LWAV(PCb.O3), PCb.lev, color = 'black')
+plt.plot(Photo_PCb_100pc_txt['O3'], Photo_PCb_100pc_txt['press']*1e3, ls = ':', color = 'black', lw = lw)
 O3 = PCb_V['variable']['ymix'][:,PCb_V_spec.index('O3')]
 plt.plot(O3, PCb_V['atm']['pco']/1e3, ls = '--', color = Ten_pc_color, lw = lw)
 
@@ -3861,8 +2645,6 @@ plt.ylim(1e3, 1e-5)
 
 ylim = (1e3, 1e-3)
 xlim = (1e11, 6e12)
-
-P_path = '/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/'
 
 PCb_photo, p_PCb_photo = compute_ox_production(
     mech_file=P_path+"Old sims/zahnle_earth.yaml",
@@ -3905,7 +2687,7 @@ gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.2, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV(prox_ox_W(PCb)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(LWAV(prox_ox_W(PCb)), base.lev, color = 'black', label = 'WACCM6', lw = 2)
 plt.plot(PCb_photo, p_PCb_photo/10, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(prox_ox_V(PCb_V, PCb_V_spec)*3/8, PCb_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
 plt.yscale('log')
@@ -3918,7 +2700,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV(prox_ox_W(PCb_10pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(LWAV(prox_ox_W(PCb_10pc)), base.lev, color = 'black', label = 'WACCM6', lw = 2)
 plt.plot(PCb_photo_10pc, p_PCb_photo_10pc/10, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(prox_ox_V(PCb_10pc_V, PCb_V_spec)*3/8, PCb_10pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
 plt.yscale('log')
@@ -3930,7 +2712,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV(prox_ox_W(PCb_1pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(LWAV(prox_ox_W(PCb_1pc)), base.lev, color = 'black', label = 'WACCM6', lw = 2)
 plt.plot(PCb_photo_1pc, p_PCb_photo_1pc/10, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(prox_ox_V(PCb_1pc_V, PCb_V_spec)*3/8, PCb_1pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
 plt.yscale('log')
@@ -3941,7 +2723,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV(prox_ox_W(PCb_01pc)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
+plt.plot(LWAV(prox_ox_W(PCb_01pc)), base.lev, color = 'black', label = 'WACCM6', lw = 2)
 plt.plot(PCb_photo_01pc, p_PCb_photo_01pc/10, color = 'b', label = 'Photochem', lw = 2)
 #plt.plot(prox_ox_V(PCb_01pc_V, PCb_V_spec)*3/8, PCb_1pc_V['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN',)
 plt.yscale('log')
@@ -3986,13 +2768,17 @@ ox_prod_01pc_photo, p_01pc_photo = compute_ox_production(
     verbose=0
 )
 
+Gauss = True
+
 plt.figure(figsize = (14,10))
 gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.1, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV(prox_ox_W(base)), base.lev, color = 'k', label = 'WACCM6', lw = 2)
-plt.plot(prox_ox_K(K_100pc_J), p_100pc, color = 'teal', label = 'Kasting\n1D model', lw = 2)
+plt.plot(LWAV(prox_ox_W(base)), base.lev, color = 'black', label = 'WACCM6', lw = 2)
+if (Gauss == True):
+    plt.plot(prox_ox_K(K_100pc_J_8G), p_100pc_8G, color = 'teal', lw = 2, ls = '--')
+plt.plot(prox_ox_K(K_100pc_J), p_100pc, color = 'teal', label = 'Kasting', lw = 2)
 plt.plot(prox_ox_V(PI_V_482SZA, PI_spec_482SZA)*3/8, PI_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = 2)
 plt.plot(ox_prod_100pc_photo, p_100pc_photo/10, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(Atmos_XS_100pc_JO2*Atmos_dens(Atmos_100pc)*Atmos_100pc["O2"], Atmos_100pc["PRESS"]*1e3, color = 'darkorange', lw = 2, label = 'Atmos')
@@ -4006,7 +2792,9 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV( prox_ox_W(Ten_pc_new)), base.lev, color = 'k', lw = 2)
+plt.plot(LWAV(prox_ox_W(Ten_pc_new)), base.lev, color = 'black', lw = 2)
+if (Gauss == True):
+    plt.plot(prox_ox_K(K_10pc_J_8G), p_10pc_8G, color = 'teal', lw = 2, ls = '--')
 plt.plot(prox_ox_K(K_10pc_J), p_10pc, color = 'teal', lw = 2)
 plt.plot(prox_ox_V(Ten_pc_V_482SZA, Ten_pc_spec_482SZA)*3/8, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 plt.plot(ox_prod_10pc_photo, p_10pc_photo/10, color = 'b', label = 'Photochem', lw = 2)
@@ -4018,7 +2806,9 @@ plt.ylim(ylim)
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV( prox_ox_W(One_pc_new)), base.lev, color = 'k', lw = 2)
+plt.plot(LWAV( prox_ox_W(One_pc_new)), base.lev, color = 'black', lw = 2)
+if (Gauss == True):
+    plt.plot(prox_ox_K(K_1pc_J_8G), p_1pc_8G, color = 'teal', lw = 2, ls = '--')
 plt.plot(prox_ox_K(K_1pc_J), p_1pc, color = 'teal', lw = 2)
 plt.plot(prox_ox_V(One_pc_V_482SZA, One_pc_spec_482SZA)*3/8, One_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 plt.plot(ox_prod_1pc_photo, p_1pc_photo/10, color = 'b', label = 'Photochem', lw = 2)
@@ -4032,8 +2822,10 @@ plt.xlabel('O'+sub('x')+' production [molecules m'+sup(-3)+' s'+sup(-1)+']', fon
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL  ', fontsize = 15, weight = 'bold', y = 0.9, loc = 'right')
-plt.plot(LWAV( prox_ox_W(Zero1_pc_new)), base.lev, color = 'k', lw = 2)
+plt.plot(LWAV( prox_ox_W(Zero1_pc_new)), base.lev, color = 'black', lw = 2)
 plt.plot(prox_ox_K(K_01pc_J), p_01pc, color = 'teal', lw = 2)
+if (Gauss == True):
+    plt.plot(prox_ox_K(K_01pc_J_8G), p_01pc_8G, color = 'teal', lw = 2, ls = '--')
 plt.plot(prox_ox_V(Z1_pc_V_482SZA, Z1_pc_spec_482SZA)*3/8, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 plt.plot(ox_prod_01pc_photo, p_01pc_photo/10, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(Atmos_XS_01pc_JO2*Atmos_dens(Atmos_01pc)*Atmos_01pc["O2"], Atmos_01pc["PRESS"]*1e3, color = 'darkorange', lw = 2, label = 'Atmos')
@@ -4055,11 +2847,11 @@ gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.1, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(n_dens(Pre_pc_h0, "O3")), Pre_pc_h0.lev, color = 'k', label = 'WACCM6')
+plt.plot(LWAV(n_dens(Pre_pc_h0, "O3")), Pre_pc_h0.lev, color = 'black', label = 'WACCM6')
 plt.plot(PI_V_482SZA['variable']['y'][:,PI_spec_482SZA.index('O3')]*1e6, PI_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN')
 plt.plot(Photo_PI["O3"]*P_dens(Photo_PI), Photo_PI["press"]*1e3, color = 'b', label = 'Photochem', lw = 2)
 plt.plot(Atmos_100pc["O3"]*Atmos_dens(Atmos_100pc), Atmos_100pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = 2)
-plt.plot(K_100pc_J["FO3"]*K_100pc_J["DEN"]*1e6, K_100pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = 2)
+plt.plot(K_100pc_J["FO3"]*K_100pc_J["DEN"]*1e6, K_100pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = 2)
 plt.yscale('log')
 plt.xlim(xlim)
 plt.ylim(ylim)
@@ -4068,11 +2860,11 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(n_dens(Ten_pc_h0, "O3")), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(n_dens(Ten_pc_h0, "O3")), Pre_pc_h0.lev, color = 'black', lw = lw)
 plt.plot(Ten_pc_V_482SZA['variable']['y'][:,Ten_pc_spec_482SZA.index('O3')]*1e6, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(Photo_10pc["O3"]*P_dens(Photo_10pc), Photo_10pc["press"]*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_10pc["O3"]*Atmos_dens(Atmos_10pc), Atmos_10pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_10pc_J["FO3"]*K_10pc_J["DEN"]*1e6, K_10pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = 2)
+plt.plot(K_10pc_J["FO3"]*K_10pc_J["DEN"]*1e6, K_10pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = 2)
 plt.yscale('log')
 plt.xlim(xlim)
 plt.ylim(ylim)
@@ -4080,11 +2872,11 @@ plt.xscale('log');  thick_axes(top = True, labelleft = False)
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(n_dens(One_pc_h0, "O3")), Pre_pc_h0.lev, color = 'k', lw = lw, label = 'WACCM6')
+plt.plot(LWAV(n_dens(One_pc_h0, "O3")), Pre_pc_h0.lev, color = 'black', lw = lw, label = 'WACCM6')
 plt.plot(One_pc_V_482SZA['variable']['y'][:,One_pc_spec_482SZA.index('O3')]*1e6, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(Photo_1pc["O3"]*P_dens(Photo_1pc), Photo_1pc["press"]*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_1pc["O3"]*Atmos_dens(Atmos_1pc), Atmos_1pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_1pc_J["FO3"]*K_1pc_J["DEN"]*1e6, K_1pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = 2)
+plt.plot(K_1pc_J["FO3"]*K_1pc_J["DEN"]*1e6, K_1pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = 2)
 plt.yscale('log')
 plt.xlim(xlim)
 plt.ylim(ylim)
@@ -4096,11 +2888,11 @@ plt.xlabel('O'+sub(3)+' number density [molecules m'+sup(-3)+']', fontsize = 15,
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(n_dens(Zero1_pc_h0, "O3")), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(n_dens(Zero1_pc_h0, "O3")), Pre_pc_h0.lev, color = 'black', lw = lw)
 plt.plot(Z1_pc_V_482SZA['variable']['y'][:,Z1_pc_spec_482SZA.index('O3')]*1e6, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(Photo_01pc["O3"]*P_dens(Photo_01pc), Photo_01pc["press"]*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_01pc["O3"]*Atmos_dens(Atmos_01pc), Atmos_01pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_01pc_J["FO3"]*K_01pc_J["DEN"]*1e6, K_01pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = 2)
+plt.plot(K_01pc_J["FO3"]*K_01pc_J["DEN"]*1e6, K_01pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = 2)
 plt.yscale('log')
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
 plt.xlim(xlim)
@@ -4116,7 +2908,7 @@ gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.1, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Pre_pc_h2.NOX), Pre_pc_h0.lev, color = 'k', label = 'WACCM6', lw = lw)
+plt.plot(LWAV(Pre_pc_h2.NOX), Pre_pc_h0.lev, color = 'black', label = 'WACCM6', lw = lw)
 N = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('N')]
 NO = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('NO')]
 NO2 = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('NO2')]
@@ -4124,7 +2916,7 @@ NOX = N+NO+NO2
 plt.plot(NOX, PI_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(P_NOX(Photo_PI), Photo_PI['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_NOX(Atmos_100pc), Atmos_100pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(Kasting_NOX(K_100pc_J), K_100pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_NOX(K_100pc_J), K_100pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-5)
 plt.xscale('log');  thick_axes(top = True)
@@ -4135,7 +2927,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Ten_pc_h2.NOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Ten_pc_h2.NOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 N = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('N')]
 NO = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('NO')]
 NO2 = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('NO2')]
@@ -4143,7 +2935,7 @@ NOX = N+NO+NO2
 plt.plot(Atmos_NOX(Atmos_10pc), Atmos_10pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
 plt.plot(NOX, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(P_NOX(Photo_10pc), Photo_10pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
-plt.plot(Kasting_NOX(K_10pc_J), K_10pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_NOX(K_10pc_J), K_10pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-5)
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
@@ -4151,7 +2943,7 @@ plt.xlim(1e-12, 1e-6)
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(One_pc_h2.NOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(One_pc_h2.NOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 N = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('N')]
 NO = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('NO')]
 NO2 = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('NO2')]
@@ -4159,7 +2951,7 @@ NOX = N+NO+NO2
 plt.plot(NOX, One_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(Atmos_NOX(Atmos_1pc), Atmos_1pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
 plt.plot(P_NOX(Photo_1pc), Photo_1pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
-plt.plot(Kasting_NOX(K_1pc_J), K_1pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_NOX(K_1pc_J), K_1pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-5)
 plt.xscale('log');  thick_axes(top = True)
@@ -4169,7 +2961,7 @@ plt.xlabel('NO'+sub('\\rm x')+' mixing ratio', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Zero1_pc_h2.NOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Zero1_pc_h2.NOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 N = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('N')]
 NO = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('NO')]
 NO2 = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('NO2')]
@@ -4177,7 +2969,7 @@ NOX = N+NO+NO2
 plt.plot(NOX, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(P_NOX(Photo_01pc), Photo_01pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_NOX(Atmos_01pc), Atmos_01pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(Kasting_NOX(K_01pc_J), K_01pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_NOX(K_01pc_J), K_01pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-5)
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
@@ -4193,7 +2985,7 @@ gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.1, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Pre_pc_h2.HOX), Pre_pc_h0.lev, color = 'k', label = 'WACCM6', lw = lw)
+plt.plot(LWAV(Pre_pc_h2.HOX), Pre_pc_h0.lev, color = 'black', label = 'WACCM6', lw = lw)
 H = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('H')]
 OH = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('OH')]
 HO2 = PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('HO2')]
@@ -4202,7 +2994,7 @@ HOX = H+OH+HO2+H2O2
 plt.plot(HOX, PI_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(P_HOX(Photo_PI), Photo_PI['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_HOX(Atmos_100pc), Atmos_100pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(Kasting_HOX(K_100pc_J), K_100pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting\n1D model', lw = lw)
+plt.plot(Kasting_HOX(K_100pc_J), K_100pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-3)
 plt.xscale('log');  thick_axes(top = True)
@@ -4213,7 +3005,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Ten_pc_h2.HOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Ten_pc_h2.HOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 H = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('H')]
 OH = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('OH')]
 HO2 = Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('HO2')]
@@ -4230,7 +3022,7 @@ plt.xlim(xlim)
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(One_pc_h2.HOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(One_pc_h2.HOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 H = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('H')]
 OH = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('OH')]
 HO2 = One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('HO2')]
@@ -4239,7 +3031,7 @@ HOX = H+OH+HO2+H2O2
 plt.plot(HOX, One_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(P_HOX(Photo_1pc), Photo_1pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_HOX(Atmos_1pc), Atmos_1pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(Kasting_HOX(K_1pc_J), K_1pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_HOX(K_1pc_J), K_1pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-3)
 plt.xscale('log');  thick_axes(top = True)
@@ -4249,7 +3041,7 @@ plt.xlabel('HO'+sub('\\rm x')+' mixing ratio', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Zero1_pc_h2.HOX), Pre_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Zero1_pc_h2.HOX), Pre_pc_h0.lev, color = 'black', lw = lw)
 H = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('H')]
 OH = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('OH')]
 HO2 = Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('HO2')]
@@ -4258,7 +3050,7 @@ HOX = H+OH+HO2+H2O2
 plt.plot(HOX, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(P_HOX(Photo_01pc), Photo_01pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_HOX(Atmos_01pc), Atmos_01pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(Kasting_HOX(K_01pc_J), K_01pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting 1D model', lw = lw)
+plt.plot(Kasting_HOX(K_01pc_J), K_01pc_J["PRESS"]/1e3, color = color_Kasting, label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-3)
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
@@ -4274,11 +3066,11 @@ gs = gridspec.GridSpec(2,2)
 gs.update(wspace = 0.1, hspace = 0.1)
 plt.subplot(gs[0,0])
 plt.title('100% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Pre_pc_h0.H2O), Pre_pc_h0.lev, color = 'k', label = 'WACCM6', lw = lw)
+plt.plot(LWAV(Pre_pc_h0.H2O), Pre_pc_h0.lev, color = 'black', label = 'WACCM6', lw = lw)
 plt.plot(PI_V_482SZA['variable']['ymix'][:,PI_spec_482SZA.index('H2O')], PI_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN')
 plt.plot(Photo_PI["H2O"], Photo_PI['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_100pc["H2O"], Atmos_100pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_100pc_J["FH2O"], K_100pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = lw)
+plt.plot(K_100pc_J["FH2O"], K_100pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, ylim)
 plt.xscale('log');  thick_axes(top = True)
@@ -4289,11 +3081,11 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0,1])
 plt.title('10% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Ten_pc_h0.H2O), Ten_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Ten_pc_h0.H2O), Ten_pc_h0.lev, color = 'black', lw = lw)
 plt.plot(Ten_pc_V_482SZA['variable']['ymix'][:,Ten_pc_spec_482SZA.index('H2O')], Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(Photo_10pc["H2O"], Photo_10pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_10pc["H2O"], Atmos_10pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_10pc_J["FH2O"], K_10pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = lw)
+plt.plot(K_10pc_J["FH2O"], K_10pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, ylim)
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
@@ -4301,11 +3093,11 @@ plt.xlim(1e-7, 1e-4)
 
 plt.subplot(gs[1,0])
 plt.title('1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(One_pc_h0.H2O), One_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(One_pc_h0.H2O), One_pc_h0.lev, color = 'black', lw = lw)
 plt.plot(One_pc_V_482SZA['variable']['ymix'][:,One_pc_spec_482SZA.index('H2O')], One_pc_V_482SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(Photo_1pc["H2O"], Photo_1pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_1pc["H2O"], Atmos_1pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_1pc_J["FH2O"], K_1pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = lw)
+plt.plot(K_1pc_J["FH2O"], K_1pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, 1e-3)
 plt.xscale('log');  thick_axes(top = True)
@@ -4315,11 +3107,11 @@ plt.xlabel('H'+sub(2)+'O mixing ratio', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1,1])
 plt.title('0.1% PAL', fontsize = 15, weight = 'bold', y = 0.9)
-plt.plot(LWAV(Zero1_pc_h0.H2O), Zero1_pc_h0.lev, color = 'k', lw = lw)
+plt.plot(LWAV(Zero1_pc_h0.H2O), Zero1_pc_h0.lev, color = 'black', lw = lw)
 plt.plot(Z1_pc_V_482SZA['variable']['ymix'][:,Z1_pc_spec_482SZA.index('H2O')], Z1_pc_V_60SZA['atm']['pco']/1e3, color = 'm', label = 'VULCAN', lw = lw)
 plt.plot(Photo_01pc["H2O"], Photo_01pc['press']*1e3, color = 'b', label = 'Photochem', lw = lw)
 plt.plot(Atmos_01pc["H2O"], Atmos_01pc["PRESS"]*1e3, color = 'darkorange', label = 'Atmos', lw = lw)
-plt.plot(K_01pc_J["FH2O"], K_01pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting\n1D model', lw = lw)
+plt.plot(K_01pc_J["FH2O"], K_01pc_J["PRESS"]/1e3, color = 'teal', label = 'Kasting', lw = lw)
 plt.yscale('log')
 plt.ylim(1e3, ylim)
 plt.xscale('log');  thick_axes(top = True, labelleft = False)
@@ -4337,45 +3129,6 @@ Are the photolysis rates outputted depending on the diurnal averaging factor or 
 
 Vulcan_factor = 2
 
-def photochem_integrated_JO2(O2_photo):
-    
-    # local production per layer (cm^-2 s^-1)
-    layer_prod = O2_photo * 1000
-    
-    # cumulative integral from top of atmosphere downward
-    int_JO2 = layer_prod[::-1].cumsum()[::-1]
-    
-    return int_JO2
-
-
-def vulcan_integrated_JO2(data, Vulcan_factor=Vulcan_factor):
-    
-    # species list
-    species = data['variable']['species']
-    O2_ind = species.index('O2')
-    
-    # O2 number density (cm^-3)
-    O2_dens = data['variable']['y'][:, O2_ind] * 1e6
-    
-    # total O2 photolysis rate
-    JO2 = (
-        data['variable']['J_sp']['O2',0]# +
-        #data['variable']['J_sp']['O2',1] +
-        #data['variable']['J_sp']['O2',2]
-    )
-    
-    # layer thickness (cm)
-    dz = data['atm']['dz']/100
-    
-    # local production per layer (cm^-2 s^-1)
-    layer_prod = Vulcan_factor * JO2 * O2_dens * dz * 3/8
-    
-    # cumulative integral from top of atmosphere downward
-    int_JO2 = layer_prod[::-1].cumsum()[::-1]
-    
-    return int_JO2
-
-
 # --- Compute VULCAN integrated JO2 ---
 int_JO2_PI = vulcan_integrated_JO2(PI_V_482SZA)
 int_JO2_Ten = vulcan_integrated_JO2(Ten_pc_V_482SZA)
@@ -4392,6 +3145,35 @@ int_ox_prod_10pc_photo = photochem_integrated_JO2(ox_prod_10pc_photo)
 int_ox_prod_1pc_photo = photochem_integrated_JO2(ox_prod_1pc_photo)
 int_ox_prod_01pc_photo = photochem_integrated_JO2(ox_prod_01pc_photo)
 
+# Atmos and Kasting: cumulative column integral from TOA downward.
+# profile: molecules m^-3 s^-1, z_cm: altitude grid in cm.
+def cumulative_from_toa(profile, z_cm):
+    arr = np.asarray(profile, dtype=float)
+    z_m = np.asarray(z_cm, dtype=float) / 100.0
+    dz_m = np.abs(np.gradient(z_m))
+    layer_prod = arr * dz_m
+    return layer_prod[::-1].cumsum()[::-1]
+
+atmos_ox_prod_100pc = Atmos_XS_100pc_JO2 * Atmos_dens(Atmos_100pc) * Atmos_100pc["O2"]
+atmos_ox_prod_10pc = Atmos_XS_10pc_JO2 * Atmos_dens(Atmos_10pc) * Atmos_10pc["O2"]
+atmos_ox_prod_1pc = Atmos_XS_1pc_JO2 * Atmos_dens(Atmos_1pc) * Atmos_1pc["O2"]
+atmos_ox_prod_01pc = Atmos_XS_01pc_JO2 * Atmos_dens(Atmos_01pc) * Atmos_01pc["O2"]
+
+int_ox_prod_100pc_atmos = cumulative_from_toa(atmos_ox_prod_100pc, Atmos_XS_100pc_Z)
+int_ox_prod_10pc_atmos = cumulative_from_toa(atmos_ox_prod_10pc, Atmos_XS_10pc_Z)
+int_ox_prod_1pc_atmos = cumulative_from_toa(atmos_ox_prod_1pc, Atmos_XS_1pc_Z)
+int_ox_prod_01pc_atmos = cumulative_from_toa(atmos_ox_prod_01pc, Atmos_XS_01pc_Z)
+
+kasting_ox_prod_100pc = prox_ox_K(K_100pc_J)
+kasting_ox_prod_10pc = prox_ox_K(K_10pc_J)
+kasting_ox_prod_1pc = prox_ox_K(K_1pc_J)
+kasting_ox_prod_01pc = prox_ox_K(K_01pc_J)
+
+int_ox_prod_100pc_kasting = cumulative_from_toa(kasting_ox_prod_100pc, K_100pc_J["Z"])
+int_ox_prod_10pc_kasting = cumulative_from_toa(kasting_ox_prod_10pc, K_10pc_J["Z"])
+int_ox_prod_1pc_kasting = cumulative_from_toa(kasting_ox_prod_1pc, K_1pc_J["Z"])
+int_ox_prod_01pc_kasting = cumulative_from_toa(kasting_ox_prod_01pc, K_01pc_J["Z"])
+
 # --- Plot ---
 plt.figure(figsize=(14,10))
 gs = gridspec.GridSpec(2,2)
@@ -4404,6 +3186,8 @@ plt.plot(cum_int_base, base.lev, color='k', label='WACCM6', lw = lw)
 # VULCAN case
 plt.plot(int_JO2_PI, PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw, label='VULCAN')
 plt.plot(int_ox_prod_100pc_photo, Photo_PI['press']*1e3, color = 'b', lw = lw, label='Photochem')
+plt.plot(int_ox_prod_100pc_atmos, Atmos_100pc["PRESS"]*1e3, color='darkorange', lw=lw, label='Atmos')
+plt.plot(int_ox_prod_100pc_kasting, K_100pc_J["PRESS"]/1e3, color='teal', lw=lw, label='Kasting')
 plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 plt.legend(loc = 0, fontsize = 15, frameon = False)
 thick_axes(top = True)
@@ -4413,15 +3197,19 @@ plt.xscale('log'); plt.xlim(xlim)
 plt.subplot(gs[0,1])
 plt.plot(int_JO2_Ten, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(int_ox_prod_10pc_photo, Photo_10pc['press']*1e3, color = 'b', lw = lw, label='Photochem')
-plt.plot(cum_int_ten, base.lev, color = 'k', lw = lw)
+plt.plot(cum_int_ten, base.lev, color = 'black', lw = lw)
+plt.plot(int_ox_prod_10pc_atmos, Atmos_10pc["PRESS"]*1e3, color='darkorange', lw=lw)
+plt.plot(int_ox_prod_10pc_kasting, K_10pc_J["PRESS"]/1e3, color='teal', lw=lw)
 thick_axes(top = True)
 plt.yscale('log'); plt.ylim(1e3, 1e-5)
 plt.xscale('log');  plt.xlim(xlim)
 
 plt.subplot(gs[1,0])
 plt.plot(int_JO2_One, One_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
-plt.plot(cum_int_one, base.lev, color = 'k', lw = lw)
+plt.plot(cum_int_one, base.lev, color = 'black', lw = lw)
 plt.plot(int_ox_prod_1pc_photo, Photo_1pc['press']*1e3, color = 'b', lw = lw, label='Photochem')
+plt.plot(int_ox_prod_1pc_atmos, Atmos_1pc["PRESS"]*1e3, color='darkorange', lw=lw)
+plt.plot(int_ox_prod_1pc_kasting, K_1pc_J["PRESS"]/1e3, color='teal', lw=lw)
 thick_axes(top = True)
 plt.yscale('log'); plt.ylim(1e3, 1e-5)
 plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
@@ -4431,7 +3219,9 @@ plt.xlabel('Integrated O$_2$ photolysis', fontsize = 15, weight = 'bold')
 plt.subplot(gs[1,1])
 plt.plot(int_JO2_Zero1, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = lw)
 plt.plot(int_ox_prod_01pc_photo, Photo_01pc['press']*1e3, color = 'b', lw = lw, label='Photochem')
-plt.plot(cum_int_zero1, base.lev, color = 'k', lw = lw)
+plt.plot(cum_int_zero1, base.lev, color = 'black', lw = lw)
+plt.plot(int_ox_prod_01pc_atmos, Atmos_01pc["PRESS"]*1e3, color='darkorange', lw=lw)
+plt.plot(int_ox_prod_01pc_kasting, K_01pc_J["PRESS"]/1e3, color='teal', lw=lw)
 
 thick_axes(top = True)
 plt.yscale('log'); plt.ylim(1e3, 1e-5)
@@ -4476,7 +3266,7 @@ plt.figure(figsize = (14,10))
 gs = gridspec.GridSpec(2,2)
 plt.subplot(gs[0, 0])
 
-plt.plot(PI_photo, base.lev, lw = lw, color = 'k')
+plt.plot(PI_photo, base.lev, lw = lw, color = 'black')
 
 lw = 2
 V_PI_photo = (
@@ -4487,7 +3277,7 @@ V_PI_photo = (
 species = PI_pc_V_60SZA['variable']['species']
 O2_dens_PI = PI_pc_V_60SZA['variable']['y'][:,species.index('O2')] * 1e6
 V_PI_prod_ox = Vulcan_factor*V_PI_photo*O2_dens_PI
-plt.plot(V_PI_prod_ox, PI_pc_V_60SZA['atm']['pco']/1e3, lw = lw, ls = ':', color = 'k')
+plt.plot(V_PI_prod_ox, PI_pc_V_60SZA['atm']['pco']/1e3, lw = lw, ls = ':', color = 'black')
 thick_axes()
 plt.ylim(1e3,ylim)
 plt.xlim(1e10,1e13)
@@ -4548,7 +3338,6 @@ Interpolate photolysis rates onto the same pressure grid so I can
 divide one by the other
 '''
 
-from scipy.interpolate import interp1d
 
 # Target pressure grid (CAM)
 p_cam = base.lev.values
@@ -4675,7 +3464,7 @@ jo2 = PCb.jo2_a + PCb.jo2_b
 PCb_01pc_photo = LWAV(2* PCb_01pc_o2_dens  * jo2)
 
 plt.figure(figsize = (7,5))
-plt.plot(LWAV(jo2), base.lev, lw = lw, color = 'k')
+plt.plot(LWAV(jo2), base.lev, lw = lw, color = 'black')
 thick_axes()
 plt.ylim(1e3,1e-5)
 plt.xscale('log')
@@ -4684,7 +3473,7 @@ plt.yscale('log')
 
 plt.figure(figsize = (7,5))
 
-plt.plot(PI_PCb_photo , base.lev, lw = lw, color = 'k')
+plt.plot(PI_PCb_photo , base.lev, lw = lw, color = 'black')
 #plt.plot(Ten_photo, base.lev, lw = lw, color = Ten_pc_color)
 #plt.plot(One_photo, base.lev, lw = lw, color = One_pc_color)
 plt.plot(Zero1_photo, base.lev, lw = lw, color = Zero1_pc_color)
@@ -4694,7 +3483,7 @@ lw = 2
 V_PCb_PI_photo = PCb_V_60SZA['variable']['J_sp']['O2', 0] + PCb_V_60SZA['variable']['J_sp']['O2', 1] + PCb_V_60SZA['variable']['J_sp']['O2', 2]
 species = PCb_V_60SZA['variable']['species']
 O2_dens = PCb_V_60SZA['variable']['y'][:,species.index('O2')] * 1e5
-plt.plot(Vulcan_factor*V_PCb_PI_photo*O2_dens, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, ls = ':', color = 'k')
+plt.plot(Vulcan_factor*V_PCb_PI_photo*O2_dens, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, ls = ':', color = 'black')
 
 V_PCb_01pc_photo = PCb_01pc_V_60SZA['variable']['J_sp']['O2', 0] + PCb_01pc_V_60SZA['variable']['J_sp']['O2', 1] + PCb_01pc_V_60SZA['variable']['J_sp']['O2', 2]
 species = PCb_01pc_V_60SZA['variable']['species']
@@ -4771,7 +3560,7 @@ gs = gridspec.GridSpec(2,2)
 plt.subplot(gs[0, 0])
 PCb_W_JO2 = prox_ox_W(PCb)
 PCb_V_JO2 = prox_ox_V(PCb_V, PCb_spec_V)
-plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
+plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'black', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4780,7 +3569,7 @@ plt.xscale('log'); thick_axes(top = True)
 plt.subplot(gs[0, 1])
 PCb_W_JO2 = prox_ox_W(PCb_10pc)
 #PCb_V_JO2 = prox_ox_V(PCb_10pc_V, PCb_10pc_spec_V)
-plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
+plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'black', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4789,7 +3578,7 @@ plt.xscale('log'); thick_axes(top = True)
 plt.subplot(gs[1, 0])
 PCb_W_JO2 = prox_ox_W(PCb_1pc)
 #PCb_V_JO2 = prox_ox_V(PCb_1pc_V, PCb_1pc_spec_V)
-plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
+plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'black', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4797,7 +3586,7 @@ plt.xscale('log'); thick_axes(top = True)
 plt.subplot(gs[1, 1])
 PCb_W_JO2 = prox_ox_W(PCb_01pc)
 #PCb_V_JO2 = prox_ox_V(PCb_01pc_V, PCb_01pc_spec_V)
-plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'k', label = 'WACCM6')
+plt.plot(LWAV(PCb_W_JO2), PCb.lev, lw = lw, color = 'black', label = 'WACCM6')
 plt.plot(PCb_V_JO2, PCb_V_60SZA['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
@@ -4823,7 +3612,7 @@ gs = gridspec.GridSpec(2,2)
 
 plt.subplot(gs[0, 0])
 plt.plot(int_JO2_PI, PCb_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
-plt.plot(cum_int_base, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
+plt.plot(cum_int_base, PCb.lev, color = 'black', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
 plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
@@ -4831,14 +3620,14 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[0, 1])
 plt.plot(int_JO2_Ten, PCb_10pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
-plt.plot(cum_int_ten, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
+plt.plot(cum_int_ten, PCb.lev, color = 'black', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
 
 
 plt.subplot(gs[1, 0])
 plt.plot(int_JO2_One, PCb_1pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
-plt.plot(cum_int_one, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
+plt.plot(cum_int_one, PCb.lev, color = 'black', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
 plt.xlabel('Integrated O2 photolysis', fontsize = 15, weight = 'bold')
@@ -4846,7 +3635,7 @@ plt.ylabel('Pressure [hPa]', fontsize = 15, weight = 'bold')
 
 plt.subplot(gs[1, 1])
 #plt.plot(int_JO2_Zero1, PCb_01pc_V['atm']['pco']/1e3, lw = lw, color = 'm', label = 'VULCAN')
-plt.plot(cum_int_zero1, PCb.lev, color = 'k', lw =lw, label= 'WACCM6')
+plt.plot(cum_int_zero1, PCb.lev, color = 'black', lw =lw, label= 'WACCM6')
 plt.ylim(ylim); plt.yscale('log'); plt.xlim(xlim)
 plt.xscale('log'); thick_axes(top = True)
 plt.xlabel('Integrated O2 photolysis', fontsize = 15, weight = 'bold')
@@ -4854,20 +3643,6 @@ plt.xlabel('Integrated O2 photolysis', fontsize = 15, weight = 'bold')
 #%% J rates calculation check with aflux
 
 
-def calculate_J_rates(data):
-    sigma1 = data['variable']['cross_J']['O2', 1] # Shape: (2610,)
-    sigma2 = data['variable']['cross_J']['O2', 2] # Shape: (2610,)
-    flux = data['variable']['aflux']             # Shape: (120, 2610)
-    
-    # Multiply sigma across the second dimension of flux
-    # Resulting j_raw will be (120, 2610)
-    j_raw = flux * (sigma1+sigma2)
-    
-    # Sum over the wavelength axis (axis 1) 
-    # This leaves you with one value for each of the 120 layers
-    J_rates = np.sum(j_raw, axis=1)
-    
-    return J_rates
 
 J_rates = calculate_J_rates(PI_V_60SZA)
 
@@ -4903,7 +3678,7 @@ plt.figure(figsize = (9*1.5,5*1.2))
 markercolor = 'whitesmoke'
 #alpha = 0.75
 alpha = 0.9
-plt.plot(WACCM_wavelength, WACCM_Flux/1000, lw = 2, color = 'k', label = 'Sun at Earth', zorder = 3, alpha = alpha)
+plt.plot(WACCM_wavelength, WACCM_Flux/1000, lw = 2, color = 'black', label = 'Sun at Earth', zorder = 3, alpha = alpha)
 plt.plot(PC_b_wavelength, PC_b_flux/1000, lw = 2, color = '#32d1a7', label = 'Proxima Centauri at b', zorder = 0, alpha = alpha)
 plt.ylabel('Top of atmosphere irradiance\nper unit wavelength [W m'+r'$^\mathbf{-2}$'+' nm'+r'$^\mathbf{-1}$'+']',fontsize=15,color='k', weight = 'bold')
 plt.xscale('log')
@@ -4931,7 +3706,7 @@ plt.savefig('/Users/gregcooke/python_output/PC_spectra.png', dpi = dpi, bbox_inc
 #%% Spectra compared to cross sections
 XSfactor = 1e5
 plt.figure()
-plt.plot(PI_pc_V_482SZA['variable']['bins'], XSfactor * (PI_pc_V_482SZA['variable']['cross_J']['O2',1]+PI_pc_V_482SZA['variable']['cross_J']['O2',2]), color = 'k')
+plt.plot(PI_pc_V_482SZA['variable']['bins'], XSfactor * (PI_pc_V_482SZA['variable']['cross_J']['O2',1]+PI_pc_V_482SZA['variable']['cross_J']['O2',2]), color = 'black')
 plt.plot(PI_pc_V_482SZA['variable']['bins'], PI_pc_V_482SZA['variable']['cross_J']['O3',1]+PI_pc_V_482SZA['variable']['cross_J']['O3',2], color = 'm')
 plt.ylim(1e-21, 1e-16)
 #plt.plot((df_flux['Wave_Min']+df_flux['Wave_Max'])[:35]/20, df_cross['O2'], color = 'teal')
@@ -4940,8 +3715,8 @@ plt.yscale('log')
 
 
 plt.figure()
-plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'k')
-plt.plot(LWAV(n_dens(PCb, "O3")), PCb.lev, color = 'k', ls = '--')
+plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'black')
+plt.plot(LWAV(n_dens(PCb, "O3")), PCb.lev, color = 'black', ls = '--')
 plt.plot(PCb_10pc_V_60SZA['variable']['y'][:,PCb_10pc_spec_V_60SZA.index('O3')] * 1e6, PCb_10pc_V_60SZA['atm']['pco']/1e3, color = Ten_pc_color)
 plt.plot(LWAV(n_dens(PCb_10pc, "O3")), PCb.lev, color = Ten_pc_color, ls = '--')
 plt.plot(PCb_1pc_V_60SZA['variable']['y'][:,PCb_1pc_spec_V_60SZA.index('O3')] * 1e6, PCb_1pc_V_60SZA['atm']['pco']/1e3, color = One_pc_color)
@@ -4955,9 +3730,9 @@ plt.xlim(1e12, 1e19)
 
 
 plt.figure()
-plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'k')
+plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'black')
 O3 = LWAV_spec(n_dens(PCb, "O3"), time = False, latitude = np.arange(47-5, 47+5))
-plt.plot(O3, PCb.lev, color = 'k', ls = '--')
+plt.plot(O3, PCb.lev, color = 'black', ls = '--')
 plt.plot(PCb_10pc_V_60SZA['variable']['y'][:,PCb_10pc_spec_V_60SZA.index('O3')] * 1e6, PCb_10pc_V_60SZA['atm']['pco']/1e3, color = Ten_pc_color)
 O3 = LWAV_spec(n_dens(PCb_10pc, "O3"), time = False, latitude = np.arange(47-5, 47+5))
 plt.plot(O3, PCb.lev, color = Ten_pc_color, ls = '--')
@@ -4989,8 +3764,8 @@ And yet, 3D models end up having overall more ozone? Are you sure about this?
 '''
 
 plt.figure()
-plt.plot(XSfactor*PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'k')
-plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O2')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'k', ls = '--')
+plt.plot(XSfactor*PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O3')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'black')
+plt.plot(PCb_V_60SZA['variable']['y'][:,PCb_spec_V_60SZA.index('O2')] * 1e6, PCb_V_60SZA['atm']['pco']/1e3, color = 'black', ls = '--')
 plt.plot(XSfactor*PCb_10pc_V_60SZA['variable']['y'][:,PCb_10pc_spec_V_60SZA.index('O3')] * 1e6, PCb_10pc_V_60SZA['atm']['pco']/1e3, color = Ten_pc_color)
 plt.plot(PCb_10pc_V_60SZA['variable']['y'][:,PCb_10pc_spec_V_60SZA.index('O2')] * 1e6, PCb_10pc_V_60SZA['atm']['pco']/1e3, color = Ten_pc_color, ls = '--')
 plt.plot(XSfactor*PCb_1pc_V_60SZA['variable']['y'][:,PCb_1pc_spec_V_60SZA.index('O3')] * 1e6, PCb_1pc_V_60SZA['atm']['pco']/1e3, color = One_pc_color)
@@ -5005,8 +3780,8 @@ plt.ylim(1e3, 1e-5)
 plt.xlim(1e19, 1e24)
 
 plt.figure()
-plt.plot(XSfactor*PI_pc_V_482SZA['variable']['y'][:,PI_pc_spec_482SZA.index('O3')] * 1e6, PI_pc_V_482SZA['atm']['pco']/1e3, color = 'k')
-plt.plot(PI_pc_V_482SZA['variable']['y'][:,PI_pc_spec_482SZA.index('O2')] * 1e6, PI_pc_V_482SZA['atm']['pco']/1e3, color = 'k', ls = '--')
+plt.plot(XSfactor*PI_pc_V_482SZA['variable']['y'][:,PI_pc_spec_482SZA.index('O3')] * 1e6, PI_pc_V_482SZA['atm']['pco']/1e3, color = 'black')
+plt.plot(PI_pc_V_482SZA['variable']['y'][:,PI_pc_spec_482SZA.index('O2')] * 1e6, PI_pc_V_482SZA['atm']['pco']/1e3, color = 'black', ls = '--')
 plt.plot(XSfactor*Ten_pc_V_482SZA['variable']['y'][:,Ten_pc_spec_482SZA.index('O3')] * 1e6, Ten_pc_V_482SZA['atm']['pco']/1e3, color = Ten_pc_color)
 plt.plot(Ten_pc_V_482SZA['variable']['y'][:,Ten_pc_spec_482SZA.index('O2')] * 1e6, Ten_pc_V_482SZA['atm']['pco']/1e3, color = Ten_pc_color, ls = '--')
 plt.plot(XSfactor*One_pc_V_482SZA['variable']['y'][:,One_pc_spec_482SZA.index('O3')] * 1e6, One_pc_V_482SZA['atm']['pco']/1e3, color = One_pc_color)
@@ -5019,7 +3794,7 @@ plt.xlim(1e15, 1e22)
 #%% How does the flux change through the atmosphere?
 level = 35
 plt.figure(figsize = (10,5))
-plt.plot(PCb_V_60SZA['variable']['bins'], PCb_V_60SZA['variable']['sflux'][level], color = 'k')
+plt.plot(PCb_V_60SZA['variable']['bins'], PCb_V_60SZA['variable']['sflux'][level], color = 'black')
 plt.plot(PCb_10pc_V_60SZA['variable']['bins'], PCb_10pc_V_60SZA['variable']['sflux'][level], color = Ten_pc_color)
 plt.plot(PCb_1pc_V_60SZA['variable']['bins'], PCb_1pc_V_60SZA['variable']['sflux'][level], color = One_pc_color)
 plt.plot(PCb_01pc_V_60SZA['variable']['bins'], PCb_01pc_V_60SZA['variable']['sflux'][level], color = Zero1_pc_color)
@@ -5029,7 +3804,7 @@ plt.ylim(1e-9, 1e3)
 plt.title(str(PCb_01pc_V_60SZA['atm']['pco'][level]/1e3) + ' hPa')
 
 plt.figure(figsize = (10,5))
-plt.plot(PI_pc_V_482SZA['variable']['bins'], PI_pc_V_482SZA['variable']['sflux'][level], color = 'k')
+plt.plot(PI_pc_V_482SZA['variable']['bins'], PI_pc_V_482SZA['variable']['sflux'][level], color = 'black')
 plt.plot(Ten_pc_V_482SZA['variable']['bins'], Ten_pc_V_482SZA['variable']['sflux'][level], color = Ten_pc_color)
 plt.plot(One_pc_V_482SZA['variable']['bins'], One_pc_V_482SZA['variable']['sflux'][level], color = One_pc_color)
 plt.plot(Z1_pc_V_482SZA['variable']['bins'], Z1_pc_V_482SZA['variable']['sflux'][level], color = Zero1_pc_color)
@@ -5041,9 +3816,7 @@ plt.title(str(PI_pc_V_482SZA['atm']['pco'][level]/1e3) + ' hPa')
 
 #%%
 
-import pandas as pd
 
-import pandas as pd
 
 file_path = '/Users/gregcooke/photochem/examples/TOI1468c/atmosphere.txt'
 output_path = '/Users/gregcooke/photochem/examples/TOI1468c/TOI1468c_atmosphere.txt'
@@ -5066,10 +3839,157 @@ df.to_csv(output_path, sep=' ', index=False, float_format='%.5E')
 print(f"Modified file saved to: {output_path}")
 
 
+#%%
+import numpy as np
 
+# 1. Extract Temperature array
+T = PI_V_482SZA['atm']['Tco']
+P = PI_V_482SZA['atm']['pco']
+
+# 2. Define rate parameters for the low-pressure limit
+A_0 = 2.989029e-28
+b_0 = -2.3
+
+# 3. Calculate the low-pressure rate constant (k_0)
+# Units: cm^6 / molecule^2 / s
+k_0_photochem = A_0 * (T ** b_0)
+
+# (Optional) If you want the exact termolecular falloff without multiplying by [M]:
+A_inf = 2.8e-11
+k_inf = A_inf * (T ** 0.0)
+M_density = (P / (1.380649e-23 * T)) * 1e-6 
+k_termolecular = k_0 / (1 + (k_0 * M_density / k_inf))
+# Note: For this specific reaction in the atmosphere, k_0 and k_termolecular 
+# will be virtually identical.
+
+# 4. Plot the corrected low-pressure rate constant
+plt.figure(figsize=(6, 8))
+plt.plot(k_0, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_termolecular, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+
+# Overlay the original rate constant for a direct visual check
+plt.plot(PI_V_482SZA['variable']['k'][1075], P / 1e3, 
+         label='Original 1075', color='red', linestyle='--')
+
+# Match your original plot formatting
+plt.ylim(1e3, 1e-5)
+plt.yscale('log')
+plt.xlabel('Rate Constant (cm$^6$ molecule$^{-2}$ s$^{-1}$)')
+plt.ylabel('P / 1e3')
+plt.title('O + O$_2$ + M Termolecular Rate Constant')
+plt.legend()
+plt.show()
+
+
+T = PI_V_482SZA['atm']['Tco']
+P = PI_V_482SZA['atm']['pco']
+k_atmos = 5.12e-34 * (298.0 / T)**2.6 * np.exp(40.5 / T)
+
+A_0_tbdy = 5.70e-34
+B_0_tbdy = -2.6
+k_kasting = A_0_tbdy * (T / 300.0)**B_0_tbdy
+
+#%%
+
+plt.figure()
+width = 15
+plt.plot(k_0_photochem, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_0, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_atmos, P / 1e3, label="Atmos", color='darkorange')
+plt.plot(k_kasting, P / 1e3, label="Atmos", color='teal')
+plt.plot(LWAV_spec(Pre_h0.usr_O_O2, time = False, latitude = np.arange(47-width, 47+width)), Pre_pc_h0.lev, color = 'k');
+plt.ylim(1e3,1e-5);  
+plt.plot(PI_V_482SZA['variable']['k'][1075], PI_V_482SZA['atm']['pco']/1e3, color = 'm')
+plt.ylim(1e3,1e-1)
+plt.yscale('log');
+plt.xlim(0.5e-33, 1.9e-33)
+
+T = Ten_pc_V_482SZA['atm']['Tco']
+P = Ten_pc_V_482SZA['atm']['pco']
+k_atmos = 5.12e-34 * (298.0 / T)**2.6 * np.exp(40.5 / T)
+
+A_0_tbdy = 5.70e-34
+B_0_tbdy = -2.6
+k_kasting = A_0_tbdy * (T / 300.0)**B_0_tbdy
+
+# 2. Define rate parameters for the low-pressure limit
+A_0 = 2.989029e-28
+b_0 = -2.3
+
+# 3. Calculate the low-pressure rate constant (k_0)
+# Units: cm^6 / molecule^2 / s
+k_0_photochem = A_0 * (T ** b_0)
+
+plt.figure()
+width = 15
+plt.plot(k_0_photochem, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_atmos, P / 1e3, label="Atmos", color='darkorange')
+plt.plot(k_kasting, P / 1e3, label="Atmos", color='teal')
+plt.plot(LWAV_spec(Pre_h0.usr_O_O2, time = False, latitude = np.arange(47-width, 47+width)), Pre_pc_h0.lev, color = 'k');
+plt.ylim(1e3,1e-5);  
+plt.plot(Ten_pc_V_482SZA['variable']['k'][1075], One_pc_V_482SZA['atm']['pco']/1e3, color = 'm')
+plt.ylim(1e3,1e-1)
+plt.yscale('log');
+plt.xlim(1.3e-33, 3e-33)
+
+T = One_pc_V_482SZA['atm']['Tco']
+P = One_pc_V_482SZA['atm']['pco']
+k_atmos = 5.12e-34 * (298.0 / T)**2.6 * np.exp(40.5 / T)
+
+A_0_tbdy = 5.70e-34
+B_0_tbdy = -2.6
+k_kasting = A_0_tbdy * (T / 300.0)**B_0_tbdy
+
+# 2. Define rate parameters for the low-pressure limit
+A_0 = 2.989029e-28
+b_0 = -2.3
+
+# 3. Calculate the low-pressure rate constant (k_0)
+# Units: cm^6 / molecule^2 / s
+k_0_photochem = A_0 * (T ** b_0)
+
+plt.figure()
+width = 15
+plt.plot(k_0_photochem, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_atmos, P / 1e3, label="Atmos", color='darkorange')
+plt.plot(k_kasting, P / 1e3, label="Atmos", color='teal')
+plt.plot(LWAV_spec(Pre_h0.usr_O_O2, time = False, latitude = np.arange(47-width, 47+width)), Pre_pc_h0.lev, color = 'k');
+plt.ylim(1e3,1e-5);  
+plt.plot(One_pc_V_482SZA['variable']['k'][1075], One_pc_V_482SZA['atm']['pco']/1e3, color = 'm')
+plt.ylim(1e3,1e-1)
+plt.yscale('log');
+plt.xlim(1.3e-33, 3e-33)
+
+T = Z1_pc_V_482SZA['atm']['Tco']
+P = Z1_pc_V_482SZA['atm']['pco']
+k_atmos = 5.12e-34 * (298.0 / T)**2.6 * np.exp(40.5 / T)
+
+A_0_tbdy = 5.70e-34
+B_0_tbdy = -2.6
+k_kasting = A_0_tbdy * (T / 300.0)**B_0_tbdy
+
+# 2. Define rate parameters for the low-pressure limit
+A_0 = 2.989029e-28
+b_0 = -2.3
+
+# 3. Calculate the low-pressure rate constant (k_0)
+# Units: cm^6 / molecule^2 / s
+k_0_photochem = A_0 * (T ** b_0)
+
+plt.figure()
+width = 15
+plt.plot(k_0_photochem, P / 1e3, label='New Low-P Rate (k_0)', color='blue')
+plt.plot(k_atmos, P / 1e3, label="Atmos", color='darkorange')
+plt.plot(k_kasting, P / 1e3, label="Atmos", color='teal')
+plt.plot(LWAV_spec(Pre_h0.usr_O_O2, time = False, latitude = np.arange(47-width, 47+width)), Pre_pc_h0.lev, color = 'k');
+plt.ylim(1e3,1e-5);  
+plt.plot(Z1_pc_V_482SZA['variable']['k'][1075], One_pc_V_482SZA['atm']['pco']/1e3, color = 'm')
+plt.ylim(1e3,1e-1)
+plt.yscale('log');
+plt.xlim(1.3e-33, 3e-33)
 #%% Ozone loss
 
-xlim = (1e-2, 1e9)
+xlim = (1e-2, 1e12)
 ylim = (1e3, 1e-3)
 
 plt.figure(figsize = (14,10))
@@ -5079,12 +3999,12 @@ plt.subplot(gs[0,0])
 reaction = PI_V_482SZA['variable']['k'][707]* PI_V_482SZA['variable']['k'][707]*1e6
 O =  PI_V_482SZA['variable']['y'][:,PI_spec_482SZA.index('O')] * 1e6
 O3 = PI_V_482SZA['variable']['y'][:,PI_spec_482SZA.index('O3')] * 1e6
-plt.plot((reaction * O * O3), PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN')
+plt.plot((reaction * O * O3)*1e3, PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2, label = 'VULCAN')
 o3_loss, pressure_hpa = compute_o3loss(
-    mech_file=P_path+"zahnle_earth.yaml",
-    settings_file=P_path+"input/settings_100pc.yaml",
-    flux_file=P_path+"input/Sun_0.0Ga.txt",
-    pt_file=P_path+"100pc_PT_profile/100%PAL_Sun_0.0Ga.txt",
+    mech_file=P_path+"100pc/zahnle_earth.yaml",
+    settings_file=P_path+"100pc/settings_100pc.yaml",
+    flux_file=P_path+"100pc/Sun_0.0Ga.txt",
+    pt_file=P_path+"100pc/Earth_100pc_48.2.txt",
     atol=1e-23,
     verbose=0
 )
@@ -5099,12 +4019,12 @@ plt.subplot(gs[0,1])
 reaction = Ten_pc_V_482SZA['variable']['k'][707]*Ten_pc_V_482SZA['variable']['k'][707]*1e6
 O =  Ten_pc_V_482SZA['variable']['y'][:,Ten_pc_spec_482SZA.index('O')] * 1e6
 O3 = Ten_pc_V_482SZA['variable']['y'][:,Ten_pc_spec_482SZA.index('O3')] * 1e6
-plt.plot((reaction * O * O3), Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
+plt.plot((reaction * O * O3)*1e3, Ten_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 o3_loss, pressure_hpa = compute_o3loss(
-    mech_file=P_path+"zahnle_earth.yaml",
-    settings_file=P_path+"input/settings_100pc.yaml",
-    flux_file=P_path+"input/Sun_0.0Ga.txt",
-    pt_file=P_path+"10pc_PT_profile/10%PAL_Sun_0.0Ga.txt",
+    mech_file=P_path+"10pc/zahnle_earth.yaml",
+    settings_file=P_path+"10pc/settings_100pc.yaml",
+    flux_file=P_path+"10pc/Sun_0.0Ga.txt",
+    pt_file=P_path+"10pc/Earth_10pc_48.2.txt",
     atol=1e-23,
     verbose=0
 )
@@ -5117,12 +4037,12 @@ plt.subplot(gs[1,0])
 reaction = One_pc_V_482SZA['variable']['k'][707]* One_pc_V_482SZA['variable']['k'][707]*1e6
 O =  One_pc_V_482SZA['variable']['y'][:,One_pc_spec_482SZA.index('O')] * 1e6
 O3 = One_pc_V_482SZA['variable']['y'][:,One_pc_spec_482SZA.index('O3')] * 1e6
-plt.plot((reaction * O * O3), PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
+plt.plot((reaction * O * O3)*1e3, PI_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 o3_loss, pressure_hpa = compute_o3loss(
-    mech_file=P_path+"zahnle_earth.yaml",
-    settings_file=P_path+"input/settings_100pc.yaml",
-    flux_file=P_path+"input/Sun_0.0Ga.txt",
-    pt_file=P_path+"1pc_PT_profile/1%PAL_Sun_0.0Ga.txt",
+    mech_file=P_path+"1pc/zahnle_earth.yaml",
+    settings_file=P_path+"1pc/settings_100pc.yaml",
+    flux_file=P_path+"1pc/Sun_0.0Ga.txt",
+    pt_file=P_path+"1pc/Earth_1pc_48.2.txt",
     atol=1e-23,
     verbose=0
 )
@@ -5137,12 +4057,12 @@ plt.subplot(gs[1,1])
 reaction = Z1_pc_V_482SZA['variable']['k'][707]*Z1_pc_V_482SZA['variable']['k'][707]*1e6
 O =  Z1_pc_V_482SZA['variable']['y'][:,Z1_pc_spec_482SZA.index('O')] * 1e6
 O3 = Z1_pc_V_482SZA['variable']['y'][:,Z1_pc_spec_482SZA.index('O3')] * 1e6
-plt.plot((reaction * O * O3), Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
+plt.plot((reaction * O * O3)*1e3, Z1_pc_V_482SZA['atm']['pco']/1e3, color = 'm', lw = 2)
 o3_loss, pressure_hpa = compute_o3loss(
-    mech_file=P_path+"zahnle_earth.yaml",
-    settings_file=P_path+"input/settings_100pc.yaml",
-    flux_file=P_path+"input/Sun_0.0Ga.txt",
-    pt_file=P_path+"0.1pc_PT_profile/0.1%PAL_Sun_0.0Ga.txt",
+    mech_file=P_path+"0.1pc/zahnle_earth.yaml",
+    settings_file=P_path+"0.1pc/settings_100pc.yaml",
+    flux_file=P_path+"0.1pc/Sun_0.0Ga.txt",
+    pt_file=P_path+"0.1pc/Earth_0.1pc_48.2.txt",
     atol=1e-23,
     verbose=0
 )
@@ -5169,100 +4089,10 @@ plt.plot(O3, PCb_1pc_V['atm']['pco']/1e3, color = 'm', ls = '--', lw = 2)
 plt.yscale('log'); plt.xscale('log')
 plt.ylim(1e3, 1e-5); plt.xlim(1e-8, 1e-5)
 
+
+
+
 #%% TUV outputs
-
-import pandas as pd
-import re
-import matplotlib.pyplot as plt
-
-
-def read_usrout(filepath):
-    """
-    Read UVSPEC-style output file.
-
-    Returns
-    -------
-    spectral_df : pandas.DataFrame
-    dose_df : pandas.DataFrame
-    """
-
-    with open(filepath, "r") as f:
-        text = f.read()
-
-    # ================================================================
-    # Spectral irradiance table
-    # ================================================================
-
-    spectral_pattern = r"wc, nm.*?\n(.*?)\n-+"
-
-    match = re.search(spectral_pattern, text, re.S)
-
-    if not match:
-        raise ValueError(f"Could not find spectral table in {filepath}")
-
-    lines = [
-        line for line in match.group(1).splitlines()
-        if line.strip()
-    ]
-
-    spectral_data = [
-        [float(x) for x in line.split()]
-        for line in lines
-    ]
-
-    spectral_columns = [
-        "wavelength_nm",
-        "sza_40",
-        "sza_45",
-        "sza_50",
-        "sza_55",
-        "sza_60",
-    ]
-
-    spectral_df = pd.DataFrame(
-        spectral_data,
-        columns=spectral_columns
-    )
-
-    # ================================================================
-    # Dose rate table
-    # ================================================================
-
-    dose_pattern = r"sza, deg\..*?\n(.*?)\n-+"
-
-    match = re.search(dose_pattern, text, re.S)
-
-    if not match:
-        raise ValueError(f"Could not find dose table in {filepath}")
-
-    lines = [
-        line for line in match.group(1).splitlines()
-        if line.strip()
-    ]
-
-    dose_data = [
-        [float(x) for x in line.split()]
-        for line in lines
-    ]
-
-    dose_columns = [
-        "sza_deg",
-        "UVB_280_315",
-        "UVBstar_280_320",
-        "UVA_315_400",
-        "DNA_damage",
-        "UV_index",
-        "P_Dam_C_1971",
-        "P_Dam_FC_2003",
-        "P_Dam_FC_2003_ext390",
-    ]
-
-    dose_df = pd.DataFrame(
-        dose_data,
-        columns=dose_columns
-    )
-
-    return spectral_df, dose_df
 
 
 # ===================================================================
@@ -5270,9 +4100,8 @@ def read_usrout(filepath):
 # ===================================================================
 
 files = {
-    "Ten": "/Users/gregcooke/usrout_10pc.txt",
-    "One": "/Users/gregcooke/usrout_1pc.txt",
-    "Z1": "/Users/gregcooke/usrout_0.1pc.txt",
+    "Z1": "/Users/gregcooke/Z1_pc.txt",
+    "Z1V": "/Users/gregcooke/VULCAN.txt",
 }
 
 spectral = {}
@@ -5282,9 +4111,8 @@ for name, path in files.items():
     spectral[name], dose[name] = read_usrout(path)
 
 # Optional aliases
-df_Ten = spectral["Ten"]
-df_One = spectral["One"]
-df_Z1  = spectral["Z1"]
+df_Z1 = spectral["Z1"]
+df_Z1V  = spectral["Z1V"]
 
 
 # ===================================================================
@@ -5324,4 +4152,798 @@ plt.legend()
 
 #%%
 
+#%% O3 production and loss analysis (VULCAN, 48.2 deg SZA)
+
+# var['y'] is number density in molecules cm^-3; var['k'] are rate coefficients.
+# Total O3 production / loss sums every reaction (and reverse step) involving O3.
+
+O3_482SZA_cases = [
+    ('PI (100% O2)', PI_V_482SZA, PI_spec_482SZA, 'k'),
+    ('10% O2', Ten_pc_V_482SZA, Ten_pc_spec_482SZA, Ten_pc_color),
+    ('1% O2', One_pc_V_482SZA, One_pc_spec_482SZA, One_pc_color),
+    ('0.1% O2', Z1_pc_V_482SZA, Z1_pc_spec_482SZA, Zero1_pc_color),
+]
+
+O3_482_budgets = {}
+for label, vulcan_ds, spec_list, color in O3_482SZA_cases:
+    O3_482_budgets[label] = vulcan_o3_production_loss(vulcan_ds, spec_list, to_m3=True)
+
+# --- Profile plot: production, loss, net ---
+xlim_o3 = (1e8, 1e15)
+ylim_o3 = (1e3, 1e-1)
+
+fig = plt.figure(figsize=(14, 10))
+gs_o3 = gridspec.GridSpec(2, 2, wspace=0.2, hspace=0.2)
+
+for ax_idx, (label, vulcan_ds, spec_list, color) in enumerate(O3_482SZA_cases):
+    b = O3_482_budgets[label]
+    ax = fig.add_subplot(gs_o3[ax_idx // 2, ax_idx % 2])
+    ax.plot(b['loss'], b['pco'], color='m', lw=2, label='Loss')
+    ax.plot(b['prod'], b['pco'], color='b', lw=2, label='Production')
+    ax.plot(np.abs(b['net']), b['pco'], color=color, lw=2, ls='--', label='|Net|')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_xlim(xlim_o3)
+    ax.set_ylim(ylim_o3)
+    ax.set_title(label, fontsize=15, weight='bold')
+    thick_axes(top=True)
+    if ax_idx in (0, 2):
+        ax.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+    if ax_idx >= 2:
+        ax.set_xlabel(
+            'O' + sub(3) + ' rate [molecules m' + sup(-3) + ' s' + sup(-1) + ']',
+            fontsize=15,
+            weight='bold',
+        )
+    if ax_idx == 0:
+        ax.legend(loc=0, fontsize=12, frameon=False)
+
+fig.suptitle('O' + sub(3) + ' production and loss (VULCAN, SZA = 48.2°)', fontsize=16, weight='bold')
+plt.savefig('/Users/gregcooke/python_output/O3_prod_loss_482SZA.png', dpi=dpi, bbox_inches='tight')
+
+# --- Chapman-cycle check: O + O2 + M -> O3 + M  vs  O + O3 -> O2 + O2 ---
+fig2, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+chapman_prod = 'O + O2 + M -> O3 + M'
+chapman_loss = 'O + O3 -> O2 + O2'
+
+for ax, (label, _, _, color) in zip(axes, O3_482SZA_cases[:2]):
+    b = O3_482_budgets[label]
+    if chapman_prod in b['prod_by_rxn']:
+        ax.plot(b['prod_by_rxn'][chapman_prod], b['pco'], color='b', lw=2, label='O + O2 + M')
+    if chapman_loss in b['loss_by_rxn']:
+        ax.plot(b['loss_by_rxn'][chapman_loss], b['pco'], color='m', lw=2, label='O + O3')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_xlim(xlim_o3)
+    ax.set_ylim(ylim_o3)
+    ax.set_title(label, fontsize=15, weight='bold')
+    thick_axes(top=True)
+    ax.legend(loc=0, fontsize=12, frameon=False)
+
+axes[0].set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+for ax in axes:
+    ax.set_xlabel(
+        'O' + sub(3) + ' rate [molecules m' + sup(-3) + ' s' + sup(-1) + ']',
+        fontsize=15,
+        weight='bold',
+    )
+fig2.suptitle('Chapman reactions', fontsize=16, weight='bold')
+plt.savefig('/Users/gregcooke/python_output/O3_chapman_482SZA.png', dpi=dpi, bbox_inches='tight')
+
+# --- Print dominant channels near the O3 peak (1% O2 case) ---
+ref_label = '1% O2'
+ref_budget = O3_482_budgets[ref_label]
+o3_prof = One_pc_V_482SZA['variable']['y'][:, One_pc_spec_482SZA.index('O3')]
+iz_peak = int(np.argmax(o3_prof))
+prod_top, loss_top = top_o3_channels(ref_budget, iz_peak, n=10)
+
+print('\n=== O3 budget at O3 peak (' + ref_label + ', p = {:.3f} hPa) ==='.format(ref_budget['pco'][iz_peak]))
+print('Production {:.3e}  Loss {:.3e}  Net {:.3e} molecules m^-3 s^-1'.format(
+    ref_budget['prod'][iz_peak],
+    ref_budget['loss'][iz_peak],
+    ref_budget['net'][iz_peak],
+))
+print('\nTop production channels:')
+for rxn, rate in prod_top:
+    print('  {:.3e}  {}'.format(rate, rxn))
+print('\nTop loss channels:')
+for rxn, rate in loss_top:
+    print('  {:.3e}  {}'.format(rate, rxn))
+
+# --- NOx and HOx: individual reaction profiles (1% O2) ---
+xlim_family = (1e5, 1e14)
+ylim_family = (1000.0, 1e-2)
+# All rates are instantaneous O3 loss/production: molecules m^-3 s^-1
+o3_rate_label = 'O' + sub(3) + ' rate [molecules m' + sup(-3) + ' s' + sup(-1) + ']'
+o3_loss_label = 'O' + sub(3) + ' loss rate [molecules m' + sup(-3) + ' s' + sup(-1) + ']'
+
+for family, fname in (('nox', 'NO' + sub('x')), ('hox', 'HO' + sub('x'))):
+    prod_fam, loss_fam = o3_channels_in_family(ref_budget, family=family)
+    fig_fam, axes_fam = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
+    for ax, channels, panel in zip(axes_fam, (loss_fam, prod_fam), ('Loss', 'Production')):
+        for rxn, rate in sorted(channels.items(), key=lambda item: np.max(item[1]), reverse=True):
+            ax.plot(rate, ref_budget['pco'], lw=1.5, label=rxn.replace('REV: ', '(rev) '))
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        ax.set_xlim(xlim_family)
+        ax.set_ylim(ylim_family)
+        ax.set_title(panel, fontsize=14, weight='bold')
+        thick_axes(top=True)
+        ax.legend(loc='best', fontsize=7, frameon=False)
+    axes_fam[0].set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+    for ax in axes_fam:
+        ax.set_xlabel(o3_rate_label, fontsize=14, weight='bold')
+    fig_fam.suptitle(
+        ref_label + ': O' + sub(3) + ' ' + fname + ' channels (SZA = 48.2°)',
+        fontsize=16,
+        weight='bold',
+    )
+    plt.tight_layout()
+    plt.savefig(
+        '/Users/gregcooke/python_output/O3_{}_channels_1pc_482SZA.png'.format(family),
+        dpi=dpi,
+        bbox_inches='tight',
+    )
+
+# --- Unit check (1% O2): channel sum = total; categories partition loss ---
+_cat = o3_loss_by_category(ref_budget)
+_ch_sum = sum(v[iz_peak] for v in ref_budget['loss_by_rxn'].values())
+print('\n=== O3 rate units: {} ==='.format(ref_budget['rate_unit']))
+print('Channel sum vs total loss at O3 peak: {:.6e} vs {:.6e}'.format(_ch_sum, ref_budget['loss'][iz_peak]))
+print('Loss partition at O3 peak (molecules m^-3 s^-1):')
+for _k in ('nox', 'hox_catalytic', 'photolysis', 'chapman', 'other', 'total'):
+    print('  {:16s} {:.6e}'.format(_k, _cat[_k][iz_peak]))
+print('  {:16s} {:.6e}  (NOx + HOx cat. + phot. + Chap.)'.format(
+    'sum categories',
+    _cat['nox'][iz_peak] + _cat['hox_catalytic'][iz_peak] + _cat['photolysis'][iz_peak]
+    + _cat['chapman'][iz_peak] + _cat['other'][iz_peak],
+))
+
+# --- NOx vs HOx catalytic O3 loss (directly comparable; same units, no photolysis in HOx) ---
+fig_tot, ax_tot = plt.subplots(figsize=(8, 6))
+
+for label, _, _, color in O3_482SZA_cases:
+    b = O3_482_budgets[label]
+    cat = o3_loss_by_category(b)
+    ax_tot.plot(cat['nox'], b['pco'], color=color, lw=2, ls='-', label='NO' + sub('x') + ' cat. ' + label)
+    ax_tot.plot(
+        cat['hox_catalytic'], b['pco'], color=color, lw=2, ls='--',
+        label='HO' + sub('x') + ' cat. ' + label,
+    )
+
+ax_tot.set_xscale('log')
+ax_tot.set_yscale('log')
+ax_tot.set_xlim(xlim_family)
+ax_tot.set_ylim(ylim_family)
+ax_tot.set_xlabel(o3_loss_label, fontsize=15, weight='bold')
+ax_tot.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+ax_tot.set_title(
+    'Catalytic O' + sub(3) + ' loss: NO' + sub('x') + ' vs HO' + sub('x') + ' (SZA = 48.2°)',
+    fontsize=15, weight='bold',
+)
+thick_axes(top=True)
+ax_tot.legend(loc='best', fontsize=8, frameon=False, ncol=2)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_NOx_vs_HOx_catalytic_loss_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- Full O3 loss budget: catalytic NOx/HOx + photolysis + Chapman + other ---
+fig_part, ax_part = plt.subplots(figsize=(9, 6))
+
+for label, _, _, color in O3_482SZA_cases:
+    b = O3_482_budgets[label]
+    cat = o3_loss_by_category(b)
+    if label == O3_482SZA_cases[0][0]:
+        ax_part.plot(cat['nox'], b['pco'], color=color, lw=2, ls='-', label='NO' + sub('x') + ' cat.')
+        ax_part.plot(cat['hox_catalytic'], b['pco'], color=color, lw=2, ls='--', label='HO' + sub('x') + ' cat.')
+        ax_part.plot(cat['photolysis'], b['pco'], color='gray', lw=1.5, ls='-', label='Photolysis')
+        ax_part.plot(cat['chapman'], b['pco'], color='gray', lw=1.5, ls='--', label='Chapman O+O' + sub(3))
+        ax_part.plot(cat['other'], b['pco'], color='gray', lw=1.5, ls=':', label='Other')
+    else:
+        ax_part.plot(cat['nox'], b['pco'], color=color, lw=2, ls='-')
+        ax_part.plot(cat['hox_catalytic'], b['pco'], color=color, lw=2, ls='--')
+
+ax_part.set_xscale('log')
+ax_part.set_yscale('log')
+ax_part.set_xlim(xlim_family)
+ax_part.set_ylim(ylim_family)
+ax_part.set_xlabel(o3_loss_label, fontsize=15, weight='bold')
+ax_part.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+ax_part.set_title(
+    'O' + sub(3) + ' loss budget by category (SZA = 48.2°)',
+    fontsize=15, weight='bold',
+)
+thick_axes(top=True)
+ax_part.legend(loc='best', fontsize=9, frameon=False)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_loss_partition_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- Key O3 + NOx / HOx loss channels vs O2 (one panel per reaction; all include O3) ---
+key_nox_loss = [
+    'NO + O3 -> NO2 + O2',
+    'NO2 + O3 -> NO3 + O2',
+    'N + O3 -> O2 + NO',
+]
+key_hox_loss = [
+    'O3 + H -> OH + O2',
+    'OH + O3 -> HO2 + O2',
+    'HO2 + O3 -> OH + O2 + O2',
+]
+
+for key_list, family_title, out_name in (
+    (key_nox_loss, 'NO' + sub('x') + ' O' + sub(3) + ' loss vs O' + sub(2), 'NOx_loss_compare'),
+    (key_hox_loss, 'HO' + sub('x') + ' O' + sub(3) + ' loss vs O' + sub(2), 'HOx_loss_compare'),
+):
+    fig_cmp, axes_cmp = plt.subplots(1, len(key_list), figsize=(4.5 * len(key_list), 5), sharey=True)
+    if len(key_list) == 1:
+        axes_cmp = [axes_cmp]
+    for ax, rxn in zip(axes_cmp, key_list):
+        for label, _, _, color in O3_482SZA_cases:
+            b = O3_482_budgets[label]
+            if rxn in b['loss_by_rxn']:
+                ax.plot(b['loss_by_rxn'][rxn], b['pco'], color=color, lw=2, label=label)
+            if label in O3_waccm_482_budgets:
+                bw = O3_waccm_482_budgets[label]
+                if rxn in bw['loss_by_rxn']:
+                    ax.plot(
+                        bw['loss_by_rxn'][rxn], bw['pco'],
+                        color=color_WACCM, lw=2, ls=':',
+                        label='WACCM6 ' + label,
+                    )
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        ax.set_xlim(xlim_family)
+        ax.set_ylim(ylim_family)
+        ax.set_title(rxn, fontsize=10, weight='bold')
+        thick_axes(top=True)
+        ax.legend(loc='best', fontsize=8, frameon=False)
+    axes_cmp[0].set_ylabel('Pressure [hPa]', fontsize=14, weight='bold')
+    for ax in axes_cmp:
+        ax.set_xlabel(
+            'O' + sub(3) + ' loss [molecules m' + sup(-3) + ' s' + sup(-1) + ']',
+            fontsize=12,
+            weight='bold',
+        )
+    fig_cmp.suptitle(family_title + ' (VULCAN SZA = 48.2°; WACCM6 zonal mean)', fontsize=15, weight='bold')
+    plt.tight_layout()
+    plt.savefig(
+        '/Users/gregcooke/python_output/O3_{}_482SZA.png'.format(out_name),
+        dpi=dpi,
+        bbox_inches='tight',
+    )
+
+#%% O3 production and loss analysis (WACCM6 CAM h0, latitude-weighted mean)
+
+# Requires h0 diagnostics <reactant>_O3 (e.g. NO_O3, OH_O3). Currently on Pre_h0;
+# add matching cam.h0 files for other O2 levels when available.
+O3_WACCM_482_DATASETS = [
+    ('PI (100% O2)', Pre_h0),
+    ('10% O2', Ten_pc_h0),
+    ('1% O2', One_pc_h0),
+    ('0.1% O2', Zero1_pc_h0),
+]
+
+print('\n=== Building WACCM6 O3 catalytic budgets (cam.h0 *_O3 diagnostics) ===')
+O3_waccm_482_budgets = {}
+for _wlabel, _wds in O3_WACCM_482_DATASETS:
+    if waccm_has_o3_loss_diagnostics(_wds):
+        O3_waccm_482_budgets[_wlabel] = waccm_o3_catalytic_budget(_wds)
+        print('  {}: OK'.format(_wlabel))
+    else:
+        print('  {}: skipped (no *_O3 variables in this cam.h0 file)'.format(_wlabel))
+
+#%% O3 production and loss analysis (Photochem, 48.2 deg SZA)
+
+O3_PHOTO_482_CASES = [
+    ('PI (100% O2)', '100pc', 'k'),
+    ('10% O2', '10pc', Ten_pc_color),
+    ('1% O2', '1pc', One_pc_color),
+    ('0.1% O2', '0.1pc', Zero1_pc_color),
+]
+
+print('\n=== Building Photochem O3 budgets (48.2 deg SZA) ===')
+O3_photo_482_budgets = {}
+for label, folder, _color in O3_PHOTO_482_CASES:
+    print('  {}'.format(label))
+    O3_photo_482_budgets[label] = photochem_o3_budget_for_folder(folder, sza_tag='48.2')
+
+# --- Photochem: catalytic NOx vs HOx O3 loss (all O2 levels) ---
+fig_photo_nh, ax_photo_nh = plt.subplots(figsize=(8, 6))
+for label, _folder, color in O3_PHOTO_482_CASES:
+    b = O3_photo_482_budgets[label]
+    cat = o3_loss_by_category(b)
+    ax_photo_nh.plot(
+        cat['nox'], b['pco'], color=color, lw=2, ls='-',
+        label='NO' + sub('x') + ' cat. ' + label,
+    )
+    ax_photo_nh.plot(
+        cat['hox_catalytic'], b['pco'], color=color, lw=2, ls='--',
+        label='HO' + sub('x') + ' cat. ' + label,
+    )
+
+ax_photo_nh.set_xscale('log')
+ax_photo_nh.set_yscale('log')
+ax_photo_nh.set_xlim(xlim_family)
+ax_photo_nh.set_ylim(ylim_family)
+ax_photo_nh.set_xlabel(o3_loss_label, fontsize=15, weight='bold')
+ax_photo_nh.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+ax_photo_nh.set_title(
+    'Photochem: catalytic O' + sub(3) + ' loss, NO' + sub('x') + ' vs HO' + sub('x') + ' (SZA = 48.2°)',
+    fontsize=15, weight='bold',
+)
+thick_axes(top=True)
+ax_photo_nh.legend(loc='best', fontsize=8, frameon=False, ncol=2)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_Photo_NOx_vs_HOx_catalytic_loss_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- HOx catalytic O3 loss: VULCAN vs Photochem vs WACCM6 ---
+fig_hox_cmp, ax_hox_cmp = plt.subplots(figsize=(9, 6))
+for label, _folder, color in O3_PHOTO_482_CASES:
+    bv = O3_482_budgets[label]
+    bp = O3_photo_482_budgets[label]
+    cat_v = o3_loss_by_category(bv)
+    cat_p = o3_loss_by_category(bp)
+    ax_hox_cmp.plot(
+        cat_v['hox_catalytic'], bv['pco'], color=color, lw=2, ls='-',
+        label='VULCAN ' + label,
+    )
+    ax_hox_cmp.plot(
+        cat_p['hox_catalytic'], bp['pco'], color=color, lw=2, ls='--',
+        label='Photochem ' + label,
+    )
+    if label in O3_waccm_482_budgets:
+        bw = O3_waccm_482_budgets[label]
+        cat_w = o3_loss_by_category(bw)
+        ax_hox_cmp.plot(
+            cat_w['hox_catalytic'], bw['pco'], color=color_WACCM, lw=2, ls=':',
+            label='WACCM6 ' + label,
+        )
+
+ax_hox_cmp.set_xscale('log')
+ax_hox_cmp.set_yscale('log')
+ax_hox_cmp.set_xlim(xlim_family)
+ax_hox_cmp.set_ylim(ylim_family)
+ax_hox_cmp.set_xlabel(o3_loss_label, fontsize=15, weight='bold')
+ax_hox_cmp.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+ax_hox_cmp.set_title(
+    'HO' + sub('x') + ' catalytic O' + sub(3) + ' loss: VULCAN vs Photochem vs WACCM6',
+    fontsize=15, weight='bold',
+)
+thick_axes(top=True)
+ax_hox_cmp.legend(loc='best', fontsize=7, frameon=False, ncol=2)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_HOx_VULCAN_Photo_WACCM_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- NOx catalytic O3 loss: VULCAN vs Photochem vs WACCM6 ---
+fig_nox_cmp, ax_nox_cmp = plt.subplots(figsize=(9, 6))
+for label, _folder, color in O3_PHOTO_482_CASES:
+    bv = O3_482_budgets[label]
+    bp = O3_photo_482_budgets[label]
+    cat_v = o3_loss_by_category(bv)
+    cat_p = o3_loss_by_category(bp)
+    ax_nox_cmp.plot(
+        cat_v['nox'], bv['pco'], color=color, lw=2, ls='-',
+        label='VULCAN ' + label,
+    )
+    ax_nox_cmp.plot(
+        cat_p['nox'], bp['pco'], color=color, lw=2, ls='--',
+        label='Photochem ' + label,
+    )
+    if label in O3_waccm_482_budgets:
+        bw = O3_waccm_482_budgets[label]
+        cat_w = o3_loss_by_category(bw)
+        ax_nox_cmp.plot(
+            cat_w['nox'], bw['pco'], color=color_WACCM, lw=2, ls=':',
+            label='WACCM6 ' + label,
+        )
+
+ax_nox_cmp.set_xscale('log')
+ax_nox_cmp.set_yscale('log')
+ax_nox_cmp.set_xlim(xlim_family)
+ax_nox_cmp.set_ylim(ylim_family)
+ax_nox_cmp.set_xlabel(o3_loss_label, fontsize=15, weight='bold')
+ax_nox_cmp.set_ylabel('Pressure [hPa]', fontsize=15, weight='bold')
+ax_nox_cmp.set_title(
+    'NO' + sub('x') + ' catalytic O' + sub(3) + ' loss: VULCAN vs Photochem vs WACCM6',
+    fontsize=15, weight='bold',
+)
+thick_axes(top=True)
+ax_nox_cmp.legend(loc='best', fontsize=7, frameon=False, ncol=2)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_NOx_VULCAN_Photo_WACCM_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- Print Photochem vs VULCAN HOx/NOx at O3 peak (1% O2) ---
+_ref = '1% O2'
+_bv = O3_482_budgets[_ref]
+_bp = O3_photo_482_budgets[_ref]
+_o3_photo = Photo_1pc['O3'].values
+_iz = int(np.argmax(_o3_photo))
+_cv = o3_loss_by_category(_bv)
+_cp = o3_loss_by_category(_bp)
+print('\n=== Catalytic O3 loss at O3 peak (1% O2, Photochem O3 profile) ===')
+print('  p = {:.3f} hPa (Photochem), {:.3f} hPa (VULCAN)'.format(
+    _bp['pco'][_iz], _bv['pco'][_iz]))
+print('  NOx loss   VULCAN {:.3e}   Photochem {:.3e} molecules m^-3 s^-1'.format(
+    _cv['nox'][_iz], _cp['nox'][_iz]))
+print('  HOx loss   VULCAN {:.3e}   Photochem {:.3e} molecules m^-3 s^-1'.format(
+    _cv['hox_catalytic'][_iz], _cp['hox_catalytic'][_iz]))
+if _ref in O3_waccm_482_budgets:
+    _bw = O3_waccm_482_budgets[_ref]
+    _cw = o3_loss_by_category(_bw)
+    _iz_w = int(np.argmin(np.abs(_bw['pco'] - _bp['pco'][_iz])))
+    print('  WACCM6 at {:.3f} hPa: NOx {:.3e}   HOx {:.3e} molecules m^-3 s^-1'.format(
+        _bw['pco'][_iz_w], _cw['nox'][_iz_w], _cw['hox_catalytic'][_iz_w]))
+elif 'PI (100% O2)' in O3_waccm_482_budgets:
+    _bw = O3_waccm_482_budgets['PI (100% O2)']
+    _cw = o3_loss_by_category(_bw)
+    _iz_w = int(np.argmin(np.abs(_bw['pco'] - _bp['pco'][_iz])))
+    print('  WACCM6 PI at {:.3f} hPa (nearest to 1% O2 peak): NOx {:.3e}   HOx {:.3e}'.format(
+        _bw['pco'][_iz_w], _cw['nox'][_iz_w], _cw['hox_catalytic'][_iz_w]))
+
+# --- Fractional O3 loss (NOx + HOx + Chapman); log fraction axis 1e-3 to 1 ---
+_ylim_frac = ylim_family
+_xlim_frac = (1e-3, 1.0)
+
+
+
+
+_o3_loss_fraction_figure(
+    O3_482SZA_cases, O3_482_budgets, 'VULCAN', 'O3_loss_fraction_VULCAN_482SZA',
+    ylim_press=_ylim_frac, xlim_frac=_xlim_frac,
+)
+_o3_loss_fraction_figure(
+    O3_PHOTO_482_CASES, O3_photo_482_budgets, 'Photochem',
+    'O3_loss_fraction_Photochem_482SZA',
+    ylim_press=_ylim_frac, xlim_frac=_xlim_frac,
+)
+
+# 1% O2: VULCAN vs Photochem vs WACCM6 (WACCM panel only if diagnostics exist for that O2 level)
+_frac_rows = [
+    ('VULCAN', O3_482_budgets),
+    ('Photochem', O3_photo_482_budgets),
+]
+if _ref in O3_waccm_482_budgets:
+    _frac_rows.append(('WACCM6', O3_waccm_482_budgets))
+fig_1pc, axes_1pc = plt.subplots(len(_frac_rows), 1, figsize=(7, 3.5 * len(_frac_rows)), sharey=True, sharex=True)
+if len(_frac_rows) == 1:
+    axes_1pc = [axes_1pc]
+for ax, (model, bdict) in zip(axes_1pc, _frac_rows):
+    plot_o3_loss_fraction(
+        bdict[_ref],
+        model + ' (' + _ref + ')',
+        ax,
+        ylim_press=_ylim_frac,
+        xlim_frac=_xlim_frac,
+    )
+    thick_axes(top=True)
+axes_1pc[0].set_ylabel('Pressure [hPa]', fontsize=14, weight='bold')
+handles, labels = axes_1pc[0].get_legend_handles_labels()
+fig_1pc.legend(handles, labels, loc='lower center', ncol=3, fontsize=10, frameon=False)
+fig_1pc.suptitle(
+    'O' + sub(3) + ' loss (NO' + sub('x') + '+HO' + sub('x') + '+Chapman): VULCAN vs Photochem vs WACCM6 (1% O'
+    + sub(2) + ')',
+    fontsize=15, weight='bold',
+)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_loss_fraction_VULCAN_Photo_WACCM_1pc_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+# --- Four-panel: VULCAN vs Photochem vs WACCM6 NOx and HOx fractions at each O2 level ---
+fig_vxp, axes_vxp = plt.subplots(2, 2, figsize=(12, 10), sharex=True, sharey=True)
+axes_vxp = axes_vxp.flatten()
+for ax, case in zip(axes_vxp, O3_482SZA_cases):
+    label = case[0]
+    plot_o3_nox_hox_fraction_vulcan_vs_photo(
+        O3_482_budgets[label],
+        O3_photo_482_budgets[label],
+        ax,
+        label,
+        xlim_frac=_xlim_frac,
+        budget_waccm=O3_waccm_482_budgets.get(label),
+    )
+    ax.set_ylim(_ylim_frac)
+    thick_axes(top=True)
+for idx, ax in enumerate(axes_vxp):
+    if idx in (0, 2):
+        ax.set_ylabel('Pressure [hPa]', fontsize=13, weight='bold')
+    else:
+        ax.tick_params(labelleft=False)
+handles, labels = axes_vxp[0].get_legend_handles_labels()
+fig_vxp.legend(
+    handles, labels, loc='lower center', ncol=3, fontsize=8,
+    frameon=False, bbox_to_anchor=(0.5, -0.04),
+)
+fig_vxp.suptitle(
+    'O' + sub(3) + ' loss fractions (NO' + sub('x') + ', HO' + sub('x') + '): VULCAN vs Photochem vs WACCM6',
+    fontsize=16, weight='bold', y=1.02,
+)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/O3_NOx_HOx_fraction_VULCAN_Photo_WACCM_482SZA.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+
+#%% Stellar spectra used by each photochemical framework
+# UV only (100–400 nm), common unit: mW m^-2 nm^-1 at 1 AU.
+
+HC_KASTING = 6.625e-27 * 3.0e10  # erg cm s^-1 (Planck constant * c), as in Kasting/Atmos photo.f
+UV_WL_MIN, UV_WL_MAX = 100.0, 400.0
+
+
+def kasting_phot_bin_to_mwm2_nm(wmin_a, wmax_a, flux_phot_cm2_s):
+    """Kasting photos.pdat: photons cm^-2 s^-1 per bin -> mW m^-2 nm^-1 (CorrK4 CHEM/photo.f)."""
+    wav_a = 0.5 * (wmin_a + wmax_a)
+    delwav_a = wmax_a - wmin_a
+    eflux_erg = (HC_KASTING * 1.0e8 / wav_a) * (1.0e4 / 1.0e7) * flux_phot_cm2_s / (0.1 * delwav_a)
+    return eflux_erg * 1.0e3  # erg cm^-2 s^-1 nm^-1 -> mW m^-2 nm^-1
+
+
+def kasting_faruv_bin_to_mwm2_nm(wl_a, sfx, lyman_alpha=False):
+    """Kasting faruv_*.pdat: photons cm^-2 s^-1 per 50 A bin (Ly-a special case in photo.f)."""
+    if lyman_alpha:
+        eflux_erg = (HC_KASTING * 1.0e8 / wl_a) * (1.0e4 / 1.0e7) * sfx * 50.0
+    else:
+        eflux_erg = (HC_KASTING * 1.0e8 / wl_a) * (1.0e4 / 1.0e7) * sfx / 0.1
+    return eflux_erg * 1.0e3
+
+
+def vulcan_gueymard_to_mwm2_nm(wl_nm, flux_vulcan, wl_ref_mw, flux_ref_mw):
+    """Map VULCAN Gueymard/VPL 'erg' files to mW m^-2 nm^-1 using UV match to Thuillier (Sun_now).
+
+    VULCAN RT uses these values as erg cm^-2 s^-1 nm^-1 internally, but the archived
+    Gueymard/VPL numbers are offset from Thuillier/WACCM mW m^-2 nm^-1 by ~4e4 in the UV.
+  """
+    wl_nm = np.asarray(wl_nm, dtype=float)
+    flux_vulcan = np.asarray(flux_vulcan, dtype=float)
+    ref_wl = np.linspace(UV_WL_MIN, UV_WL_MAX, 80)
+    photo_uv = np.interp(ref_wl, wl_ref_mw, flux_ref_mw, left=np.nan, right=np.nan)
+    vulcan_uv = np.interp(ref_wl, wl_nm, flux_vulcan, left=np.nan, right=np.nan)
+    ok = np.isfinite(photo_uv) & np.isfinite(vulcan_uv) & (vulcan_uv > 0) & (photo_uv > 0)
+    scale = np.median(photo_uv[ok] / vulcan_uv[ok])
+    return flux_vulcan * scale
+
+
+def read_two_column_spectrum(path, skiprows=0):
+    """Read nm + flux text files (optional # comment or text header line)."""
+    try:
+        data = np.loadtxt(path, comments='#', skiprows=skiprows)
+    except ValueError:
+        data = np.loadtxt(path, skiprows=max(skiprows, 1))
+    return data[:, 0], data[:, 1]
+
+
+def read_kasting_faruv(path):
+    """Parse faruv_sun.pdat (wavelength in Angstrom, photons cm^-2 s^-1 per bin)."""
+    wl_a, sfx = [], []
+    with open(path, 'r') as f:
+        for line in f:
+            parts = line.split()
+            if len(parts) < 2:
+                continue
+            try:
+                wl_a.append(float(parts[0]))
+                sfx.append(float(parts[1]))
+            except ValueError:
+                continue
+    return np.array(wl_a), np.array(sfx)
+
+
+# --- File paths ---
+VULCAN_FLUX_PATH = '/Users/gregcooke/VIH_cases/atm/stellar_flux/Gueymard_solar.txt'
+WACCM_FLUX_PATH = '/Users/gregcooke/stellar_files/SolarForcingCMIP6piControl_c160921.nc'
+PHOTOCHEM_FLUX_PATH = '/Users/gregcooke/photochem/examples/ModernEarth/Sun_now.txt'
+KASTING_PHOTOS_PATH = '/Users/gregcooke/Aoshuang_2_CorrK4_clean/DATA/photos.pdat'
+KASTING_FARUV_PATH = '/Users/gregcooke/Aoshuang_2_CorrK4_clean/DATA/faruv_sun.pdat'
+ATMOS_ATLAS_PATH = '/Users/gregcooke/atmos/PHOTOCHEM/DATA/FLUX/composite.atl1_1'
+
+
+
+# Photochem Modern Earth: mW m^-2 nm^-1 (Thuillier ATLAS composite)
+wl_photo, flux_photo = read_two_column_spectrum(PHOTOCHEM_FLUX_PATH)
+
+# WACCM6 CMIP6 solar forcing: mW m^-2 nm^-1
+with xr.open_dataset(WACCM_FLUX_PATH) as ds_waccm:
+    wl_waccm = ds_waccm['wlen'].values
+    ssi = ds_waccm['ssi'].values
+    if ssi.ndim == 2:
+        ssi = np.nanmean(ssi, axis=0)
+    flux_waccm = np.asarray(ssi, dtype=float)
+
+# VULCAN (Gueymard): file header says erg cm^-2 s^-1 nm^-1; scale to mW via UV Thuillier
+wl_vulcan, flux_vulcan_raw = read_two_column_spectrum(VULCAN_FLUX_PATH, skiprows=1)
+flux_vulcan = vulcan_gueymard_to_mwm2_nm(
+    wl_vulcan, flux_vulcan_raw, wl_photo, flux_photo
+)
+
+# Kasting CorrK4: photos.pdat (photons cm^-2 s^-1 per bin) + faruv_sun.pdat (UV)
+kasting_blocks = read_kasting_file(KASTING_PHOTOS_PATH)
+df_kast_flux = kasting_blocks['flux_block']
+df_kast_flux[['Wave_Min', 'Wave_Max']] = (
+    df_kast_flux['Range_A'].str.split('-', expand=True).astype(float)
+)
+wl_kast_nm = (df_kast_flux['Wave_Min'].values + df_kast_flux['Wave_Max'].values) / 20.0
+flux_kast = np.array([
+    kasting_phot_bin_to_mwm2_nm(w0, w1, f)
+    for w0, w1, f in zip(
+        df_kast_flux['Wave_Min'].values,
+        df_kast_flux['Wave_Max'].values,
+        df_kast_flux['Flux'].values,
+    )
+])
+
+wl_faruv_a, sfx_faruv = read_kasting_faruv(KASTING_FARUV_PATH)
+flux_faruv = np.array([
+    kasting_faruv_bin_to_mwm2_nm(wl, fx, lyman_alpha=(i == len(wl_faruv_a) - 1))
+    for i, (wl, fx) in enumerate(zip(wl_faruv_a, sfx_faruv))
+])
+wl_faruv_nm = wl_faruv_a / 10.0
+
+# Atmos photochem: same Thuillier ATLAS composite as readflux (pstar=sun)
+wl_atmos, flux_atmos = read_two_column_spectrum(ATMOS_ATLAS_PATH, skiprows=0)
+
+# --- Figure: UV 100–400 nm ---
+_stellar_specs = [
+    (wl_vulcan, flux_vulcan, 'VULCAN (Gueymard)', '#1f77b4', '-'),
+    (wl_waccm, flux_waccm, 'WACCM6 (CMIP6 SSI)', '#ff7f0e', '-'),
+    (wl_photo, flux_photo, 'Photochem (Sun_now)', '#2ca02c', '-'),
+    (wl_kast_nm, flux_kast, 'Kasting (photos.pdat)', '#d62728', '-'),
+    (wl_faruv_nm, flux_faruv, 'Kasting (faruv_sun.pdat)', '#d62728', '--'),
+    (wl_atmos, flux_atmos, 'Atmos (ATLAS1 composite)', '#9467bd', '-'),
+]
+
+fig_stellar, ax_uv = plt.subplots(figsize=(9, 7))
+
+for wl, flux, label, color, ls in _stellar_specs:
+    m = (
+        np.isfinite(wl) & np.isfinite(flux) & (flux > 0)
+        & (wl >= UV_WL_MIN) & (wl <= UV_WL_MAX)
+    )
+    ax_uv.plot(wl[m], flux[m], ls=ls, lw=1.5, color=color, label=label)
+
+ax_uv.set_xlim(UV_WL_MIN, UV_WL_MAX)
+ax_uv.set_yscale('log')
+ax_uv.set_xlabel('Wavelength [nm]', fontsize=12, weight='bold')
+ax_uv.set_ylabel('Spectral irradiance [mW m$^{-2}$ nm$^{-1}$]', fontsize=12, weight='bold')
+ax_uv.set_title('TOA solar spectra (UV, 100–400 nm)', fontsize=13, weight='bold')
+ax_uv.legend(loc='upper right', fontsize=8, frameon=False)
+thick_axes(top=True)
+plt.ylim(1e0, 1e2)
+
+fig_stellar.suptitle(
+    'Stellar input spectra used in 1-D photochemical models',
+    fontsize=14, weight='bold', y=1.02,
+)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/Stellar_spectra_model_comparison.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+print('Saved stellar spectra figure to python_output/Stellar_spectra_model_comparison.png')
+
+# --- Figure: ratio to WACCM on a common interpolated wavelength grid ---
+_wl_common = np.linspace(UV_WL_MIN, UV_WL_MAX, 601)
+
+
+def _interp_flux_onto_grid(wl, flux, wl_grid):
+    """Linear interpolation onto wl_grid (nm); NaN outside source range."""
+    wl = np.asarray(wl, dtype=float)
+    flux = np.asarray(flux, dtype=float)
+    m = np.isfinite(wl) & np.isfinite(flux) & (flux > 0)
+    if m.sum() < 2:
+        return np.full(wl_grid.shape, np.nan)
+    order = np.argsort(wl[m])
+    wl_s = wl[m][order]
+    flux_s = flux[m][order]
+    out = np.interp(wl_grid, wl_s, flux_s, left=np.nan, right=np.nan)
+    out[(wl_grid < wl_s.min()) | (wl_grid > wl_s.max())] = np.nan
+    return out
+
+
+_flux_waccm_grid = _interp_flux_onto_grid(wl_waccm, flux_waccm, _wl_common)
+_waccm_ok = np.isfinite(_flux_waccm_grid) & (_flux_waccm_grid > 0)
+
+_ratio_specs = [
+    (wl_vulcan, flux_vulcan, 'VULCAN / WACCM', '#1f77b4', '-'),
+    (wl_photo, flux_photo, 'Photochem / WACCM', '#2ca02c', '-'),
+    (wl_kast_nm, flux_kast, 'Kasting photos.pdat / WACCM', '#d62728', '-'),
+    (wl_faruv_nm, flux_faruv, 'Kasting faruv_sun / WACCM', '#d62728', '--'),
+    (wl_atmos, flux_atmos, 'Atmos / WACCM', '#9467bd', '-'),
+]
+
+fig_ratio, ax_ratio = plt.subplots(figsize=(9, 5.5))
+
+for wl, flux, label, color, ls in _ratio_specs:
+    flux_on_grid = _interp_flux_onto_grid(wl, flux, _wl_common)
+    ratio = flux_on_grid / _flux_waccm_grid
+    m_plot = _waccm_ok & np.isfinite(ratio) & (ratio > 0)
+    ax_ratio.plot(_wl_common[m_plot], ratio[m_plot], ls=ls, lw=1.5, color=color, label=label)
+
+ax_ratio.axhline(1.0, color='#ff7f0e', ls=':', lw=1.5, label='WACCM (reference)')
+ax_ratio.set_xlim(UV_WL_MIN, UV_WL_MAX)
+#ax_ratio.set_yscale('log')
+ax_ratio.set_xlabel('Wavelength [nm]', fontsize=12, weight='bold')
+ax_ratio.set_ylabel('Flux ratio (model / WACCM6 SSI)', fontsize=12, weight='bold')
+ax_ratio.set_title('Spectral irradiance relative to WACCM (100–400 nm)', fontsize=13, weight='bold')
+ax_ratio.legend(loc='upper right', fontsize=8, frameon=False)
+thick_axes(top=True)
+plt.ylim(0.5,1.5)
+plt.xlim(110, 250)
+#plt.axvline(121.6, color = 'm', lw = 3)
+
+fig_ratio.suptitle(
+    'Stellar spectra vs WACCM6 CMIP6 (interpolated to common grid)',
+    fontsize=14, weight='bold', y=1.02,
+)
+plt.tight_layout()
+plt.savefig(
+    '/Users/gregcooke/python_output/Stellar_spectra_ratio_to_WACCM.png',
+    dpi=dpi,
+    bbox_inches='tight',
+)
+print('Saved ratio figure to python_output/Stellar_spectra_ratio_to_WACCM.png')
+
+#%%
+
+metrics = []
+
+for wl, flux, label, *_ in _ratio_specs:
+
+    flux_grid = _interp_flux_onto_grid(wl, flux, _wl_common)
+
+    m = (
+        (_wl_common >= 180) &
+        (_wl_common <= 250) &
+        np.isfinite(flux_grid) &
+        np.isfinite(_flux_waccm_grid) &
+        (_flux_waccm_grid > 0)
+    )
+
+    ratio = flux_grid[m] / _flux_waccm_grid[m]
+
+    mad = np.mean(np.abs(ratio - 1.0))
+
+    rms = np.sqrt(np.mean((ratio - 1.0)**2))
+
+    log_rms = np.sqrt(
+        np.mean(
+            (np.log10(flux_grid[m]) -
+             np.log10(_flux_waccm_grid[m]))**2
+        )
+    )
+
+    int_bias = (
+        np.trapz(flux_grid[m], _wl_common[m]) -
+        np.trapz(_flux_waccm_grid[m], _wl_common[m])
+    ) / np.trapz(_flux_waccm_grid[m], _wl_common[m])
+
+    metrics.append(
+        (label, mad, rms, log_rms, int_bias)
+    )
+
+for row in metrics:
+    print(row)
 
