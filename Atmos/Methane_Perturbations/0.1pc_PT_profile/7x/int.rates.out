@@ -1,0 +1,1320 @@
+
+O                   PRODUCTION RXS              INT RX RATE    TP =  1.10E+15
+   8) H       + HO2     = H2O     + O            5.181E+08
+  21) O1D     + O3      = O       + O       O2   7.325E+08
+  22) OH      + OH      = H2O     + O            8.650E+08
+  23) O1D     + N2      = O       + N2           5.605E+14
+  24) O1D     + O2      = O       + O2           1.753E+11
+  25) O2      + HV      = O       + O            4.782E-35
+  26) O3      + HV      = O2      + O            2.155E-10
+  73) N       + O2      = NO      + O            1.168E+06
+  76) N       + NO      = N2      + O            7.174E+07
+ 105) SO2     + O1D     = SO2     + O            7.839E+03
+ 107) SO      + O2      = O       + SO2          2.609E+09
+ 130) S       + O2      = SO      + O            5.385E+08
+ 147) SO21    + O2      = SO3     + O            3.909E+02
+ 180) CO      + O1D     = CO      + O            7.737E+07
+ 182) CO2     + O1D     = CO2     + O            7.324E+11
+ 195) N       + NO2     = N2O     + O            9.334E+06
+ 213) CS      + O2      = OCS     + O            1.970E+04
+ 259) O2      + HV      = O       + O1D          2.405E+11
+ 260) O2      + HV      = O       + O            7.810E+11
+ 263) H2O     + HV      = H       + H       O    3.799E+09
+ 265) O3      + HV      = O2      + O            5.389E+14
+ 266) O3      + HV      = O       + O       O    4.688E+11
+ 268) CO2     + HV      = CO      + O            8.053E+10
+ 272) HO2     + HV      = OH      + O            6.811E+09
+ 281) HNO3    + HV      = HNO2    + O            3.381E+08
+ 283) NO      + HV      = N       + O            1.027E+08
+ 285) NO2     + HV      = NO      + O            5.843E+11
+ 286) SO      + HV      = S       + O            3.269E+06
+ 288) SO2     + HV      = SO      + O            4.886E+09
+ 298) SO3     + HV      = SO2     + O            5.899E+02
+ 299) HSO     + HV      = HS      + O            6.943E+04
+ 302) NO3     + HV      = NO2     + O            1.205E+10
+ 307) N2O5    + HV      = NO3     + NO      O    6.081E+06
+
+O                      LOSS RXS                INT RX RATE    TL =  1.10E+15
+   3) H2      + O       = OH      + H            2.707E+08
+  10) OH      + O       = H       + O2           9.574E+11
+  14) HO2     + O       = OH      + O2           1.189E+12
+  17) O       + O       = O2      +              4.563E+10
+  18) O       + O2      = O3      +              1.102E+15
+  19) O       + O3      = O2      + O2           5.606E+10
+  32) O       + HCO     = H       + CO2          4.055E+06
+  33) O       + HCO     = OH      + CO           4.055E+06
+  35) CO      + O       = CO2     +              2.063E+08
+  46) H2CO    + O       = HCO     + OH           1.727E+09
+  47) H2O2    + O       = OH      + HO2          1.904E+07
+  60) CH3     + O       = H2CO    + H            1.898E+08
+  78) NO      + O       = NO2     +              1.544E+10
+  81) NO2     + O       = NO      + O2           1.374E+11
+  88) O       + HNO     = OH      + NO           4.220E+05
+  91) CH4     + O       = CH3     + OH           5.097E+08
+  94) CH23    + O       = HCO     + H            2.857E+06
+  97) C2H6    + O       = C2H5    + OH           8.727E+05
+ 100) C2H5    + O       = CH3     + HCO     H    2.328E+02
+ 109) SO      + O       = SO2     +              1.363E+07
+ 112) SO2     + O       = SO3     +              3.081E+07
+ 115) SO3     + O       = SO2     + O2           2.944E-01
+ 122) H2S     + O       = OH      + HS           2.853E+03
+ 123) HS      + O       = H       + SO           2.577E+05
+ 136) S2      + O       = S       + SO           9.418E+03
+ 169) HSO     + O       = OH      + SO           9.042E+05
+ 174) O       + OCS     = CO      + SO           4.980E+07
+ 175) O       + OCS     = S       + CO2          5.594E+02
+ 189) O       + NO3     = O2      + NO2          2.763E+08
+ 192) O       + NO2     = NO3     +              1.316E+10
+ 200) O       + N2O5    = NO2     + NO2     O2   5.979E+03
+ 208) O       + HO2NO2  = OH      + NO2     O2   6.760E+04
+ 211) O       + HNO3    = OH      + NO3          4.409E+05
+ 218) CS2     + O       = SO      + CS           6.052E+06
+ 219) CS2     + O       = OCS     + S            5.674E+05
+ 237) CS2     + O       = CO      + S2           1.122E+05
+ 241) CS      + O       = CO      + S            1.292E+02
+
+O2                  PRODUCTION RXS              INT RX RATE    TP =  1.10E+15
+   5) H       + O3      = OH      + O2           1.580E+11
+   7) H       + HO2     = H2      + O2           2.234E+09
+  10) OH      + O       = H       + O2           9.574E+11
+  11) OH      + HO2     = H2O     + O2           1.105E+11
+  12) OH      + O3      = HO2     + O2           1.759E+11
+  14) HO2     + O       = OH      + O2           1.189E+12
+  15) HO2     + O3      = OH      + O2      O2   1.804E+11
+  16) HO2     + HO2     = H2O2    + O2           9.149E+10
+  17) O       + O       = O2      +              4.563E+10
+  19) O       + O3      = O2      + O2           5.606E+10
+  20) O1D     + O3      = O2      + O2           7.325E+08
+  21) O1D     + O3      = O       + O       O2   7.325E+08
+  24) O1D     + O2      = O       + O2           1.753E+11
+  26) O3      + HV      = O2      + O            2.155E-10
+  27) O3      + O3      = O2      + O2      O2   5.607E+02
+  68) CH3O2   + HO2     = CH3OOH  + O2           6.484E+11
+  77) NO      + O3      = NO2     + O2           4.870E+11
+  81) NO2     + O       = NO      + O2           1.374E+11
+ 106) SO2     + O1D     = SO      + O2           2.514E+04
+ 115) SO3     + O       = SO2     + O2           2.944E-01
+ 125) HS      + HO2     = H2S     + O2           1.281E+06
+ 133) S       + HO2     = HS      + O2           5.136E+01
+ 153) SO      + O3      = SO2     + O2           2.486E+09
+ 155) HS      + O3      = HSO     + O2           7.615E+08
+ 158) S       + O3      = SO      + O2           1.597E+06
+ 170) HSO     + O3      = HS      + O2      O2   7.579E+08
+ 189) O       + NO3     = O2      + NO2          2.763E+08
+ 190) HO2     + NO3     = OH      + NO2     O2   2.121E+07
+ 197) O1D     + N2O     = N2      + O2           1.002E+08
+ 200) O       + N2O5    = NO2     + NO2     O2   5.979E+03
+ 204) NO2     + NO3     = NO      + NO2     O2   1.085E+03
+ 205) NO2     + O3      = NO3     + O2           2.820E+08
+ 206) NO3     + NO3     = NO2     + NO2     O2   8.510E-02
+ 208) O       + HO2NO2  = OH      + NO2     O2   6.760E+04
+ 209) OH      + HO2NO2  = H2O     + NO2     O2   3.105E+09
+ 212) HO2     + NO2     = HNO2    + O2           5.337E+06
+ 215) CS      + O3      = OCS     + O2           6.431E+06
+ 248) CH3S    + O3      = CH3SO   + O2           2.458E+09
+ 250) CH3SO   + O3      = CH3SO2  + O2           2.447E+09
+ 252) CH3SO2  + O3      = CH3SO3  + O2           2.771E+07
+ 264) O3      + HV      = O2      + O1D          5.613E+14
+ 265) O3      + HV      = O2      + O            5.389E+14
+ 301) NO3     + HV      = NO      + O2           1.657E+09
+
+O2                     LOSS RXS                INT RX RATE    TL =  1.11E+15
+   6) H       + O2      = HO2     +              1.694E+12
+  18) O       + O2      = O3      +              1.102E+15
+  24) O1D     + O2      = O       + O2           1.753E+11
+  25) O2      + HV      = O       + O            4.782E-35
+  40) HCO     + O2      = HO2     + CO           2.574E+11
+  41) CH2OH   + O2      = H2CO    + HO2          1.698E+09
+  42) CH3O    + O2      = H2CO    + HO2          2.751E+11
+  54) CH21    + O2      = HCO     + OH           3.760E+06
+  58) CH23    + O2      = HCO     + OH           4.842E+09
+  59) CH3     + O2      = H2CO    + OH           1.636E+04
+  66) CH3     + O2      = CH3O2   +              4.273E+11
+  73) N       + O2      = NO      + O            1.168E+06
+ 104) C2H5    + O2      = CH3     + HCO     OH   9.000E+08
+ 107) SO      + O2      = O       + SO2          2.609E+09
+ 116) HSO3    + O2      = HO2     + SO3          1.921E+09
+ 130) S       + O2      = SO      + O            5.385E+08
+ 147) SO21    + O2      = SO3     + O            3.909E+02
+ 213) CS      + O2      = OCS     + O            1.970E+04
+ 214) CS      + O2      = CO      + SO           2.463E+03
+ 224) CS2X    + O2      = CS      + SO2          1.776E+03
+ 245) C2H5S   + O2      = C2H5SO2 +              2.463E+09
+ 256) C2H7SO  + O2      = C2H6SO  + HO2          8.368E+08
+ 259) O2      + HV      = O       + O1D          2.405E+11
+ 260) O2      + HV      = O       + O            7.810E+11
+
+H2O                 PRODUCTION RXS              INT RX RATE    TP =  1.48E+11
+   4) H2      + OH      = H2O     + H            3.998E+10
+   8) H       + HO2     = H2O     + O            5.181E+08
+  11) OH      + HO2     = H2O     + O2           1.105E+11
+  13) OH      + H2O2    = HO2     + H2O          3.392E+10
+  22) OH      + OH      = H2O     + O            8.650E+08
+  31) OH      + HCO     = H2O     + CO           2.774E+05
+  43) H2CO    + OH      = H2O     + HCO          1.075E+11
+  44) H       + OH      = H2O     +              2.279E+07
+  48) CH4     + OH      = CH3     + H2O          4.047E+11
+  69) CH3OOH  + OH      = CH3O2   + H2O          3.473E+11
+  70) CH3OOH  + OH      = H2O     + H2CO    OH   1.488E+11
+  84) HNO3    + OH      = H2O     + NO3          8.830E+08
+  89) OH      + HNO     = H2O     + NO           1.787E+05
+  90) HNO2    + OH      = H2O     + NO2          1.346E+08
+  96) C2H6    + OH      = C2H5    + H2O          8.985E+08
+ 114) H2SO4   + H2O     = SO3     + H2O     H2O  4.395E+09
+ 120) H2S     + OH      = H2O     + HS           1.020E+06
+ 165) HSO     + OH      = H2O     + SO           1.216E+06
+ 209) OH      + HO2NO2  = H2O     + NO2     O2   3.105E+09
+ 242) C2H6S   + OH      = C2H5S   + H2O          2.461E+09
+ 258) CH4SO2  + OH      = CH3SO2  + H2O          8.342E+08
+ 291) H2SO4   + HV      = SO3     + H2O          3.214E+06
+
+H2O                    LOSS RXS                INT RX RATE    TL =  6.24E+10
+   1) H2O     + O1D     = OH      + OH           2.931E+11
+ 113) SO3     + H2O     = H2SO4   +              6.378E+09
+ 114) H2SO4   + H2O     = SO3     + H2O     H2O  4.395E+09
+ 203) N2O5    + H2O     = HNO3    + HNO3         1.479E+04
+ 261) H2O     + HV      = H       + OH           1.948E+11
+ 262) H2O     + HV      = H2      + O1D          2.535E+09
+ 263) H2O     + HV      = H       + H       O    3.799E+09
+
+H                   PRODUCTION RXS              INT RX RATE    TP =  1.88E+12
+   2) H2      + O1D     = OH      + H            1.619E+09
+   3) H2      + O       = OH      + H            2.707E+08
+   4) H2      + OH      = H2O     + H            3.998E+10
+  10) OH      + O       = H       + O2           9.574E+11
+  32) O       + HCO     = H       + CO2          4.055E+06
+  34) CO      + OH      = CO2     + H            5.248E+11
+  50) CH4     + O1D     = CH3O    + H            1.698E+09
+  51) CH4     + O1D     = CH2OH   + H            1.698E+09
+  60) CH3     + O       = H2CO    + H            1.898E+08
+  75) N       + OH      = NO      + H            1.451E+07
+  86) HNO     + HV      = NO      + H            4.197E+06
+  92) CH21    + H2      = CH3     + H            3.669E+05
+  94) CH23    + O       = HCO     + H            2.857E+06
+ 100) C2H5    + O       = CH3     + HCO     H    2.328E+02
+ 110) SO      + OH      = SO2     + H            4.238E+07
+ 123) HS      + O       = H       + SO           2.577E+05
+ 129) HS      + S       = H       + S2           2.490E-04
+ 131) S       + OH      = SO      + H            2.399E+01
+ 173) HS      + CO      = OCS     + H            5.296E-05
+ 226) CS      + HS      = CS2     + H            3.701E-03
+ 229) S       + HCS     = H       + CS2          1.719E-10
+ 230) HS      + CO      = OCS     + H            5.360E-05
+ 234) CH23    + S       = HCS     + H            1.442E-12
+ 261) H2O     + HV      = H       + OH           1.948E+11
+ 263) H2O     + HV      = H       + H       O    3.799E+09
+ 271) H2CO    + HV      = HCO     + H            1.425E+11
+ 274) CH4     + HV      = CH3     + H            4.557E+09
+ 275) CH4     + HV      = CH23    + H       H    7.862E+08
+ 276) CH3     + HV      = CH21    + H            4.589E+05
+ 287) H2S     + HV      = HS      + H            2.472E+05
+
+H                      LOSS RXS                INT RX RATE    TL =  1.88E+12
+   5) H       + O3      = OH      + O2           1.580E+11
+   6) H       + O2      = HO2     +              1.694E+12
+   7) H       + HO2     = H2      + O2           2.234E+09
+   8) H       + HO2     = H2O     + O            5.181E+08
+   9) H       + HO2     = OH      + OH           2.332E+10
+  28) H       + CO      = HCO     +              6.007E+06
+  29) H       + HCO     = H2      + CO           5.504E+05
+  36) CO2     + H       = CO      + OH           8.155E+03
+  38) H2CO    + H       = H2      + HCO          3.101E+05
+  39) H       + H       = H2      +              1.226E+07
+  44) H       + OH      = H2O     +              2.279E+07
+  62) CH3     + H       = CH4     +              6.460E+05
+  71) H       + NO      = HNO     +              6.971E+04
+  83) NO2     + H       = NO      + OH           8.429E+06
+  87) H       + HNO     = H2      + NO           8.052E+00
+  99) C2H5    + H       = CH3     + CH3          3.705E-02
+ 121) H2S     + H       = H2      + HS           2.023E+01
+ 128) HS      + H       = H2      + S            2.593E+00
+ 163) H       + SO      = HSO     +              2.359E+01
+ 166) HSO     + H       = HS      + OH           1.159E+02
+ 167) HSO     + H       = H2      + SO           5.793E+01
+ 172) H       + OCS     = CO      + HS           4.952E+03
+ 194) H       + N2O     = N2      + OH           7.522E-02
+ 227) H       + CS      = HCS     +              2.909E-06
+ 228) H       + HCS     = H2      + CS           1.160E-06
+ 239) OCS     + H       = CO      + HS           4.936E+03
+
+OH                  PRODUCTION RXS              INT RX RATE    TP =  2.87E+12
+   1) H2O     + O1D     = OH      + OH           2.931E+11
+   2) H2      + O1D     = OH      + H            1.619E+09
+   3) H2      + O       = OH      + H            2.707E+08
+   5) H       + O3      = OH      + O2           1.580E+11
+   9) H       + HO2     = OH      + OH           2.332E+10
+  14) HO2     + O       = OH      + O2           1.189E+12
+  15) HO2     + O3      = OH      + O2      O2   1.804E+11
+  33) O       + HCO     = OH      + CO           4.055E+06
+  36) CO2     + H       = CO      + OH           8.155E+03
+  46) H2CO    + O       = HCO     + OH           1.727E+09
+  47) H2O2    + O       = OH      + HO2          1.904E+07
+  49) CH4     + O1D     = CH3     + OH           1.262E+10
+  54) CH21    + O2      = HCO     + OH           3.760E+06
+  58) CH23    + O2      = HCO     + OH           4.842E+09
+  59) CH3     + O2      = H2CO    + OH           1.636E+04
+  70) CH3OOH  + OH      = H2O     + H2CO    OH   1.488E+11
+  79) NO      + HO2     = NO2     + OH           9.230E+10
+  83) NO2     + H       = NO      + OH           8.429E+06
+  88) O       + HNO     = OH      + NO           4.220E+05
+  91) CH4     + O       = CH3     + OH           5.097E+08
+  97) C2H6    + O       = C2H5    + OH           8.727E+05
+  98) C2H6    + O1D     = C2H5    + OH           6.351E+05
+ 104) C2H5    + O2      = CH3     + HCO     OH   9.000E+08
+ 108) SO      + HO2     = SO2     + OH           2.385E+08
+ 122) H2S     + O       = OH      + HS           2.853E+03
+ 134) S       + HO2     = SO      + OH           5.136E+01
+ 154) SO2     + HO2     = SO3     + OH           1.914E+05
+ 156) HS      + HO2     = HSO     + OH           1.281E+06
+ 166) HSO     + H       = HS      + OH           1.159E+02
+ 169) HSO     + O       = OH      + SO           9.042E+05
+ 190) HO2     + NO3     = OH      + NO2     O2   2.121E+07
+ 194) H       + N2O     = N2      + OH           7.522E-02
+ 199) N       + HO2     = NO      + OH           5.988E+06
+ 208) O       + HO2NO2  = OH      + NO2     O2   6.760E+04
+ 211) O       + HNO3    = OH      + NO3          4.409E+05
+ 222) CS2OH   + HV      = CS2     + OH           2.333E+06
+ 261) H2O     + HV      = H       + OH           1.948E+11
+ 267) H2O2    + HV      = OH      + OH           4.613E+10
+ 272) HO2     + HV      = OH      + O            6.811E+09
+ 279) HNO2    + HV      = NO      + OH           5.887E+09
+ 280) HNO3    + HV      = NO2     + OH           2.190E+09
+ 305) HO2NO2  + HV      = OH      + NO3          6.379E+08
+ 308) CH3OOH  + HV      = CH3O    + OH           1.472E+11
+
+OH                     LOSS RXS                INT RX RATE    TL =  2.87E+12
+   4) H2      + OH      = H2O     + H            3.998E+10
+  10) OH      + O       = H       + O2           9.574E+11
+  11) OH      + HO2     = H2O     + O2           1.105E+11
+  12) OH      + O3      = HO2     + O2           1.759E+11
+  13) OH      + H2O2    = HO2     + H2O          3.392E+10
+  22) OH      + OH      = H2O     + O            8.650E+08
+  31) OH      + HCO     = H2O     + CO           2.774E+05
+  34) CO      + OH      = CO2     + H            5.248E+11
+  43) H2CO    + OH      = H2O     + HCO          1.075E+11
+  44) H       + OH      = H2O     +              2.279E+07
+  45) OH      + OH      = H2O2    +              2.427E+08
+  48) CH4     + OH      = CH3     + H2O          4.047E+11
+  69) CH3OOH  + OH      = CH3O2   + H2O          3.473E+11
+  70) CH3OOH  + OH      = H2O     + H2CO    OH   1.488E+11
+  75) N       + OH      = NO      + H            1.451E+07
+  80) NO      + OH      = HNO2    +              5.436E+09
+  82) NO2     + OH      = HNO3    +              3.853E+09
+  84) HNO3    + OH      = H2O     + NO3          8.830E+08
+  89) OH      + HNO     = H2O     + NO           1.787E+05
+  90) HNO2    + OH      = H2O     + NO2          1.346E+08
+  96) C2H6    + OH      = C2H5    + H2O          8.985E+08
+ 101) C2H5    + OH      = CH3     + HCO     H2   4.829E+00
+ 110) SO      + OH      = SO2     + H            4.238E+07
+ 111) SO2     + OH      = HSO3    +              1.921E+09
+ 120) H2S     + OH      = H2O     + HS           1.020E+06
+ 131) S       + OH      = SO      + H            2.399E+01
+ 165) HSO     + OH      = H2O     + SO           1.216E+06
+ 177) OCS     + OH      = CO2     + HS           7.186E+06
+ 193) OH      + NO3     = HO2     + NO2          2.280E+07
+ 209) OH      + HO2NO2  = H2O     + NO2     O2   3.105E+09
+ 220) CS2     + OH      = OCS     + HS           5.831E+03
+ 221) CS2     + OH      = CS2OH   +              2.333E+06
+ 242) C2H6S   + OH      = C2H5S   + H2O          2.461E+09
+ 243) C2H6S   + OH      = C2H7SO  +              8.368E+08
+ 257) C2H6SO  + OH      = CH4SO2  + CH3          8.342E+08
+ 258) CH4SO2  + OH      = CH3SO2  + H2O          8.342E+08
+
+HO2                 PRODUCTION RXS              INT RX RATE    TP =  2.45E+12
+   6) H       + O2      = HO2     +              1.694E+12
+  12) OH      + O3      = HO2     + O2           1.759E+11
+  13) OH      + H2O2    = HO2     + H2O          3.392E+10
+  40) HCO     + O2      = HO2     + CO           2.574E+11
+  41) CH2OH   + O2      = H2CO    + HO2          1.698E+09
+  42) CH3O    + O2      = H2CO    + HO2          2.751E+11
+  47) H2O2    + O       = OH      + HO2          1.904E+07
+ 116) HSO3    + O2      = HO2     + SO3          1.921E+09
+ 193) OH      + NO3     = HO2     + NO2          2.280E+07
+ 210) HO2NO2  + M       = HO2     + NO2          8.050E+09
+ 256) C2H7SO  + O2      = C2H6SO  + HO2          8.368E+08
+ 304) HO2NO2  + HV      = HO2     + NO2          2.305E+09
+
+HO2                    LOSS RXS                INT RX RATE    TL =  2.45E+12
+   7) H       + HO2     = H2      + O2           2.234E+09
+   8) H       + HO2     = H2O     + O            5.181E+08
+   9) H       + HO2     = OH      + OH           2.332E+10
+  11) OH      + HO2     = H2O     + O2           1.105E+11
+  14) HO2     + O       = OH      + O2           1.189E+12
+  15) HO2     + O3      = OH      + O2      O2   1.804E+11
+  16) HO2     + HO2     = H2O2    + O2           9.149E+10
+  68) CH3O2   + HO2     = CH3OOH  + O2           6.484E+11
+  79) NO      + HO2     = NO2     + OH           9.230E+10
+ 108) SO      + HO2     = SO2     + OH           2.385E+08
+ 125) HS      + HO2     = H2S     + O2           1.281E+06
+ 133) S       + HO2     = HS      + O2           5.136E+01
+ 134) S       + HO2     = SO      + OH           5.136E+01
+ 154) SO2     + HO2     = SO3     + OH           1.914E+05
+ 156) HS      + HO2     = HSO     + OH           1.281E+06
+ 190) HO2     + NO3     = OH      + NO2     O2   2.121E+07
+ 199) N       + HO2     = NO      + OH           5.988E+06
+ 207) HO2     + NO2     = HO2NO2  +              1.413E+10
+ 212) HO2     + NO2     = HNO2    + O2           5.337E+06
+ 272) HO2     + HV      = OH      + O            6.811E+09
+
+H2O2                PRODUCTION RXS              INT RX RATE    TP =  9.17E+10
+  16) HO2     + HO2     = H2O2    + O2           9.149E+10
+  45) OH      + OH      = H2O2    +              2.427E+08
+
+H2O2                   LOSS RXS                INT RX RATE    TL =  8.96E+10
+  13) OH      + H2O2    = HO2     + H2O          3.392E+10
+  47) H2O2    + O       = OH      + HO2          1.904E+07
+ 267) H2O2    + HV      = OH      + OH           4.613E+10
+
+H2                  PRODUCTION RXS              INT RX RATE    TP =  1.81E+11
+   7) H       + HO2     = H2      + O2           2.234E+09
+  29) H       + HCO     = H2      + CO           5.504E+05
+  38) H2CO    + H       = H2      + HCO          3.101E+05
+  39) H       + H       = H2      +              1.226E+07
+  52) CH4     + O1D     = H2CO    + H2           8.492E+08
+  87) H       + HNO     = H2      + NO           8.052E+00
+ 101) C2H5    + OH      = CH3     + HCO     H2   4.829E+00
+ 121) H2S     + H       = H2      + HS           2.023E+01
+ 128) HS      + H       = H2      + S            2.593E+00
+ 167) HSO     + H       = H2      + SO           5.793E+01
+ 228) H       + HCS     = H2      + CS           1.160E-06
+ 262) H2O     + HV      = H2      + O1D          2.535E+09
+ 270) H2CO    + HV      = H2      + CO           1.707E+11
+ 273) CH4     + HV      = CH21    + H2           4.189E+09
+ 277) C2H6    + HV      = CH23    + CH23    H2   5.071E+02
+
+H2                     LOSS RXS                INT RX RATE    TL =  4.19E+10
+   2) H2      + O1D     = OH      + H            1.619E+09
+   3) H2      + O       = OH      + H            2.707E+08
+   4) H2      + OH      = H2O     + H            3.998E+10
+  92) CH21    + H2      = CH3     + H            3.669E+05
+
+CO                  PRODUCTION RXS              INT RX RATE    TP =  5.86E+11
+  29) H       + HCO     = H2      + CO           5.504E+05
+  30) HCO     + HCO     = H2CO    + CO           1.335E+00
+  31) OH      + HCO     = H2O     + CO           2.774E+05
+  33) O       + HCO     = OH      + CO           4.055E+06
+  36) CO2     + H       = CO      + OH           8.155E+03
+  40) HCO     + O2      = HO2     + CO           2.574E+11
+  63) CH3     + HCO     = CH4     + CO           4.980E+01
+  85) HCO     + NO      = HNO     + CO           2.559E+04
+  93) CH21    + CO2     = H2CO    + CO           1.754E+05
+  95) CH23    + CO2     = H2CO    + CO           1.263E+08
+ 102) C2H5    + HCO     = C2H6    + CO           4.564E-05
+ 127) HS      + HCO     = H2S     + CO           1.658E-01
+ 132) S       + HCO     = HS      + CO           9.568E-06
+ 162) SO      + HCO     = HSO     + CO           5.006E+00
+ 172) H       + OCS     = CO      + HS           4.952E+03
+ 174) O       + OCS     = CO      + SO           4.980E+07
+ 176) OCS     + S       = CO      + S2           2.379E+01
+ 180) CO      + O1D     = CO      + O            7.737E+07
+ 214) CS      + O2      = CO      + SO           2.463E+03
+ 217) CS      + O3      = CO      + SO2          6.431E+06
+ 237) CS2     + O       = CO      + S2           1.122E+05
+ 239) OCS     + H       = CO      + HS           4.936E+03
+ 241) CS      + O       = CO      + S            1.292E+02
+ 268) CO2     + HV      = CO      + O            8.053E+10
+ 269) CO2     + HV      = CO      + O1D          7.634E+10
+ 270) H2CO    + HV      = H2      + CO           1.707E+11
+ 300) OCS     + HV      = CO      + S            5.228E+08
+
+CO                     LOSS RXS                INT RX RATE    TL =  5.25E+11
+  28) H       + CO      = HCO     +              6.007E+06
+  34) CO      + OH      = CO2     + H            5.248E+11
+  35) CO      + O       = CO2     +              2.063E+08
+ 173) HS      + CO      = OCS     + H            5.296E-05
+ 179) S       + CO      = OCS     +              4.134E+00
+ 180) CO      + O1D     = CO      + O            7.737E+07
+ 188) OCS2    + CO      = OCS     + OCS          2.382E+01
+ 230) HS      + CO      = OCS     + H            5.360E-05
+
+HCO                 PRODUCTION RXS              INT RX RATE    TP =  2.57E+11
+  28) H       + CO      = HCO     +              6.007E+06
+  38) H2CO    + H       = H2      + HCO          3.101E+05
+  43) H2CO    + OH      = H2O     + HCO          1.075E+11
+  46) H2CO    + O       = HCO     + OH           1.727E+09
+  54) CH21    + O2      = HCO     + OH           3.760E+06
+  58) CH23    + O2      = HCO     + OH           4.842E+09
+  65) CH3     + H2CO    = CH4     + HCO          3.553E-01
+  94) CH23    + O       = HCO     + H            2.857E+06
+ 100) C2H5    + O       = CH3     + HCO     H    2.328E+02
+ 101) C2H5    + OH      = CH3     + HCO     H2   4.829E+00
+ 104) C2H5    + O2      = CH3     + HCO     OH   9.000E+08
+ 271) H2CO    + HV      = HCO     + H            1.425E+11
+
+HCO                    LOSS RXS                INT RX RATE    TL =  2.57E+11
+  29) H       + HCO     = H2      + CO           5.504E+05
+  30) HCO     + HCO     = H2CO    + CO           1.335E+00
+  31) OH      + HCO     = H2O     + CO           2.774E+05
+  32) O       + HCO     = H       + CO2          4.055E+06
+  33) O       + HCO     = OH      + CO           4.055E+06
+  40) HCO     + O2      = HO2     + CO           2.574E+11
+  63) CH3     + HCO     = CH4     + CO           4.980E+01
+  85) HCO     + NO      = HNO     + CO           2.559E+04
+ 102) C2H5    + HCO     = C2H6    + CO           4.564E-05
+ 127) HS      + HCO     = H2S     + CO           1.658E-01
+ 132) S       + HCO     = HS      + CO           9.568E-06
+ 162) SO      + HCO     = HSO     + CO           5.006E+00
+
+H2CO                PRODUCTION RXS              INT RX RATE    TP =  4.29E+11
+  30) HCO     + HCO     = H2CO    + CO           1.335E+00
+  41) CH2OH   + O2      = H2CO    + HO2          1.698E+09
+  42) CH3O    + O2      = H2CO    + HO2          2.751E+11
+  52) CH4     + O1D     = H2CO    + H2           8.492E+08
+  59) CH3     + O2      = H2CO    + OH           1.636E+04
+  60) CH3     + O       = H2CO    + H            1.898E+08
+  70) CH3OOH  + OH      = H2O     + H2CO    OH   1.488E+11
+  93) CH21    + CO2     = H2CO    + CO           1.754E+05
+  95) CH23    + CO2     = H2CO    + CO           1.263E+08
+ 247) C2H5SO  + HV      = H2CO    + CH3S         2.463E+09
+
+H2CO                   LOSS RXS                INT RX RATE    TL =  4.27E+11
+  38) H2CO    + H       = H2      + HCO          3.101E+05
+  43) H2CO    + OH      = H2O     + HCO          1.075E+11
+  46) H2CO    + O       = HCO     + OH           1.727E+09
+  65) CH3     + H2CO    = CH4     + HCO          3.553E-01
+ 270) H2CO    + HV      = H2      + CO           1.707E+11
+ 271) H2CO    + HV      = HCO     + H            1.425E+11
+
+CH3O                PRODUCTION RXS              INT RX RATE    TP =  2.75E+11
+  50) CH4     + O1D     = CH3O    + H            1.698E+09
+  67) CH3O2   + NO      = CH3O    + NO2          1.262E+11
+ 308) CH3OOH  + HV      = CH3O    + OH           1.472E+11
+
+CH3O                   LOSS RXS                INT RX RATE    TL =  2.75E+11
+  42) CH3O    + O2      = H2CO    + HO2          2.751E+11
+
+CH2OH               PRODUCTION RXS              INT RX RATE    TP =  1.70E+09
+  51) CH4     + O1D     = CH2OH   + H            1.698E+09
+
+CH2OH                  LOSS RXS                INT RX RATE    TL =  1.70E+09
+  41) CH2OH   + O2      = H2CO    + HO2          1.698E+09
+
+CH3O2               PRODUCTION RXS              INT RX RATE    TP =  7.75E+11
+  66) CH3     + O2      = CH3O2   +              4.273E+11
+  69) CH3OOH  + OH      = CH3O2   + H2O          3.473E+11
+
+CH3O2                  LOSS RXS                INT RX RATE    TL =  7.75E+11
+  67) CH3O2   + NO      = CH3O    + NO2          1.262E+11
+  68) CH3O2   + HO2     = CH3OOH  + O2           6.484E+11
+
+CH3OOH              PRODUCTION RXS              INT RX RATE    TP =  6.48E+11
+  68) CH3O2   + HO2     = CH3OOH  + O2           6.484E+11
+
+CH3OOH                 LOSS RXS                INT RX RATE    TL =  6.48E+11
+  69) CH3OOH  + OH      = CH3O2   + H2O          3.473E+11
+  70) CH3OOH  + OH      = H2O     + H2CO    OH   1.488E+11
+ 308) CH3OOH  + HV      = CH3O    + OH           1.472E+11
+
+CH4                 PRODUCTION RXS              INT RX RATE    TP =  6.46E+05
+  62) CH3     + H       = CH4     +              6.460E+05
+  63) CH3     + HCO     = CH4     + CO           4.980E+01
+  64) CH3     + HNO     = CH4     + NO           2.942E-02
+  65) CH3     + H2CO    = CH4     + HCO          3.553E-01
+ 233) CH3     + HCS     = CH4     + CS           3.921E-07
+ 278) C2H6    + HV      = CH4     + CH21         1.268E+02
+
+CH4                    LOSS RXS                INT RX RATE    TL =  4.32E+11
+  48) CH4     + OH      = CH3     + H2O          4.047E+11
+  49) CH4     + O1D     = CH3     + OH           1.262E+10
+  50) CH4     + O1D     = CH3O    + H            1.698E+09
+  51) CH4     + O1D     = CH2OH   + H            1.698E+09
+  52) CH4     + O1D     = H2CO    + H2           8.492E+08
+  53) CH21    + CH4     = CH3     + CH3          8.718E-10
+  91) CH4     + O       = CH3     + OH           5.097E+08
+ 273) CH4     + HV      = CH21    + H2           4.189E+09
+ 274) CH4     + HV      = CH3     + H            4.557E+09
+ 275) CH4     + HV      = CH23    + H       H    7.862E+08
+
+CH3                 PRODUCTION RXS              INT RX RATE    TP =  4.27E+11
+  48) CH4     + OH      = CH3     + H2O          4.047E+11
+  49) CH4     + O1D     = CH3     + OH           1.262E+10
+  53) CH21    + CH4     = CH3     + CH3          8.718E-10
+  91) CH4     + O       = CH3     + OH           5.097E+08
+  92) CH21    + H2      = CH3     + H            3.669E+05
+  99) C2H5    + H       = CH3     + CH3          3.705E-02
+ 100) C2H5    + O       = CH3     + HCO     H    2.328E+02
+ 101) C2H5    + OH      = CH3     + HCO     H2   4.829E+00
+ 104) C2H5    + O2      = CH3     + HCO     OH   9.000E+08
+ 254) CH3SO2  + HV      = CH3     + SO2          3.270E+09
+ 255) CH3SO3  + HV      = CH3     + SO3          2.774E+07
+ 257) C2H6SO  + OH      = CH4SO2  + CH3          8.342E+08
+ 274) CH4     + HV      = CH3     + H            4.557E+09
+
+CH3                    LOSS RXS                INT RX RATE    TL =  4.27E+11
+  59) CH3     + O2      = H2CO    + OH           1.636E+04
+  60) CH3     + O       = H2CO    + H            1.898E+08
+  61) CH3     + CH3     = C2H6    +              1.540E+03
+  62) CH3     + H       = CH4     +              6.460E+05
+  63) CH3     + HCO     = CH4     + CO           4.980E+01
+  64) CH3     + HNO     = CH4     + NO           2.942E-02
+  65) CH3     + H2CO    = CH4     + HCO          3.553E-01
+  66) CH3     + O2      = CH3O2   +              4.273E+11
+ 233) CH3     + HCS     = CH4     + CS           3.921E-07
+ 276) CH3     + HV      = CH21    + H            4.589E+05
+
+C2H6                PRODUCTION RXS              INT RX RATE    TP =  1.54E+03
+  61) CH3     + CH3     = C2H6    +              1.540E+03
+ 102) C2H5    + HCO     = C2H6    + CO           4.564E-05
+ 103) C2H5    + HNO     = C2H6    + NO           3.205E-06
+
+C2H6                   LOSS RXS                INT RX RATE    TL =  9.00E+08
+  96) C2H6    + OH      = C2H5    + H2O          8.985E+08
+  97) C2H6    + O       = C2H5    + OH           8.727E+05
+  98) C2H6    + O1D     = C2H5    + OH           6.351E+05
+ 277) C2H6    + HV      = CH23    + CH23    H2   5.071E+02
+ 278) C2H6    + HV      = CH4     + CH21         1.268E+02
+
+NO                  PRODUCTION RXS              INT RX RATE    TP =  7.30E+11
+  64) CH3     + HNO     = CH4     + NO           2.942E-02
+  73) N       + O2      = NO      + O            1.168E+06
+  75) N       + OH      = NO      + H            1.451E+07
+  81) NO2     + O       = NO      + O2           1.374E+11
+  83) NO2     + H       = NO      + OH           8.429E+06
+  86) HNO     + HV      = NO      + H            4.197E+06
+  87) H       + HNO     = H2      + NO           8.052E+00
+  88) O       + HNO     = OH      + NO           4.220E+05
+  89) OH      + HNO     = H2O     + NO           1.787E+05
+ 103) C2H5    + HNO     = C2H6    + NO           3.205E-06
+ 152) SO      + NO2     = SO2     + NO           1.024E+08
+ 157) HS      + NO2     = HSO     + NO           2.155E+06
+ 198) O1D     + N2O     = NO      + NO           1.568E+08
+ 199) N       + HO2     = NO      + OH           5.988E+06
+ 204) NO2     + NO3     = NO      + NO2     O2   1.085E+03
+ 249) CH3S    + NO2     = CH3SO   + NO           4.804E+06
+ 251) CH3SO   + NO2     = CH3SO2  + NO           1.608E+07
+ 253) CH3SO2  + NO2     = CH3SO3  + NO           3.172E+04
+ 279) HNO2    + HV      = NO      + OH           5.887E+09
+ 284) NO2     + HV      = NO      + O1D          1.508E+08
+ 285) NO2     + HV      = NO      + O            5.843E+11
+ 301) NO3     + HV      = NO      + O2           1.657E+09
+ 307) N2O5    + HV      = NO3     + NO      O    6.081E+06
+
+NO                     LOSS RXS                INT RX RATE    TL =  7.30E+11
+  67) CH3O2   + NO      = CH3O    + NO2          1.262E+11
+  71) H       + NO      = HNO     +              6.971E+04
+  76) N       + NO      = N2      + O            7.174E+07
+  77) NO      + O3      = NO2     + O2           4.870E+11
+  78) NO      + O       = NO2     +              1.544E+10
+  79) NO      + HO2     = NO2     + OH           9.230E+10
+  80) NO      + OH      = HNO2    +              5.436E+09
+  85) HCO     + NO      = HNO     + CO           2.559E+04
+ 164) HSO     + NO      = HNO     + SO           4.707E+06
+ 191) NO      + NO3     = NO2     + NO2          9.271E+08
+ 246) C2H5SO2 + NO      = C2H5SO  + NO2          2.463E+09
+ 283) NO      + HV      = N       + O            1.027E+08
+
+NO2                 PRODUCTION RXS              INT RX RATE    TP =  7.53E+11
+  67) CH3O2   + NO      = CH3O    + NO2          1.262E+11
+  77) NO      + O3      = NO2     + O2           4.870E+11
+  78) NO      + O       = NO2     +              1.544E+10
+  79) NO      + HO2     = NO2     + OH           9.230E+10
+  90) HNO2    + OH      = H2O     + NO2          1.346E+08
+ 189) O       + NO3     = O2      + NO2          2.763E+08
+ 190) HO2     + NO3     = OH      + NO2     O2   2.121E+07
+ 191) NO      + NO3     = NO2     + NO2          9.271E+08
+ 193) OH      + NO3     = HO2     + NO2          2.280E+07
+ 200) O       + N2O5    = NO2     + NO2     O2   5.979E+03
+ 202) N2O5    + M       = NO3     + NO2          3.586E+05
+ 204) NO2     + NO3     = NO      + NO2     O2   1.085E+03
+ 206) NO3     + NO3     = NO2     + NO2     O2   8.510E-02
+ 208) O       + HO2NO2  = OH      + NO2     O2   6.760E+04
+ 209) OH      + HO2NO2  = H2O     + NO2     O2   3.105E+09
+ 210) HO2NO2  + M       = HO2     + NO2          8.050E+09
+ 246) C2H5SO2 + NO      = C2H5SO  + NO2          2.463E+09
+ 280) HNO3    + HV      = NO2     + OH           2.190E+09
+ 302) NO3     + HV      = NO2     + O            1.205E+10
+ 304) HO2NO2  + HV      = HO2     + NO2          2.305E+09
+ 306) N2O5    + HV      = NO3     + NO2          7.792E+06
+
+NO2                    LOSS RXS                INT RX RATE    TL =  7.53E+11
+  81) NO2     + O       = NO      + O2           1.374E+11
+  82) NO2     + OH      = HNO3    +              3.853E+09
+  83) NO2     + H       = NO      + OH           8.429E+06
+ 152) SO      + NO2     = SO2     + NO           1.024E+08
+ 157) HS      + NO2     = HSO     + NO           2.155E+06
+ 192) O       + NO2     = NO3     +              1.316E+10
+ 195) N       + NO2     = N2O     + O            9.334E+06
+ 201) NO2     + NO3     = N2O5    +              1.425E+07
+ 204) NO2     + NO3     = NO      + NO2     O2   1.085E+03
+ 205) NO2     + O3      = NO3     + O2           2.820E+08
+ 207) HO2     + NO2     = HO2NO2  +              1.413E+10
+ 212) HO2     + NO2     = HNO2    + O2           5.337E+06
+ 249) CH3S    + NO2     = CH3SO   + NO           4.804E+06
+ 251) CH3SO   + NO2     = CH3SO2  + NO           1.608E+07
+ 253) CH3SO2  + NO2     = CH3SO3  + NO           3.172E+04
+ 284) NO2     + HV      = NO      + O1D          1.508E+08
+ 285) NO2     + HV      = NO      + O            5.843E+11
+
+HNO                 PRODUCTION RXS              INT RX RATE    TP =  4.80E+06
+  71) H       + NO      = HNO     +              6.971E+04
+  85) HCO     + NO      = HNO     + CO           2.559E+04
+ 164) HSO     + NO      = HNO     + SO           4.707E+06
+
+HNO                    LOSS RXS                INT RX RATE    TL =  4.80E+06
+  64) CH3     + HNO     = CH4     + NO           2.942E-02
+  86) HNO     + HV      = NO      + H            4.197E+06
+  87) H       + HNO     = H2      + NO           8.052E+00
+  88) O       + HNO     = OH      + NO           4.220E+05
+  89) OH      + HNO     = H2O     + NO           1.787E+05
+ 103) C2H5    + HNO     = C2H6    + NO           3.205E-06
+
+H2S                 PRODUCTION RXS              INT RX RATE    TP =  1.28E+06
+ 125) HS      + HO2     = H2S     + O2           1.281E+06
+ 126) HS      + HS      = H2S     + S            1.668E+01
+ 127) HS      + HCO     = H2S     + CO           1.658E-01
+ 168) HSO     + HS      = H2S     + SO           3.889E+01
+ 235) HS      + HCS     = H2S     + CS           1.356E-06
+
+H2S                    LOSS RXS                INT RX RATE    TL =  1.27E+06
+ 120) H2S     + OH      = H2O     + HS           1.020E+06
+ 121) H2S     + H       = H2      + HS           2.023E+01
+ 122) H2S     + O       = OH      + HS           2.853E+03
+ 287) H2S     + HV      = HS      + H            2.472E+05
+
+HS                  PRODUCTION RXS              INT RX RATE    TP =  7.66E+08
+ 120) H2S     + OH      = H2O     + HS           1.020E+06
+ 121) H2S     + H       = H2      + HS           2.023E+01
+ 122) H2S     + O       = OH      + HS           2.853E+03
+ 132) S       + HCO     = HS      + CO           9.568E-06
+ 133) S       + HO2     = HS      + O2           5.136E+01
+ 166) HSO     + H       = HS      + OH           1.159E+02
+ 170) HSO     + O3      = HS      + O2      O2   7.579E+08
+ 171) HSO     + S       = HS      + SO           1.109E-02
+ 172) H       + OCS     = CO      + HS           4.952E+03
+ 177) OCS     + OH      = CO2     + HS           7.186E+06
+ 220) CS2     + OH      = OCS     + HS           5.831E+03
+ 231) CH21    + S2      = HCS     + HS           2.292E-14
+ 232) CH23    + S2      = HCS     + HS           1.386E-11
+ 236) S       + HCS     = HS      + CS           8.594E-11
+ 239) OCS     + H       = CO      + HS           4.936E+03
+ 287) H2S     + HV      = HS      + H            2.472E+05
+ 299) HSO     + HV      = HS      + O            6.943E+04
+
+HS                     LOSS RXS                INT RX RATE    TL =  7.66E+08
+ 123) HS      + O       = H       + SO           2.577E+05
+ 125) HS      + HO2     = H2S     + O2           1.281E+06
+ 126) HS      + HS      = H2S     + S            1.668E+01
+ 127) HS      + HCO     = H2S     + CO           1.658E-01
+ 128) HS      + H       = H2      + S            2.593E+00
+ 129) HS      + S       = H       + S2           2.490E-04
+ 155) HS      + O3      = HSO     + O2           7.615E+08
+ 156) HS      + HO2     = HSO     + OH           1.281E+06
+ 157) HS      + NO2     = HSO     + NO           2.155E+06
+ 168) HSO     + HS      = H2S     + SO           3.889E+01
+ 173) HS      + CO      = OCS     + H            5.296E-05
+ 226) CS      + HS      = CS2     + H            3.701E-03
+ 230) HS      + CO      = OCS     + H            5.360E-05
+ 235) HS      + HCS     = H2S     + CS           1.356E-06
+
+S                   PRODUCTION RXS              INT RX RATE    TP =  5.40E+08
+ 126) HS      + HS      = H2S     + S            1.668E+01
+ 128) HS      + H       = H2      + S            2.593E+00
+ 136) S2      + O       = S       + SO           9.418E+03
+ 159) SO      + SO      = SO2     + S            1.297E+01
+ 175) O       + OCS     = S       + CO2          5.594E+02
+ 219) CS2     + O       = OCS     + S            5.674E+05
+ 241) CS      + O       = CO      + S            1.292E+02
+ 286) SO      + HV      = S       + O            3.269E+06
+ 292) S2      + HV      = S       + S            1.028E+05
+ 294) S3      + HV      = S2      + S            3.330E-05
+ 300) OCS     + HV      = CO      + S            5.228E+08
+ 309) CS2     + HV      = CS      + S            1.326E+07
+
+S                      LOSS RXS                INT RX RATE    TL =  5.40E+08
+ 129) HS      + S       = H       + S2           2.490E-04
+ 130) S       + O2      = SO      + O            5.385E+08
+ 131) S       + OH      = SO      + H            2.399E+01
+ 132) S       + HCO     = HS      + CO           9.568E-06
+ 133) S       + HO2     = HS      + O2           5.136E+01
+ 134) S       + HO2     = SO      + OH           5.136E+01
+ 135) S       + S       = S2      +              4.802E-11
+ 139) S       + S2      = S3      +              3.330E-05
+ 141) S       + S3      = S4      +              1.777E-18
+ 158) S       + O3      = SO      + O2           1.597E+06
+ 171) HSO     + S       = HS      + SO           1.109E-02
+ 176) OCS     + S       = CO      + S2           2.379E+01
+ 179) S       + CO      = OCS     +              4.134E+00
+ 184) OCS     + S       = OCS2    +              2.382E+01
+ 185) OCS2    + S       = OCS     + S2           7.770E-12
+ 229) S       + HCS     = H       + CS2          1.719E-10
+ 234) CH23    + S       = HCS     + H            1.442E-12
+ 236) S       + HCS     = HS      + CS           8.594E-11
+ 240) CS2     + S       = CS      + S2           1.377E-04
+
+SO                  PRODUCTION RXS              INT RX RATE    TP =  5.50E+09
+ 106) SO2     + O1D     = SO      + O2           2.514E+04
+ 123) HS      + O       = H       + SO           2.577E+05
+ 130) S       + O2      = SO      + O            5.385E+08
+ 131) S       + OH      = SO      + H            2.399E+01
+ 134) S       + HO2     = SO      + OH           5.136E+01
+ 136) S2      + O       = S       + SO           9.418E+03
+ 148) SO21    + SO2     = SO3     + SO           6.328E+00
+ 151) SO23    + SO2     = SO3     + SO           7.664E-01
+ 158) S       + O3      = SO      + O2           1.597E+06
+ 164) HSO     + NO      = HNO     + SO           4.707E+06
+ 165) HSO     + OH      = H2O     + SO           1.216E+06
+ 167) HSO     + H       = H2      + SO           5.793E+01
+ 168) HSO     + HS      = H2S     + SO           3.889E+01
+ 169) HSO     + O       = OH      + SO           9.042E+05
+ 171) HSO     + S       = HS      + SO           1.109E-02
+ 174) O       + OCS     = CO      + SO           4.980E+07
+ 214) CS      + O2      = CO      + SO           2.463E+03
+ 216) CS      + O3      = SO      + CO2          6.431E+06
+ 218) CS2     + O       = SO      + CS           6.052E+06
+ 288) SO2     + HV      = SO      + O            4.886E+09
+
+SO                     LOSS RXS                INT RX RATE    TL =  5.50E+09
+ 107) SO      + O2      = O       + SO2          2.609E+09
+ 108) SO      + HO2     = SO2     + OH           2.385E+08
+ 109) SO      + O       = SO2     +              1.363E+07
+ 110) SO      + OH      = SO2     + H            4.238E+07
+ 152) SO      + NO2     = SO2     + NO           1.024E+08
+ 153) SO      + O3      = SO2     + O2           2.486E+09
+ 159) SO      + SO      = SO2     + S            1.297E+01
+ 160) SO3     + SO      = SO2     + SO2          1.809E-02
+ 162) SO      + HCO     = HSO     + CO           5.006E+00
+ 163) H       + SO      = HSO     +              2.359E+01
+ 238) CS2     + SO      = OCS     + S2           1.615E+00
+ 286) SO      + HV      = S       + O            3.269E+06
+
+SO2                 PRODUCTION RXS              INT RX RATE    TP =  2.12E+11
+ 105) SO2     + O1D     = SO2     + O            7.839E+03
+ 107) SO      + O2      = O       + SO2          2.609E+09
+ 108) SO      + HO2     = SO2     + OH           2.385E+08
+ 109) SO      + O       = SO2     +              1.363E+07
+ 110) SO      + OH      = SO2     + H            4.238E+07
+ 115) SO3     + O       = SO2     + O2           2.944E-01
+ 144) SO21    + M       = SO2     + M            1.839E+11
+ 146) SO21    + HV      = SO2     + HV           2.719E+07
+ 149) SO23    + M       = SO2     + M            1.906E+10
+ 150) SO23    + HV      = SO2     + HV           9.372E+06
+ 152) SO      + NO2     = SO2     + NO           1.024E+08
+ 153) SO      + O3      = SO2     + O2           2.486E+09
+ 159) SO      + SO      = SO2     + S            1.297E+01
+ 160) SO3     + SO      = SO2     + SO2          1.809E-02
+ 217) CS      + O3      = CO      + SO2          6.431E+06
+ 224) CS2X    + O2      = CS      + SO2          1.776E+03
+ 254) CH3SO2  + HV      = CH3     + SO2          3.270E+09
+ 298) SO3     + HV      = SO2     + O            5.899E+02
+
+SO2                    LOSS RXS                INT RX RATE    TL =  2.11E+11
+ 105) SO2     + O1D     = SO2     + O            7.839E+03
+ 106) SO2     + O1D     = SO      + O2           2.514E+04
+ 111) SO2     + OH      = HSO3    +              1.921E+09
+ 112) SO2     + O       = SO3     +              3.081E+07
+ 148) SO21    + SO2     = SO3     + SO           6.328E+00
+ 151) SO23    + SO2     = SO3     + SO           7.664E-01
+ 154) SO2     + HO2     = SO3     + OH           1.914E+05
+ 288) SO2     + HV      = SO      + O            4.886E+09
+ 289) SO2     + HV      = SO21    +              2.023E+11
+ 290) SO2     + HV      = SO23    +              6.775E+08
+
+H2SO4               PRODUCTION RXS              INT RX RATE    TP =  6.38E+09
+ 113) SO3     + H2O     = H2SO4   +              6.378E+09
+
+H2SO4                  LOSS RXS                INT RX RATE    TL =  6.28E+09
+ 114) H2SO4   + H2O     = SO3     + H2O     H2O  4.395E+09
+ 291) H2SO4   + HV      = SO3     + H2O          3.214E+06
+
+HSO                 PRODUCTION RXS              INT RX RATE    TP =  7.65E+08
+ 155) HS      + O3      = HSO     + O2           7.615E+08
+ 156) HS      + HO2     = HSO     + OH           1.281E+06
+ 157) HS      + NO2     = HSO     + NO           2.155E+06
+ 162) SO      + HCO     = HSO     + CO           5.006E+00
+ 163) H       + SO      = HSO     +              2.359E+01
+
+HSO                    LOSS RXS                INT RX RATE    TL =  7.65E+08
+ 164) HSO     + NO      = HNO     + SO           4.707E+06
+ 165) HSO     + OH      = H2O     + SO           1.216E+06
+ 166) HSO     + H       = HS      + OH           1.159E+02
+ 167) HSO     + H       = H2      + SO           5.793E+01
+ 168) HSO     + HS      = H2S     + SO           3.889E+01
+ 169) HSO     + O       = OH      + SO           9.042E+05
+ 170) HSO     + O3      = HS      + O2      O2   7.579E+08
+ 171) HSO     + S       = HS      + SO           1.109E-02
+ 299) HSO     + HV      = HS      + O            6.943E+04
+
+S2                  PRODUCTION RXS              INT RX RATE    TP =  1.12E+05
+ 129) HS      + S       = H       + S2           2.490E-04
+ 135) S       + S       = S2      +              4.802E-11
+ 176) OCS     + S       = CO      + S2           2.379E+01
+ 185) OCS2    + S       = OCS     + S2           7.770E-12
+ 225) CS2X    + CS2     = CS      + CS      S2   5.069E-06
+ 237) CS2     + O       = CO      + S2           1.122E+05
+ 238) CS2     + SO      = OCS     + S2           1.615E+00
+ 240) CS2     + S       = CS      + S2           1.377E-04
+ 293) S4      + HV      = S2      + S2           2.905E+01
+ 294) S3      + HV      = S2      + S            3.330E-05
+
+S2                     LOSS RXS                INT RX RATE    TL =  1.12E+05
+ 136) S2      + O       = S       + SO           9.418E+03
+ 139) S       + S2      = S3      +              3.330E-05
+ 140) S2      + S2      = S4      +              2.905E+01
+ 231) CH21    + S2      = HCS     + HS           2.292E-14
+ 232) CH23    + S2      = HCS     + HS           1.386E-11
+ 292) S2      + HV      = S       + S            1.028E+05
+
+S4                  PRODUCTION RXS              INT RX RATE    TP =  2.90E+01
+ 140) S2      + S2      = S4      +              2.905E+01
+ 141) S       + S3      = S4      +              1.777E-18
+ 297) S8      + HV      = S4      + S4           2.820E-12
+
+S4                     LOSS RXS                INT RX RATE    TL =  2.90E+01
+ 142) S4      + S4      = S8      +              2.820E-12
+ 293) S4      + HV      = S2      + S2           2.905E+01
+
+S8                  PRODUCTION RXS              INT RX RATE    TP =  2.82E-12
+ 142) S4      + S4      = S8      +              2.820E-12
+
+S8                     LOSS RXS                INT RX RATE    TL =  2.82E-12
+ 297) S8      + HV      = S4      + S4           2.820E-12
+
+SO3                 PRODUCTION RXS              INT RX RATE    TP =  6.38E+09
+ 112) SO2     + O       = SO3     +              3.081E+07
+ 114) H2SO4   + H2O     = SO3     + H2O     H2O  4.395E+09
+ 116) HSO3    + O2      = HO2     + SO3          1.921E+09
+ 147) SO21    + O2      = SO3     + O            3.909E+02
+ 148) SO21    + SO2     = SO3     + SO           6.328E+00
+ 151) SO23    + SO2     = SO3     + SO           7.664E-01
+ 154) SO2     + HO2     = SO3     + OH           1.914E+05
+ 255) CH3SO3  + HV      = CH3     + SO3          2.774E+07
+ 291) H2SO4   + HV      = SO3     + H2O          3.214E+06
+
+SO3                    LOSS RXS                INT RX RATE    TL =  6.38E+09
+ 113) SO3     + H2O     = H2SO4   +              6.378E+09
+ 115) SO3     + O       = SO2     + O2           2.944E-01
+ 160) SO3     + SO      = SO2     + SO2          1.809E-02
+ 298) SO3     + HV      = SO2     + O            5.899E+02
+
+OCS                 PRODUCTION RXS              INT RX RATE    TP =  7.02E+06
+ 173) HS      + CO      = OCS     + H            5.296E-05
+ 179) S       + CO      = OCS     +              4.134E+00
+ 185) OCS2    + S       = OCS     + S2           7.770E-12
+ 188) OCS2    + CO      = OCS     + OCS          2.382E+01
+ 213) CS      + O2      = OCS     + O            1.970E+04
+ 215) CS      + O3      = OCS     + O2           6.431E+06
+ 219) CS2     + O       = OCS     + S            5.674E+05
+ 220) CS2     + OH      = OCS     + HS           5.831E+03
+ 230) HS      + CO      = OCS     + H            5.360E-05
+ 238) CS2     + SO      = OCS     + S2           1.615E+00
+
+OCS                    LOSS RXS                INT RX RATE    TL =  5.80E+08
+ 172) H       + OCS     = CO      + HS           4.952E+03
+ 174) O       + OCS     = CO      + SO           4.980E+07
+ 175) O       + OCS     = S       + CO2          5.594E+02
+ 176) OCS     + S       = CO      + S2           2.379E+01
+ 177) OCS     + OH      = CO2     + HS           7.186E+06
+ 184) OCS     + S       = OCS2    +              2.382E+01
+ 239) OCS     + H       = CO      + HS           4.936E+03
+ 300) OCS     + HV      = CO      + S            5.228E+08
+
+S3                  PRODUCTION RXS              INT RX RATE    TP =  3.33E-05
+ 139) S       + S2      = S3      +              3.330E-05
+
+S3                     LOSS RXS                INT RX RATE    TL =  3.33E-05
+ 141) S       + S3      = S4      +              1.777E-18
+ 294) S3      + HV      = S2      + S            3.330E-05
+
+O3                  PRODUCTION RXS              INT RX RATE    TP =  1.10E+15
+  18) O       + O2      = O3      +              1.102E+15
+
+O3                     LOSS RXS                INT RX RATE    TL =  1.10E+15
+   5) H       + O3      = OH      + O2           1.580E+11
+  12) OH      + O3      = HO2     + O2           1.759E+11
+  15) HO2     + O3      = OH      + O2      O2   1.804E+11
+  19) O       + O3      = O2      + O2           5.606E+10
+  20) O1D     + O3      = O2      + O2           7.325E+08
+  21) O1D     + O3      = O       + O       O2   7.325E+08
+  26) O3      + HV      = O2      + O            2.155E-10
+  27) O3      + O3      = O2      + O2      O2   5.607E+02
+  77) NO      + O3      = NO2     + O2           4.870E+11
+ 153) SO      + O3      = SO2     + O2           2.486E+09
+ 155) HS      + O3      = HSO     + O2           7.615E+08
+ 158) S       + O3      = SO      + O2           1.597E+06
+ 170) HSO     + O3      = HS      + O2      O2   7.579E+08
+ 205) NO2     + O3      = NO3     + O2           2.820E+08
+ 215) CS      + O3      = OCS     + O2           6.431E+06
+ 216) CS      + O3      = SO      + CO2          6.431E+06
+ 217) CS      + O3      = CO      + SO2          6.431E+06
+ 248) CH3S    + O3      = CH3SO   + O2           2.458E+09
+ 250) CH3SO   + O3      = CH3SO2  + O2           2.447E+09
+ 252) CH3SO2  + O3      = CH3SO3  + O2           2.771E+07
+ 264) O3      + HV      = O2      + O1D          5.613E+14
+ 265) O3      + HV      = O2      + O            5.389E+14
+ 266) O3      + HV      = O       + O       O    4.688E+11
+
+HNO3                PRODUCTION RXS              INT RX RATE    TP =  3.85E+09
+  82) NO2     + OH      = HNO3    +              3.853E+09
+ 203) N2O5    + H2O     = HNO3    + HNO3         1.479E+04
+ 244) C2H6S   + NO3     = C2H5S   + HNO3         1.827E+06
+
+HNO3                   LOSS RXS                INT RX RATE    TL =  3.82E+09
+  84) HNO3    + OH      = H2O     + NO3          8.830E+08
+ 211) O       + HNO3    = OH      + NO3          4.409E+05
+ 280) HNO3    + HV      = NO2     + OH           2.190E+09
+ 281) HNO3    + HV      = HNO2    + O            3.381E+08
+ 282) HNO3    + HV      = HNO2    + O1D          2.427E+08
+
+N                   PRODUCTION RXS              INT RX RATE    TP =  1.03E+08
+ 283) NO      + HV      = N       + O            1.027E+08
+
+N                      LOSS RXS                INT RX RATE    TL =  1.03E+08
+  72) N       + N       = N2      +              8.192E+00
+  73) N       + O2      = NO      + O            1.168E+06
+  75) N       + OH      = NO      + H            1.451E+07
+  76) N       + NO      = N2      + O            7.174E+07
+ 195) N       + NO2     = N2O     + O            9.334E+06
+ 199) N       + HO2     = NO      + OH           5.988E+06
+
+NO3                 PRODUCTION RXS              INT RX RATE    TP =  1.50E+10
+  84) HNO3    + OH      = H2O     + NO3          8.830E+08
+ 192) O       + NO2     = NO3     +              1.316E+10
+ 202) N2O5    + M       = NO3     + NO2          3.586E+05
+ 205) NO2     + O3      = NO3     + O2           2.820E+08
+ 211) O       + HNO3    = OH      + NO3          4.409E+05
+ 305) HO2NO2  + HV      = OH      + NO3          6.379E+08
+ 306) N2O5    + HV      = NO3     + NO2          7.792E+06
+ 307) N2O5    + HV      = NO3     + NO      O    6.081E+06
+
+NO3                    LOSS RXS                INT RX RATE    TL =  1.50E+10
+ 189) O       + NO3     = O2      + NO2          2.763E+08
+ 190) HO2     + NO3     = OH      + NO2     O2   2.121E+07
+ 191) NO      + NO3     = NO2     + NO2          9.271E+08
+ 193) OH      + NO3     = HO2     + NO2          2.280E+07
+ 201) NO2     + NO3     = N2O5    +              1.425E+07
+ 204) NO2     + NO3     = NO      + NO2     O2   1.085E+03
+ 206) NO3     + NO3     = NO2     + NO2     O2   8.510E-02
+ 244) C2H6S   + NO3     = C2H5S   + HNO3         1.827E+06
+ 301) NO3     + HV      = NO      + O2           1.657E+09
+ 302) NO3     + HV      = NO2     + O            1.205E+10
+
+N2O                 PRODUCTION RXS              INT RX RATE    TP =  9.33E+06
+ 195) N       + NO2     = N2O     + O            9.334E+06
+
+N2O                    LOSS RXS                INT RX RATE    TL =  1.03E+11
+ 194) H       + N2O     = N2      + OH           7.522E-02
+ 197) O1D     + N2O     = N2      + O2           1.002E+08
+ 198) O1D     + N2O     = NO      + NO           1.568E+08
+ 303) N2O     + HV      = N2      + O1D          1.032E+11
+
+HO2NO2              PRODUCTION RXS              INT RX RATE    TP =  1.41E+10
+ 207) HO2     + NO2     = HO2NO2  +              1.413E+10
+
+HO2NO2                 LOSS RXS                INT RX RATE    TL =  1.41E+10
+ 208) O       + HO2NO2  = OH      + NO2     O2   6.760E+04
+ 209) OH      + HO2NO2  = H2O     + NO2     O2   3.105E+09
+ 210) HO2NO2  + M       = HO2     + NO2          8.050E+09
+ 304) HO2NO2  + HV      = HO2     + NO2          2.305E+09
+ 305) HO2NO2  + HV      = OH      + NO3          6.379E+08
+
+N2O5                PRODUCTION RXS              INT RX RATE    TP =  1.43E+07
+ 201) NO2     + NO3     = N2O5    +              1.425E+07
+
+N2O5                   LOSS RXS                INT RX RATE    TL =  1.43E+07
+ 200) O       + N2O5    = NO2     + NO2     O2   5.979E+03
+ 202) N2O5    + M       = NO3     + NO2          3.586E+05
+ 203) N2O5    + H2O     = HNO3    + HNO3         1.479E+04
+ 306) N2O5    + HV      = NO3     + NO2          7.792E+06
+ 307) N2O5    + HV      = NO3     + NO      O    6.081E+06
+
+NH                  PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+
+NH                     LOSS RXS                INT RX RATE    TL =  0.00E+00
+
+NH2                 PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+
+NH2                    LOSS RXS                INT RX RATE    TL =  0.00E+00
+
+NH3                 PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+
+NH3                    LOSS RXS                INT RX RATE    TL =  1.50E+10
+
+CO2                 PRODUCTION RXS              INT RX RATE    TP =  1.26E+12
+  32) O       + HCO     = H       + CO2          4.055E+06
+  34) CO      + OH      = CO2     + H            5.248E+11
+  35) CO      + O       = CO2     +              2.063E+08
+ 175) O       + OCS     = S       + CO2          5.594E+02
+ 177) OCS     + OH      = CO2     + HS           7.186E+06
+ 182) CO2     + O1D     = CO2     + O            7.324E+11
+ 216) CS      + O3      = SO      + CO2          6.431E+06
+
+CO2                    LOSS RXS                INT RX RATE    TL =  8.89E+11
+  36) CO2     + H       = CO      + OH           8.155E+03
+  93) CH21    + CO2     = H2CO    + CO           1.754E+05
+  95) CH23    + CO2     = H2CO    + CO           1.263E+08
+ 182) CO2     + O1D     = CO2     + O            7.324E+11
+ 268) CO2     + HV      = CO      + O            8.053E+10
+ 269) CO2     + HV      = CO      + O1D          7.634E+10
+
+CS                  PRODUCTION RXS              INT RX RATE    TP =  1.93E+07
+ 218) CS2     + O       = SO      + CS           6.052E+06
+ 224) CS2X    + O2      = CS      + SO2          1.776E+03
+ 225) CS2X    + CS2     = CS      + CS      S2   5.069E-06
+ 228) H       + HCS     = H2      + CS           1.160E-06
+ 233) CH3     + HCS     = CH4     + CS           3.921E-07
+ 235) HS      + HCS     = H2S     + CS           1.356E-06
+ 236) S       + HCS     = HS      + CS           8.594E-11
+ 240) CS2     + S       = CS      + S2           1.377E-04
+ 309) CS2     + HV      = CS      + S            1.326E+07
+
+CS                     LOSS RXS                INT RX RATE    TL =  1.93E+07
+ 213) CS      + O2      = OCS     + O            1.970E+04
+ 214) CS      + O2      = CO      + SO           2.463E+03
+ 215) CS      + O3      = OCS     + O2           6.431E+06
+ 216) CS      + O3      = SO      + CO2          6.431E+06
+ 217) CS      + O3      = CO      + SO2          6.431E+06
+ 226) CS      + HS      = CS2     + H            3.701E-03
+ 227) H       + CS      = HCS     +              2.909E-06
+ 241) CS      + O       = CO      + S            1.292E+02
+
+CS2                 PRODUCTION RXS              INT RX RATE    TP =  2.11E+08
+ 222) CS2OH   + HV      = CS2     + OH           2.333E+06
+ 223) CS2X    + M       = CS2     + M            2.088E+08
+ 226) CS      + HS      = CS2     + H            3.701E-03
+ 229) S       + HCS     = H       + CS2          1.719E-10
+
+CS2                    LOSS RXS                INT RX RATE    TL =  2.31E+08
+ 218) CS2     + O       = SO      + CS           6.052E+06
+ 219) CS2     + O       = OCS     + S            5.674E+05
+ 220) CS2     + OH      = OCS     + HS           5.831E+03
+ 221) CS2     + OH      = CS2OH   +              2.333E+06
+ 225) CS2X    + CS2     = CS      + CS      S2   5.069E-06
+ 237) CS2     + O       = CO      + S2           1.122E+05
+ 238) CS2     + SO      = OCS     + S2           1.615E+00
+ 240) CS2     + S       = CS      + S2           1.377E-04
+ 309) CS2     + HV      = CS      + S            1.326E+07
+ 310) CS2     + HV      = CS2X    +              2.088E+08
+
+HCS                 PRODUCTION RXS              INT RX RATE    TP =  2.91E-06
+ 227) H       + CS      = HCS     +              2.909E-06
+ 231) CH21    + S2      = HCS     + HS           2.292E-14
+ 232) CH23    + S2      = HCS     + HS           1.386E-11
+ 234) CH23    + S       = HCS     + H            1.442E-12
+
+HCS                    LOSS RXS                INT RX RATE    TL =  2.91E-06
+ 228) H       + HCS     = H2      + CS           1.160E-06
+ 229) S       + HCS     = H       + CS2          1.719E-10
+ 233) CH3     + HCS     = CH4     + CS           3.921E-07
+ 235) HS      + HCS     = H2S     + CS           1.356E-06
+ 236) S       + HCS     = HS      + CS           8.594E-11
+
+C2H6S               PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+
+C2H6S                  LOSS RXS                INT RX RATE    TL =  3.30E+09
+ 242) C2H6S   + OH      = C2H5S   + H2O          2.461E+09
+ 243) C2H6S   + OH      = C2H7SO  +              8.368E+08
+ 244) C2H6S   + NO3     = C2H5S   + HNO3         1.827E+06
+
+C2H5S               PRODUCTION RXS              INT RX RATE    TP =  2.46E+09
+ 242) C2H6S   + OH      = C2H5S   + H2O          2.461E+09
+ 244) C2H6S   + NO3     = C2H5S   + HNO3         1.827E+06
+
+C2H5S                  LOSS RXS                INT RX RATE    TL =  2.46E+09
+ 245) C2H5S   + O2      = C2H5SO2 +              2.463E+09
+
+C2H5SO              PRODUCTION RXS              INT RX RATE    TP =  2.46E+09
+ 246) C2H5SO2 + NO      = C2H5SO  + NO2          2.463E+09
+
+C2H5SO                 LOSS RXS                INT RX RATE    TL =  2.46E+09
+ 247) C2H5SO  + HV      = H2CO    + CH3S         2.463E+09
+
+C2H5SO2             PRODUCTION RXS              INT RX RATE    TP =  2.46E+09
+ 245) C2H5S   + O2      = C2H5SO2 +              2.463E+09
+
+C2H5SO2                LOSS RXS                INT RX RATE    TL =  2.46E+09
+ 246) C2H5SO2 + NO      = C2H5SO  + NO2          2.463E+09
+
+CH3S                PRODUCTION RXS              INT RX RATE    TP =  2.46E+09
+ 247) C2H5SO  + HV      = H2CO    + CH3S         2.463E+09
+
+CH3S                   LOSS RXS                INT RX RATE    TL =  2.46E+09
+ 248) CH3S    + O3      = CH3SO   + O2           2.458E+09
+ 249) CH3S    + NO2     = CH3SO   + NO           4.804E+06
+
+CH3SO               PRODUCTION RXS              INT RX RATE    TP =  2.46E+09
+ 248) CH3S    + O3      = CH3SO   + O2           2.458E+09
+ 249) CH3S    + NO2     = CH3SO   + NO           4.804E+06
+
+CH3SO                  LOSS RXS                INT RX RATE    TL =  2.46E+09
+ 250) CH3SO   + O3      = CH3SO2  + O2           2.447E+09
+ 251) CH3SO   + NO2     = CH3SO2  + NO           1.608E+07
+
+CH3SO2              PRODUCTION RXS              INT RX RATE    TP =  3.30E+09
+ 250) CH3SO   + O3      = CH3SO2  + O2           2.447E+09
+ 251) CH3SO   + NO2     = CH3SO2  + NO           1.608E+07
+ 258) CH4SO2  + OH      = CH3SO2  + H2O          8.342E+08
+
+CH3SO2                 LOSS RXS                INT RX RATE    TL =  3.30E+09
+ 252) CH3SO2  + O3      = CH3SO3  + O2           2.771E+07
+ 253) CH3SO2  + NO2     = CH3SO3  + NO           3.172E+04
+ 254) CH3SO2  + HV      = CH3     + SO2          3.270E+09
+
+CH3SO3              PRODUCTION RXS              INT RX RATE    TP =  2.77E+07
+ 252) CH3SO2  + O3      = CH3SO3  + O2           2.771E+07
+ 253) CH3SO2  + NO2     = CH3SO3  + NO           3.172E+04
+
+CH3SO3                 LOSS RXS                INT RX RATE    TL =  2.77E+07
+ 255) CH3SO3  + HV      = CH3     + SO3          2.774E+07
+
+CH4SO2              PRODUCTION RXS              INT RX RATE    TP =  8.34E+08
+ 257) C2H6SO  + OH      = CH4SO2  + CH3          8.342E+08
+
+CH4SO2                 LOSS RXS                INT RX RATE    TL =  8.34E+08
+ 258) CH4SO2  + OH      = CH3SO2  + H2O          8.342E+08
+
+C2H6SO              PRODUCTION RXS              INT RX RATE    TP =  8.37E+08
+ 256) C2H7SO  + O2      = C2H6SO  + HO2          8.368E+08
+
+C2H6SO                 LOSS RXS                INT RX RATE    TL =  8.37E+08
+ 257) C2H6SO  + OH      = CH4SO2  + CH3          8.342E+08
+
+C2H7SO              PRODUCTION RXS              INT RX RATE    TP =  8.37E+08
+ 243) C2H6S   + OH      = C2H7SO  +              8.368E+08
+
+C2H7SO                 LOSS RXS                INT RX RATE    TL =  8.37E+08
+ 256) C2H7SO  + O2      = C2H6SO  + HO2          8.368E+08
+
+SO4AER              PRODUCTION RXS              INT RX RATE    TP =  1.78E+09
+
+SO4AER                 LOSS RXS                INT RX RATE    TL =  1.76E+09
+
+S8AER               PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+
+S8AER                  LOSS RXS                INT RX RATE    TL =  1.71E-19
+
+HNO2                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+  80) NO      + OH      = HNO2    +              5.436E+09
+ 212) HO2     + NO2     = HNO2    + O2           5.337E+06
+ 281) HNO3    + HV      = HNO2    + O            3.381E+08
+ 282) HNO3    + HV      = HNO2    + O1D          2.427E+08
+
+HNO2                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+  90) HNO2    + OH      = H2O     + NO2          1.346E+08
+ 279) HNO2    + HV      = NO      + OH           5.887E+09
+
+O1D                 PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 259) O2      + HV      = O       + O1D          2.405E+11
+ 262) H2O     + HV      = H2      + O1D          2.535E+09
+ 264) O3      + HV      = O2      + O1D          5.613E+14
+ 269) CO2     + HV      = CO      + O1D          7.634E+10
+ 282) HNO3    + HV      = HNO2    + O1D          2.427E+08
+ 284) NO2     + HV      = NO      + O1D          1.508E+08
+ 303) N2O     + HV      = N2      + O1D          1.032E+11
+
+O1D                    LOSS RXS                INT RX RATE    TL =  0.00E+00
+   1) H2O     + O1D     = OH      + OH           2.931E+11
+   2) H2      + O1D     = OH      + H            1.619E+09
+  20) O1D     + O3      = O2      + O2           7.325E+08
+  21) O1D     + O3      = O       + O       O2   7.325E+08
+  23) O1D     + N2      = O       + N2           5.605E+14
+  24) O1D     + O2      = O       + O2           1.753E+11
+  49) CH4     + O1D     = CH3     + OH           1.262E+10
+  50) CH4     + O1D     = CH3O    + H            1.698E+09
+  51) CH4     + O1D     = CH2OH   + H            1.698E+09
+  52) CH4     + O1D     = H2CO    + H2           8.492E+08
+  98) C2H6    + O1D     = C2H5    + OH           6.351E+05
+ 105) SO2     + O1D     = SO2     + O            7.839E+03
+ 106) SO2     + O1D     = SO      + O2           2.514E+04
+ 180) CO      + O1D     = CO      + O            7.737E+07
+ 182) CO2     + O1D     = CO2     + O            7.324E+11
+ 197) O1D     + N2O     = N2      + O2           1.002E+08
+ 198) O1D     + N2O     = NO      + NO           1.568E+08
+
+CH21                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 273) CH4     + HV      = CH21    + H2           4.189E+09
+ 276) CH3     + HV      = CH21    + H            4.589E+05
+ 278) C2H6    + HV      = CH4     + CH21         1.268E+02
+
+CH21                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+  53) CH21    + CH4     = CH3     + CH3          8.718E-10
+  54) CH21    + O2      = HCO     + OH           3.760E+06
+  55) CH21    + N2      = CH23    + N2           4.185E+09
+  92) CH21    + H2      = CH3     + H            3.669E+05
+  93) CH21    + CO2     = H2CO    + CO           1.754E+05
+ 231) CH21    + S2      = HCS     + HS           2.292E-14
+
+CH23                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+  55) CH21    + N2      = CH23    + N2           4.185E+09
+ 275) CH4     + HV      = CH23    + H       H    7.862E+08
+ 277) C2H6    + HV      = CH23    + CH23    H2   5.071E+02
+
+CH23                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+  58) CH23    + O2      = HCO     + OH           4.842E+09
+  94) CH23    + O       = HCO     + H            2.857E+06
+  95) CH23    + CO2     = H2CO    + CO           1.263E+08
+ 232) CH23    + S2      = HCS     + HS           1.386E-11
+ 234) CH23    + S       = HCS     + H            1.442E-12
+
+C2H5                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+  96) C2H6    + OH      = C2H5    + H2O          8.985E+08
+  97) C2H6    + O       = C2H5    + OH           8.727E+05
+  98) C2H6    + O1D     = C2H5    + OH           6.351E+05
+
+C2H5                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+  99) C2H5    + H       = CH3     + CH3          3.705E-02
+ 100) C2H5    + O       = CH3     + HCO     H    2.328E+02
+ 101) C2H5    + OH      = CH3     + HCO     H2   4.829E+00
+ 102) C2H5    + HCO     = C2H6    + CO           4.564E-05
+ 103) C2H5    + HNO     = C2H6    + NO           3.205E-06
+ 104) C2H5    + O2      = CH3     + HCO     OH   9.000E+08
+
+SO21                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 289) SO2     + HV      = SO21    +              2.023E+11
+
+SO21                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 143) SO21    + M       = SO23    + M            1.839E+10
+ 144) SO21    + M       = SO2     + M            1.839E+11
+ 145) SO21    + HV      = SO23    + HV           1.854E+06
+ 146) SO21    + HV      = SO2     + HV           2.719E+07
+ 147) SO21    + O2      = SO3     + O            3.909E+02
+ 148) SO21    + SO2     = SO3     + SO           6.328E+00
+
+SO23                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 143) SO21    + M       = SO23    + M            1.839E+10
+ 145) SO21    + HV      = SO23    + HV           1.854E+06
+ 290) SO2     + HV      = SO23    +              6.775E+08
+
+SO23                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 149) SO23    + M       = SO2     + M            1.906E+10
+ 150) SO23    + HV      = SO2     + HV           9.372E+06
+ 151) SO23    + SO2     = SO3     + SO           7.664E-01
+
+HSO3                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 111) SO2     + OH      = HSO3    +              1.921E+09
+
+HSO3                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 116) HSO3    + O2      = HO2     + SO3          1.921E+09
+
+OCS2                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 184) OCS     + S       = OCS2    +              2.382E+01
+
+OCS2                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 185) OCS2    + S       = OCS     + S2           7.770E-12
+ 188) OCS2    + CO      = OCS     + OCS          2.382E+01
+
+CS2X                PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 310) CS2     + HV      = CS2X    +              2.088E+08
+
+CS2X                   LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 223) CS2X    + M       = CS2     + M            2.088E+08
+ 224) CS2X    + O2      = CS      + SO2          1.776E+03
+ 225) CS2X    + CS2     = CS      + CS      S2   5.069E-06
+
+CS2OH               PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+ 221) CS2     + OH      = CS2OH   +              2.333E+06
+
+CS2OH                  LOSS RXS                INT RX RATE    TL =  0.00E+00
+ 222) CS2OH   + HV      = CS2     + OH           2.333E+06
+
+N2                  PRODUCTION RXS              INT RX RATE    TP =  0.00E+00
+  23) O1D     + N2      = O       + N2           5.605E+14
+  55) CH21    + N2      = CH23    + N2           4.185E+09
+  72) N       + N       = N2      +              8.192E+00
+  76) N       + NO      = N2      + O            7.174E+07
+ 194) H       + N2O     = N2      + OH           7.522E-02
+ 197) O1D     + N2O     = N2      + O2           1.002E+08
+ 303) N2O     + HV      = N2      + O1D          1.032E+11
+
+N2                     LOSS RXS                INT RX RATE    TL =  0.00E+00
+  23) O1D     + N2      = O       + N2           5.605E+14
+  55) CH21    + N2      = CH23    + N2           4.185E+09
