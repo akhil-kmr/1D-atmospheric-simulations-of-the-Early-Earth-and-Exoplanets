@@ -224,6 +224,7 @@ If you use this dataset or the associated models, please cite the paper (citatio
 - **VULCAN:** Tsai, S.-M. et al. (2017), *VULCAN: An Open-source, Validated Chemical Kinetics Python Code for Exoplanetary Atmospheres*, ApJS, 228, 20. [doi:10.3847/1538-4365/228/2/20](https://doi.org/10.3847/1538-4365/228/2/20)
 - **Atmos:** Arney, G. et al. (2016), *The Pale Orange Dot: The Spectrum and Habitability of Hazy Archean Earth*, Astrobiology, 16, 873. [doi:10.1089/ast.2015.1422](https://doi.org/10.1089/ast.2015.1422)
 - **WACCM6 / CESM:** see [ESCOMP/CESM](https://github.com/ESCOMP/CESM)
+- **Planetary Spectrum Generator (PSG):** Villanueva, G. L., et al.(2018), *Planetary Spectrum Generator: An accurate online radiative transfer suite for atmospheres, comets, small bodies and exoplanets*, Journal of Quantitative Spectroscopy and Radiative Transfer, 217, 86-104. [doi:10.1016/j.jqsrt.2018.05.023] (https://doi.org/10.1016/j.jqsrt.2018.05.023)
 
 ---
 
