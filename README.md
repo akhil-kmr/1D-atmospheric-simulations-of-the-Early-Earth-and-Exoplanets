@@ -5,9 +5,9 @@
 
 ## Overview
 
-This repository accompanies the paper **"The development of the ozone layer under an evolving Sun"**. It contains the simulation data, model configuration files, and analysis scripts used to study how Earth's atmosphere — and in particular its ozone (O₃) layer — responds to changing atmospheric oxygen levels from the **Proterozoic through the Phanerozoic to the present day**.
+This repository accompanies the paper **"Simulations of the Evolving Ozone Layer: Implications for the Early Earth and Exoplanets."** It contains the simulation data, model configuration files, and analysis scripts used to study how Earth's atmosphere — and in particular its ozone (O₃) layer — responds to changing atmospheric oxygen levels from the **Proterozoic through the Phanerozoic to the present day**.
 
-The central scientific question is how atmospheric photochemistry and ozone evolve as O₂ rises from near-zero levels in the Proterozoic (the "faint young Sun" era) through the oxygenation events of the Phanerozoic to modern (and slightly super-modern) conditions. We simulate this evolution using four independent one-dimensional (1D) photochemical models, benchmarked against **WACCM6**, a three-dimensional coupled chemistry–climate general circulation model.
+The central scientific question is how atmospheric photochemistry and ozone evolve as O₂ rises from near-zero levels in the Proterozoic (the "faint young Sun" era) through the oxygenation events of the Phanerozoic to modern conditions. We simulate this evolution using four independent one-dimensional (1D) photochemical models, benchmarked against **WACCM6**, a configuration of the Community Earth System Model (CESM) that couples interactive chemistry with a three-dimensional general circulation model.
 
 Across thousands of atmospheric states, we systematically vary:
 
@@ -30,27 +30,27 @@ We quantify how model choice and boundary-condition assumptions affect ozone col
 | **Atmos** | 1D photochemical–climate model from the Virtual Planetary Laboratory | [github.com/VirtualPlanetaryLaboratory/atmos](https://github.com/VirtualPlanetaryLaboratory/atmos) |
 | **Photochem** | Photochemical and climate model for planetary atmospheres | [github.com/Nicholaswogan/photochem](https://github.com/Nicholaswogan/photochem) |
 | **VULCAN** | Chemical kinetics code for exoplanetary and planetary atmospheres | [github.com/shami-EEG/VULCAN](https://github.com/shami-EEG/VULCAN) |
-| **Kasting 1D model** | Penn State 1D photochemical model with correlated-*k* O₂ Schumann–Runge photolysis (Ji et al. 2024) | [zenodo.org/records/10822978](https://zenodo.org/records/10822978) |
-| **WACCM6** | Whole Atmosphere Community Climate Model v6 (3D benchmark) | [github.com/ESCOMP/CESM](https://github.com/ESCOMP/CESM) |
+| **Kasting 1D model** | 1D photochemical model developed in the group headed by James Kasting, with correlated-*k* O₂ Schumann–Runge photolysis (Ji et al. 2024) | [zenodo.org/records/10822978](https://zenodo.org/records/10822978) |
+| **WACCM6** | Whole Atmosphere Community Climate Model version 6 — a configuration of CESM used as the 3D benchmark | [github.com/ESCOMP/CESM](https://github.com/ESCOMP/CESM) |
 
 All four 1D models are run with harmonised boundary conditions where possible (matching lower-boundary mixing ratios, stellar spectra, and WACCM6 P–T profiles) so that differences in output reflect genuine model physics rather than inconsistent inputs.
 
 ---
 
-## Oxygenation states and geological context
+## Oxygenation states
 
 Simulations are organised by O₂ level expressed as a percentage of PAL:
 
-| Folder name | Approx. O₂ (% PAL) | Geological context |
-|-------------|-------------------|-------------------|
-| `0.1pc` | 0.1% | Late Proterozoic / very low O₂ |
-| `0.5pc` | 0.5% | Proterozoic transition |
-| `1pc` | 1% | Early Phanerozoic low O₂ |
-| `5pc` | 5% | Rising Phanerozoic O₂ |
-| `10pc` | 10% | Mid-Phanerozoic |
-| `50pc` | 50% | Late Phanerozoic |
-| `100pc` | 100% | Present day |
-| `150pc` | 150% | Elevated O₂ (sensitivity) |
+| Folder name | Approx. O₂ (% PAL) |
+|-------------|-------------------|
+| `0.1pc` | 0.1% |
+| `0.5pc` | 0.5% |
+| `1pc` | 1% |
+| `5pc` | 5% |
+| `10pc` | 10% |
+| `50pc` | 50% |
+| `100pc` | 100% |
+| `150pc` | 150% |
 
 Solar-age labels such as `Sun_0.0Ga` (present Sun) and `Sun_2.4Ga` (younger Sun) indicate which stellar spectrum was used. The **Young Sun** and **Coupled Young Sun Simulations** folders explore the faint young Sun explicitly.
 
@@ -140,7 +140,7 @@ Methane perturbations are indicated in filenames (e.g. `0.01xCH4`, `10xCH4`). Wa
 
 ### `Kasting_1D_model/`
 
-Output from the Penn State 1D photochemical model ([Ji et al. 2024](https://zenodo.org/records/10822978)), which uses a correlated-*k* parameterisation for O₂ photolysis in the Schumann–Runge bands (175–205 nm).
+Output from the 1D photochemical model developed in the group headed by James Kasting ([Ji et al. 2024](https://zenodo.org/records/10822978)), which uses a correlated-*k* parameterisation for O₂ photolysis in the Schumann–Runge bands (175–205 nm).
 
 **Standard grid** (`0.1pc/` … `150pc/`):  
 Sub-folders for SZA (`SZA_45`, `SZA_48.2`, `SZA_60`) and an `8point` diurnal-integration option. Key output files:
@@ -199,7 +199,7 @@ The `Young Sun/` (Photochem) and `Coupled Young Sun Simulations/` (Atmos) folder
 
 ### Methane perturbations
 
-CH₄ surface flux is scaled by factors from 0.01× to 10× present-day values. Methane affects HOₓ and odd-oxygen chemistry, particularly at low O₂, and is a major source of inter-model disagreement.
+CH₄ mixing ratio is scaled by factors from 0.01× to 10× present-day values. Methane affects HOₓ and odd-oxygen chemistry, particularly at low O₂, and is a major source of inter-model disagreement.
 
 ### Water vapour perturbations
 
@@ -220,10 +220,10 @@ A parallel suite (`Proxima Centauri/` in Atmos, `Proxima_Centauri/` in Photochem
 If you use this dataset or the associated models, please cite the paper (citation to be added upon publication) and the relevant model papers:
 
 - **Kasting 1D / correlated-*k* O₂ photolysis:** Ji, A. et al. (2024), *A Correlated-k Parameterization for O₂ Photolysis in the Schumann-Runge Bands*, JGR Atmospheres. Data: [10.5281/zenodo.10822978](https://doi.org/10.5281/zenodo.10822978)
-- **Photochem:** Wogan, N. et al. (2023, 2024)
-- **VULCAN:** Tsai, S.-M. et al.
-- **Atmos:** Segura, A. et al.
-- **WACCM6 / CESM:** Gettelman, A. et al.; see [ESCOMP/CESM](https://github.com/ESCOMP/CESM)
+- **Photochem:** Wogan, N. F. et al. (2025), *The Open-source Photochem Code: A General Chemical and Climate Model for Interpreting (Exo)Planet Observations*, PSJ, 6, 256. [doi:10.3847/PSJ/ae0e1c](https://doi.org/10.3847/PSJ/ae0e1c)
+- **VULCAN:** Tsai, S.-M. et al. (2017), *VULCAN: An Open-source, Validated Chemical Kinetics Python Code for Exoplanetary Atmospheres*, ApJS, 228, 20. [doi:10.3847/1538-4365/228/2/20](https://doi.org/10.3847/1538-4365/228/2/20)
+- **Atmos:** Arney, G. et al. (2016), *The Pale Orange Dot: The Spectrum and Habitability of Hazy Archean Earth*, Astrobiology, 16, 873. [doi:10.1089/ast.2015.1422](https://doi.org/10.1089/ast.2015.1422)
+- **WACCM6 / CESM:** see [ESCOMP/CESM](https://github.com/ESCOMP/CESM)
 
 ---
 
