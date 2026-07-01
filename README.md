@@ -5,7 +5,7 @@
 
 ## Overview
 
-This repository accompanies the paper **"Simulations of the Evolving Ozone Layer: Implications for the Early Earth and Exoplanets."** It contains the simulation data, model configuration files, and analysis scripts used to study how Earth's atmosphere — and in particular its ozone (O₃) layer — responds to changing atmospheric oxygen levels from the **Proterozoic through the Phanerozoic to the present day**.
+This repository accompanies the paper **"Simulations of the Evolving Ozone Layer with Consequences for the Early Earth and Exoplanets"** It contains the simulation data, model configuration files, and analysis scripts used to study how Earth's atmosphere — and in particular its ozone (O₃) layer — responds to changing atmospheric oxygen levels from the **Proterozoic through the Phanerozoic to the present day**.
 
 The central scientific question is how atmospheric photochemistry and ozone evolve as O₂ rises from near-zero levels in the Proterozoic (the "faint young Sun" era) through the oxygenation events of the Phanerozoic to modern conditions. We simulate this evolution using four independent one-dimensional (1D) photochemical models, benchmarked against **WACCM6**, a configuration of the Community Earth System Model (CESM) that couples interactive chemistry with a three-dimensional general circulation model.
 
