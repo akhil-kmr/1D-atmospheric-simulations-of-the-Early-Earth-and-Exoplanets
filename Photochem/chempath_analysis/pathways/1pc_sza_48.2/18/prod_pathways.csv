@@ -1,0 +1,13 @@
+pathway_id,pathway,contribution,rate,total_prod,dconc,species,alt_km
+1*1336,"O3_transport -> O3
+Net:O3_transport -> O3",0.9999999999999956,354412337662965.4,354412337662965.4,0.0,O3,18.5
+"2*408,1*671","2(O+O2+M -> O3+M)
+O2+hv -> O+O
+Net:3O2 -> 2O3",2.307477019664651e-15,0.4088991623214624,0.8177983246429248,0.0,O3,18.5
+"1*408,1*670,1*1330,1*1337","O+O2+M -> O3+M
+NO2+hv -> NO+O
+NO -> NO_transport
+NO2_transport -> NO2
+Net:O2 + NO2_transport -> O3 + NO_transport",1.794928673290019e-15,0.6361448670390035,0.6361448670390035,0.0,O3,18.5
+del,deleted_pathways,3.9489707670613713e-16,0.13995639609169402,0.13995639609169402,0.0,O3,18.5
+err,err_pathways,0.0,0.0,0.0,0.0,O3,18.5

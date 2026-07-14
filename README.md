@@ -223,11 +223,11 @@ If you use this dataset or the associated models, please cite the paper (citatio
 - **Photochem:** Wogan, N. F. et al. (2025), *The Open-source Photochem Code: A General Chemical and Climate Model for Interpreting (Exo)Planet Observations*, PSJ, 6, 256. [doi:10.3847/PSJ/ae0e1c](https://doi.org/10.3847/PSJ/ae0e1c)
 - **VULCAN:** Tsai, S.-M. et al. (2017), *VULCAN: An Open-source, Validated Chemical Kinetics Python Code for Exoplanetary Atmospheres*, ApJS, 228, 20. [doi:10.3847/1538-4365/228/2/20](https://doi.org/10.3847/1538-4365/228/2/20)
 - **Atmos:** Arney, G. et al. (2016), *The Pale Orange Dot: The Spectrum and Habitability of Hazy Archean Earth*, Astrobiology, 16, 873. [doi:10.1089/ast.2015.1422](https://doi.org/10.1089/ast.2015.1422)
-- **WACCM6 / CESM:** see [ESCOMP/CESM](https://github.com/ESCOMP/CESM)
+- **WACCM6 / CESM:** A. Gettelman et al. (2019), The Whole Atmosphere Community Climate Model Version 6 (WACCM6), [https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JD030943](https://agupubs.onlinelibrary.wiley.com/doi/full/11.1029/2019JD030943), see [ESCOMP/CESM](https://github.com/ESCOMP/CESM)
 - **Planetary Spectrum Generator (PSG):** Villanueva, G. L., et al.(2018), *Planetary Spectrum Generator: An accurate online radiative transfer suite for atmospheres, comets, small bodies and exoplanets*, Journal of Quantitative Spectroscopy and Radiative Transfer, 217, 86-104. [doi:10.1016/j.jqsrt.2018.05.023] (https://doi.org/10.1016/j.jqsrt.2018.05.023)
 
 ---
 
 ## Licence and contact
 
-Simulation data and configuration files are provided to support reproducibility of the published results. For questions about specific runs or boundary conditions, contact the authors at the Institute of Astronomy, University of Cambridge.
+Simulation data and configuration files are provided to support reproducibility of the published results. For any questions, please contact either Akhil Kumar or Greg Cooke.

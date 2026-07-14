@@ -1,0 +1,5 @@
+pathway_id,pathway,contribution,rate,total_prod,dconc,species,alt_km
+1*1336,"O3_transport -> O3
+Net:O3_transport -> O3",1.0,3.511146873363426e+16,3.511146873363426e+16,0.0,O3,13.5
+del,deleted_pathways,2.1604639285230683e-18,0.07585706167648236,0.07585706167648236,0.0,O3,13.5
+err,err_pathways,0.0,0.0,0.0,0.0,O3,13.5
