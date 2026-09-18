@@ -1,0 +1,804 @@
+TUV spectral window: 100–420 nm (nwint=-156, tag=w100-420)
+
+=== pal0p1 / waccm ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM LWAV (Earth_0.1pc_o2.cam.h0.0033-0036.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 16.531 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_waccm_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_waccm_atm48p2_sza0-85_w100-420.txt
+
+=== pal0p1 / waccm_eq ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM equator ILAT=47 (Earth_0.1pc_o2.cam.h0.0033-0036.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 16.167 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_waccm_eq_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_waccm_eq_atm48p2_sza0-85_w100-420.txt
+
+=== pal0p1 / vulcan ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed VULCAN (Earth_0.1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul) profiles -> DATAE1/ATM/ussa.* (O3 column = 34.690 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_vulcan_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_vulcan_atm48p2_sza0-85_w100-420.txt
+
+=== pal0p1 / photochem ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Photochem (Earth_0.1pc_48.2.txt) profiles -> DATAE1/ATM/ussa.* (O3 column = 64.109 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_photochem_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_photochem_atm48p2_sza0-85_w100-420.txt
+
+=== pal0p1 / atmos ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Atmos (PTZ_mixingratios_out.dist) profiles -> DATAE1/ATM/ussa.* (O3 column = 90.370 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_atmos_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_atmos_atm48p2_sza0-85_w100-420.txt
+
+=== pal0p1 / kasting ===
+/Users/gregcooke/V5.4/run_TUV.py:546: FutureWarning: The 'delim_whitespace' keyword in pd.read_csv is deprecated and will be removed in a future version. Use ``sep='\s+'`` instead
+  df = pd.read_csv(kasting_path, delim_whitespace=True, engine="python")
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Kasting (OUTPUT_PLOT.dat) profiles -> DATAE1/ATM/ussa.* (O3 column = 43.871 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_kasting_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal0p1_kasting_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / waccm ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM LWAV (Earth_1pc_o2.cam.h0.0045-0048.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 57.919 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_waccm_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_waccm_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / waccm_eq ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM equator ILAT=47 (Earth_1pc_o2.cam.h0.0045-0048.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 49.489 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_waccm_eq_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_waccm_eq_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / vulcan ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed VULCAN (Earth_1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul) profiles -> DATAE1/ATM/ussa.* (O3 column = 115.887 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_vulcan_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_vulcan_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / photochem ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Photochem (Earth_1pc_48.2.txt) profiles -> DATAE1/ATM/ussa.* (O3 column = 148.195 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_photochem_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_photochem_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / atmos ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Atmos (PTZ_mixingratios_out.dist) profiles -> DATAE1/ATM/ussa.* (O3 column = 172.668 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_atmos_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_atmos_atm48p2_sza0-85_w100-420.txt
+
+=== pal1 / kasting ===
+/Users/gregcooke/V5.4/run_TUV.py:546: FutureWarning: The 'delim_whitespace' keyword in pd.read_csv is deprecated and will be removed in a future version. Use ``sep='\s+'`` instead
+  df = pd.read_csv(kasting_path, delim_whitespace=True, engine="python")
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Kasting (OUTPUT_PLOT.dat) profiles -> DATAE1/ATM/ussa.* (O3 column = 103.451 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_kasting_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal1_kasting_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / waccm ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM LWAV (Earth_10pc_o2.cam.h0.0037-0040.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 164.620 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_waccm_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_waccm_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / waccm_eq ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM equator ILAT=47 (Earth_10pc_o2.cam.h0.0037-0040.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 136.335 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_waccm_eq_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_waccm_eq_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / vulcan ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed VULCAN (Earth_10pc_o2_1e12s_48.2SZA_WPT_1rtol.vul) profiles -> DATAE1/ATM/ussa.* (O3 column = 202.837 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_vulcan_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_vulcan_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / photochem ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Photochem (Earth_10pc_48.2.txt) profiles -> DATAE1/ATM/ussa.* (O3 column = 261.561 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_photochem_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_photochem_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / atmos ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Atmos (PTZ_mixingratios_out.dist) profiles -> DATAE1/ATM/ussa.* (O3 column = 229.735 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_atmos_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_atmos_atm48p2_sza0-85_w100-420.txt
+
+=== pal10 / kasting ===
+/Users/gregcooke/V5.4/run_TUV.py:546: FutureWarning: The 'delim_whitespace' keyword in pd.read_csv is deprecated and will be removed in a future version. Use ``sep='\s+'`` instead
+  df = pd.read_csv(kasting_path, delim_whitespace=True, engine="python")
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Kasting (OUTPUT_PLOT.dat) profiles -> DATAE1/ATM/ussa.* (O3 column = 238.899 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_kasting_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal10_kasting_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / waccm ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM LWAV (Earth_100pc_o2.cam.h0.0009-0012.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 279.642 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_waccm_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_waccm_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / waccm_eq ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed CAM/WACCM equator ILAT=47 (Earth_100pc_o2.cam.h0.0009-0012.nc) profiles -> DATAE1/ATM/ussa.* (O3 column = 247.508 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_waccm_eq_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_waccm_eq_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / vulcan ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed VULCAN (Earth_1e12s_48.2SZA_WPT_1rtol.vul) profiles -> DATAE1/ATM/ussa.* (O3 column = 244.742 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_vulcan_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_vulcan_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / photochem ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Photochem (Earth_100pc_48.2.txt) profiles -> DATAE1/ATM/ussa.* (O3 column = 342.013 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_photochem_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_photochem_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / atmos ===
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Atmos (PTZ_mixingratios_out.dist) profiles -> DATAE1/ATM/ussa.* (O3 column = 259.212 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_atmos_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_atmos_atm48p2_sza0-85_w100-420.txt
+
+=== pal100 / kasting ===
+/Users/gregcooke/V5.4/run_TUV.py:546: FutureWarning: The 'delim_whitespace' keyword in pd.read_csv is deprecated and will be removed in a future version. Use ``sep='\s+'`` instead
+  df = pd.read_csv(kasting_path, delim_whitespace=True, engine="python")
+/Users/gregcooke/V5.4/run_TUV.py:606: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+  col_molec_cm2 = float(np.trapz(n, z_cm))
+Installed Kasting (OUTPUT_PLOT.dat) profiles -> DATAE1/ATM/ussa.* (O3 column = 334.983 DU)
+Wrote O3 profile -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_kasting_atm48p2_sza0-85_w100-420_o3_profile.csv
+make: `tuv' is up to date.
+
+
+ done: loading inputs
+ calculating....
+ equally spaced z-grid
+ Date, Lat, Lon, Min_SZA
+2002/ 3/21   0.000   0.000   0.000
+step =    1 sza =     0.000 Earth-sun factor =  1.0000000
+step =    2 sza =     5.000 Earth-sun factor =  1.0000000
+step =    3 sza =    10.000 Earth-sun factor =  1.0000000
+step =    4 sza =    15.000 Earth-sun factor =  1.0000000
+step =    5 sza =    20.000 Earth-sun factor =  1.0000000
+step =    6 sza =    25.000 Earth-sun factor =  1.0000000
+step =    7 sza =    30.000 Earth-sun factor =  1.0000000
+step =    8 sza =    35.000 Earth-sun factor =  1.0000000
+step =    9 sza =    40.000 Earth-sun factor =  1.0000000
+step =   10 sza =    45.000 Earth-sun factor =  1.0000000
+step =   11 sza =    50.000 Earth-sun factor =  1.0000000
+step =   12 sza =    55.000 Earth-sun factor =  1.0000000
+step =   13 sza =    60.000 Earth-sun factor =  1.0000000
+step =   14 sza =    65.000 Earth-sun factor =  1.0000000
+step =   15 sza =    70.000 Earth-sun factor =  1.0000000
+step =   16 sza =    75.000 Earth-sun factor =  1.0000000
+step =   17 sza =    80.000 Earth-sun factor =  1.0000000
+step =   18 sza =    85.000 Earth-sun factor =  1.0000000
+Archived -> /Users/gregcooke/V5.4/OUTPUT/compare/pal100_kasting_atm48p2_sza0-85_w100-420.txt
+Wrote /Users/gregcooke/V5.4/OUTPUT/compare/comparison_summary_w100-420.csv (432 rows)
+Wrote /Users/gregcooke/V5.4/OUTPUT/compare/comparison_spectral_w100-420.csv (3744 rows)
+Wrote /Users/gregcooke/V5.4/OUTPUT/compare/ozone_profiles_comparison.csv (2640 rows)

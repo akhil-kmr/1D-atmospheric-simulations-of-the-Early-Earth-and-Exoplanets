@@ -1,0 +1,17 @@
+{
+  "case": "pal100",
+  "label": "100% PAL",
+  "model": "vulcan",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "wstart_nm": 100.0,
+  "wstop_nm": 420.0,
+  "nwint": -156,
+  "o3col_du": 244.7425,
+  "outfil": "V100V",
+  "source_file": "Earth_1e12s_48.2SZA_WPT_1rtol.vul",
+  "source_path": "/Users/gregcooke/VIH_cases/output/Earth_1e12s_48.2SZA_WPT_1rtol.vul"
+}

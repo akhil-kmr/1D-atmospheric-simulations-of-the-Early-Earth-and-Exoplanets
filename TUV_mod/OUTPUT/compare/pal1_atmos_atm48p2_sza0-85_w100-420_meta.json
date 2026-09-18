@@ -1,0 +1,17 @@
+{
+  "case": "pal1",
+  "label": "1% PAL",
+  "model": "atmos",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "wstart_nm": 100.0,
+  "wstop_nm": 420.0,
+  "nwint": -156,
+  "o3col_du": 172.6678,
+  "outfil": "A01PA",
+  "source_file": "PTZ_mixingratios_out.dist",
+  "source_path": "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Atmos/1pc/SZA_48.2/PTZ_mixingratios_out.dist"
+}

@@ -1,0 +1,10 @@
+{
+  "case": "pal10",
+  "label": "10% PAL",
+  "model": "vulcan",
+  "sza_deg": 48.2,
+  "o3col_du": 202.8367,
+  "outfil": "V10PV",
+  "source_file": "Earth_10pc_o2_1e12s_48.2SZA_WPT_1rtol.vul",
+  "source_path": "/Users/gregcooke/VIH_cases/output/Earth_10pc_o2_1e12s_48.2SZA_WPT_1rtol.vul"
+}

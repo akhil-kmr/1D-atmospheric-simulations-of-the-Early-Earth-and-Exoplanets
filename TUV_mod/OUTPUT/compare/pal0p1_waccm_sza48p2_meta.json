@@ -1,0 +1,10 @@
+{
+  "case": "pal0p1",
+  "label": "0.1% PAL",
+  "model": "waccm",
+  "sza_deg": 48.2,
+  "o3col_du": 18.2939,
+  "outfil": "Wp01W",
+  "source_file": "b.e21.BWma1850.f19_g17.0.1pc_o2.001.cam.h0.0080-0083.nc",
+  "source_path": "/Users/gregcooke/H_escape/b.e21.BWma1850.f19_g17.0.1pc_o2.001.cam.h0.0080-0083.nc"
+}

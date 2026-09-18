@@ -1,0 +1,46 @@
+# Ozone profile from Kasting (OUTPUT_PLOT.dat) (via run_TUV.py)
+# Column 1: geometric altitude (km), column 2: n(O3) in molec cm-3
+# values at 0 and 1 km: interpolated from model; 2-74 km knots match USSA grid
+# (total column scaling in TUV still uses o3col if set > 0 in the input deck)
+#
+#
+#
+   0 4.94E+11
+   1 4.92E+11
+   2 4.92E+11
+   4 5.15E+11
+   6 5.37E+11
+   8 5.35E+11
+  10 5.27E+11
+  12 6.88E+11
+  14 1.42E+12
+  16 2.68E+12
+  18 3.87E+12
+  20 4.68E+12
+  22 5.05E+12
+  24 5.00E+12
+  26 4.62E+12
+  28 3.99E+12
+  30 3.22E+12
+  32 2.41E+12
+  34 1.68E+12
+  36 1.11E+12
+  38 7.02E+11
+  40 4.31E+11
+  42 2.64E+11
+  44 1.65E+11
+  46 1.05E+11
+  48 6.80E+10
+  50 4.46E+10
+  52 2.95E+10
+  54 1.96E+10
+  56 1.29E+10
+  58 8.41E+09
+  60 5.39E+09
+  62 3.36E+09
+  64 2.03E+09
+  66 1.17E+09
+  68 6.27E+08
+  70 3.14E+08
+  72 1.55E+08
+  74 7.86E+07

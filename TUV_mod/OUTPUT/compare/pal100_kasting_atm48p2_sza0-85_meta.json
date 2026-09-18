@@ -1,0 +1,14 @@
+{
+  "case": "pal100",
+  "label": "100% PAL",
+  "model": "kasting",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "o3col_du": 334.9828,
+  "outfil": "K100K",
+  "source_file": "OUTPUT_PLOT.dat",
+  "source_path": "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Kasting_1D_model/100pc/SZA_48.2/OUTPUT_PLOT.dat"
+}

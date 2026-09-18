@@ -1,0 +1,14 @@
+{
+  "case": "pal10",
+  "label": "10% PAL",
+  "model": "photochem",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "o3col_du": 261.5609,
+  "outfil": "P10PP",
+  "source_file": "Earth_10pc_48.2.txt",
+  "source_path": "/Users/gregcooke/1D-Simulations-of-the-Early-Earth/Photochem/10pc/Earth_10pc_48.2.txt"
+}

@@ -1,0 +1,16 @@
+{
+  "case": "pal10",
+  "label": "10% PAL",
+  "model": "waccm_eq",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "o3col_du": 136.3349,
+  "outfil": "W10PE",
+  "source_file": "Earth_10pc_o2.cam.h0.0037-0040.nc",
+  "source_path": "/Users/gregcooke/CESM_data/Earth_10pc_o2.cam.h0.0037-0040.nc",
+  "waccm_latitude_deg": -0.9473684210526301,
+  "waccm_ilat": 47
+}

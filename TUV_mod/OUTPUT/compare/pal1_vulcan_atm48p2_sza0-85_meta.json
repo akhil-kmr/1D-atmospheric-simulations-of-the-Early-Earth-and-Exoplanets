@@ -1,0 +1,14 @@
+{
+  "case": "pal1",
+  "label": "1% PAL",
+  "model": "vulcan",
+  "atmosphere_equilibrium_sza_deg": 48.2,
+  "tuv_sza_start_deg": 0.0,
+  "tuv_sza_stop_deg": 85.0,
+  "tuv_sza_step_deg": 5.0,
+  "tuv_sza_count": 18,
+  "o3col_du": 115.8874,
+  "outfil": "V01PV",
+  "source_file": "Earth_1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul",
+  "source_path": "/Users/gregcooke/VIH_cases/output/Earth_1pc_o2_1e12s_48.2SZA_WPT_1rtol.vul"
+}
